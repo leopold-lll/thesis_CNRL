@@ -86,14 +86,6 @@ Note that, this is exactly our situation, in fact, an attribute link the nodes t
 \section{Build graph - example}
 In this section, I am going to show how a graph is transformed from the simple structure and the attributes to a hypergraph or to a bipartite graph.\\
 %
-\begin{figure}[htp]
-	\centering
-	\includegraphics{images/7transform_str}
-	\caption{The structure representation of the graph}
-	\label{fig:7transform_str}
-\end{figure}
-%
-%
 \begin{multicols}{2}
 	\begin{center}
 		\begin{tabular}{|l|cc|}
@@ -111,7 +103,7 @@ In this section, I am going to show how a graph is transformed from the simple s
 		\end{tabular}
 		\captionof{table}{For each node, there are the attributes ID that it has}
 		\label{tab:7_ID_to_att}
-		
+		%
 		\begin{tabular}{|l|cccc|}
 		\hline
 		att&\multicolumn{4}{c|}{node ID}\\
@@ -127,6 +119,15 @@ In this section, I am going to show how a graph is transformed from the simple s
 		\captionof{table}{For each attribute, there are the nodes ID that it has}
 	\end{center}
 \end{multicols}
+%
+%
+\begin{figure}[htp]
+	\centering
+	\includegraphics{images/7transform_str}
+	\caption{The structure representation of the graph}
+	\label{fig:7transform_str}
+\end{figure}
+%
 %
 In figure~\ref{fig:7transform_str} we can see the structure of the graph. In table~\ref{tab:7_ID_to_att} we can see that for each node is represented the ID of the attributes that it has. At the opposite in table~\ref{tab:7_att_to_ID} for each attribute, are represented the ID of the nodes that have it.\\
 Then now it is possible to create the two graphs.
