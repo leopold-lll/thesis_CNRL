@@ -1,0 +1,6 @@
+# Useless files
+*.aux
+*.log
+*.gz
+*.toc
+*.dvi
