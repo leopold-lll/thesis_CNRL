@@ -1,0 +1,83 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newif\ifcomment	%allow multiline comments
+%\commenttrue 		%Show comments
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifcomment	%<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+	\documentclass[epsfig,a4paper,11pt,titlepage,twoside,openany]{book}
+
+	% queste due righe nel preambolo servono a poter utilizzare le lettere accentate in tutto i testo se no 	di norma si inserirebbero con \'e...
+	\usepackage[T1]{fontenc}
+	\usepackage[utf8]{inputenc}
+	
+	\usepackage{hyperref} %Serve per i riferimenti
+	\usepackage{caption}  %Serve per le note (caption)
+	
+	\begin{document}
+	%set the language of the text to english
+	% !TeX spellcheck = en_GB
+	
+	% personal commands:
+	% \newcommand{\nome_commando}[argomenti]{comando}
+	\newcommand{\mmax}[0]{mod\_withMax}
+	\newcommand{\mover}[0]{mod\_overlap }
+	\newcommand{\mmod}[0]{modified modularity}
+\fi					%<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+%
+\chapter{Summary}
+% Montresor suggerisce di scriverlo alla fine in quanto solo allora si avrà una visione d'insieme di tutto il lavoro.
+%% cos'è?
+%% Sommario è un breve riassunto del lavoro svolto dove si descrive: l’obiettivo, l’oggetto della tesi, le metodologie e le tecniche usate, i dati elaborati e la spiegazione delle conclusioni alle quali siete arrivati.
+%% Il sommario dell’elaborato consiste al massimo di 3 pagine e deve contenere le seguenti informazioni: contesto e motivazioni breve riassunto del problema affrontato tecniche utilizzate e/o sviluppate risultati raggiunti, sottolineando il contributo personale del laureando/a se vi sono più persone che hanno contribuito...
+This thesis goes back over the work that I was done during the internship inside the university, with the supervision of the PhD student Sheikh Nasrullah for the professor Montresor Alberto.
+%
+\section{Introduction}
+The whole internship is based on the paper named "Community-enhanced Network Representation Learning for Network Analysis" alias CNRL, this paper proposes an innovative method for detecting the communities inside a graph, so my purpose is to take the code at the base of this paper, try to replicate the results shown and after that increase if it is possible the potentiality of this algorithm.\newline
+At the start, I had to need to understand the main problem and understand the dynamics at the base of it, therefore I read out some other papers like:
+\begin{itemize}
+	\item "DeepWalk: Online Learning of Social Representations"
+	\item "node2vec: Scalable Feature Learning for Networks"
+	\item "How exactly does word2vec work?"
+\end{itemize} 
+Before the explaining of the work done, we need to understand why the community detection is so important.
+%
+\section{What are graphs and the communities}
+At the base of all, there are the graphs, a particular data structure formed of the nodes that can represent an entity, eventually with some attributes, and the edges that link two nodes, the edges are all directed or not. With this special data structure, we can represent a huge amount of situations. The purpose of the community detection is to find the communities inside the graph, that are groups of nodes that are similar.\\
+What does this mean?\\
+Two nodes are similar if have an equivalent role inside a group of nodes, they can are a hub of connection or an isolated point or more simply they have the same value for some attribute. To find this groups can permit to who look for it, to manage those nodes in a similar way. Like the possible application of the graphs, the same is for this technology, there are lots of situation and context where those algorithms can work very well.
+%
+\section{How we evaluate the community}
+Up to now, I have explained what are graphs and communities, and from my words seem that when you choose some groups of nodes is may be easily understood if it is a good partition or not. And if you have two partitions to decide which is the best is not difficult. This is not really true. If we have a little graph with only one community we can look at it and decide if the partition is good or not, but this is not possible for a big graph.\\
+So how we evaluate a partition?\\
+First of all, we must explain what we intend with partitions, here the characteristics:
+\begin{itemize}
+	\item A partition is a set of communities
+	\item Not all the communities have the same size, or better the same number of nodes
+	\item For the communities, there is not a minimum size neither a maximum size
+	\item Is possible that some nodes do not have a community to which it belongs
+	\item A node can belong to more than one community, this mean that I have an overlapping of communities
+\end{itemize}
+Said that, we can speak about the modularity.\\
+The modularity is the method used for evaluating a partition, there are different implementations of it because the aim is the same but we can have different interest so we can weight different aspect, in our work we have used three different methods: \mmax, \mover and \mmod . The first two are unofficial names, we have chosen them for distinguishing it, the last one is the method used in the CNRL's paper. More explanation of those methods in the chapter on the modularity.
+%
+\section{Our changes}
+The code of CNRL do $x$ random walks (a sequence of $l$ adjacent nodes) on the graph where $x=n*w$: 
+\begin{itemize}
+	\item $n$: is the number of nodes in the graph
+	\item $w$: is the number of walks starting from each node
+	\item $l$: is the maximum length of each walk
+\end{itemize}
+Given those walks, the algorithm calculates the partition. Note that CNRL use only the structure of the graph, the nodes and the edges, no other information is considered.\\
+Our approach uses the code of CNRL but introduces the attributes of the nodes, this permit a better evaluation. This because two nodes that before are far, there was no one link between them, now are considered near if they share one or more attributes.
+%
+\section{Results}
+To be continued...
+
+%
+%
+%
+%
+\newpage
+%
+\ifcomment	%<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+	\end{document}
+\fi					%<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<

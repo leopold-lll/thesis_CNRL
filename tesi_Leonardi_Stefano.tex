@@ -2,9 +2,6 @@
 \newif\ifinclude		% if per l'include dei file
 \includetrue	
 
-%\newif\ifcomment 	%creo una condizione che mi permette d'usare i commenti multilinea. Andrò a commentare le parti specifiche di ogni file affinche non giri da solo ma assieme a tutto il resto.
-%\commentfalse		%Hide comments
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 % Template per Elaborato di Laurea
@@ -14,70 +11,12 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% formato FRONTE RETRO
-\documentclass[epsfig,a4paper,11pt,titlepage,twoside,openany]{book}
-\usepackage{epsfig}
-\usepackage{plain}
-\usepackage{setspace}
-\usepackage[paperheight=29.7cm,paperwidth=21cm,outer=1.5cm,inner=2.5cm,top=2cm,bottom=2cm]{geometry} % per definizione layout
-\usepackage{titlesec} % per formato custom dei titoli dei capitoli
-
-\singlespacing
-
-\usepackage[english]{babel}
-
-%%%%%%%%%%%%%%%%% STEFANO ADDED %%%%%%%%%%%%%%%%
-% supporto lettere accentate
-% queste due righe nel preambolo servono a poter utilizzare le lettere accentate in tutto il testo se no di norma si inserirebbero con \'e...
-\usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
-\usepackage{hyperref} %Serve per i riferimenti
-\usepackage{caption}  %Serve per le note (caption)
-\usepackage{multicol}	 %Serve per usare più colonne
-
-%%%%%%%%%%%%%%%%% ENRICO ADDED %%%%%%%%%%%%%%%%%
-\usepackage{ulem} %Serve per il sottolineato
-\usepackage{amsmath} %Serve per alcuni ambienti matematici
-\usepackage{array} %Serve per le tabelle
-\usepackage{multirow} %Seve per tabelle
-\setcounter{secnumdepth}{5} %Utilissimo serve per aumentare il numero di paragrafi, si arriva fino a 5 livelli di profondità x.x.x.x.x
-%GRAFICI
-\usepackage{pgfplots}
-\usepackage{pgfmath}
-\usepackage{tikz}
-%CODICE
-\usepackage{listings}
-\usepackage[cache=false]{minted} 
-%\setminted{tabsize=4, breaklines, breakanywhere, linenos, mathescape,}
-
-\lstset{
-	  breakatwhitespace=false,         
-	  breaklines=true,     
-	  basicstyle=\footnotesize\ttfamily,            
-	  commentstyle=\color{blue}, %Indica il colore dei commenti
-	  keywordstyle=\color{red}, %Indica il colore delle parole chiave
-	  language=C, %Indica il linguaggio predefinito da usare
-	  rulecolor=\color{black}, %Indica il colore dei numeri di righe
-	  tabsize=4,
-	  escapeinside={\%*}{*)},
-	  morekeywords={}, %Altre parole da inserire tra le keywords. Ad esempio possiamo aggiungere do, gotttto, ecc ecc 
-}
-%%%%%%%%%%%%%%%%% END OF ENRICO  %%%%%%%%%%%%%%%%
-
-\begin{document}
-%set the language of the text to english
-% !TeX spellcheck = en_GB
-
-%%%%%%% personal commands:
-% \newcommand{\nome_commando}[argomenti]{comando}
-\newcommand{\mmax}[0]{mod\_withMax}
-\newcommand{\mover}[0]{mod\_overlap }
-\newcommand{\mmod}[0]{modified modularity}
+\input{import}
 	
  	% nessuna numerazione
 	\ifinclude
   		\pagenumbering{gobble} 
-  		\input{first_page}
+  		\input{prima_pagina}
   		\clearpage
   	 \fi
   
@@ -132,7 +71,7 @@
       
 	%\ifinclude
       	% sommario
-      	\input{summary}
+      	\input{sommario}
  	%\fi
       
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -153,8 +92,10 @@
     %
     % \input oppure \include
     %
-    \input{1_implementation}		%capitolo 1
-    \input{2_evaluation_methods}	%capitolo 2
+    
+    \input{1_implementazione}		%capitolo 1
+    \input{2_metodi_di_valutazione}	%capitolo 2
+    
     %\input{capitolo3}	%capitolo 3
     %\input{capitolo4}	%capitolo 4
     \endgroup
@@ -166,7 +107,7 @@
     % stile con ordinamento alfabetico in funzione degli autori
     \bibliographystyle{plain}
     \ifinclude
-    	%\bibliography{biblio}
+    	\bibliography{biblio}
     \fi
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Nota:
