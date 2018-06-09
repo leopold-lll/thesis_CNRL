@@ -1,53 +1,60 @@
 %\input{import}
 %
 %
-\chapter{Summary}
+\chapter{Sommario}
 %% cos'è?
-%% Sommario è un breve riassunto del lavoro svolto dove si descrive: l’obiettivo, l’oggetto della tesi, le metodologie e le tecniche usate, i dati elaborati e la spiegazione delle conclusioni alle quali siete arrivati.
+%% Il sommario è un breve riassunto del lavoro svolto dove si descrive: l’obiettivo, l’oggetto della tesi, le metodologie e le tecniche usate, i dati elaborati e la spiegazione delle conclusioni alle quali siete arrivati.
 %% Il sommario dell’elaborato consiste al massimo di 3 pagine e deve contenere le seguenti informazioni: contesto e motivazioni breve riassunto del problema affrontato tecniche utilizzate e/o sviluppate risultati raggiunti, sottolineando il contributo personale del laureando/a se vi sono più persone che hanno contribuito...
-This thesis goes back over the work that I was done during the internship inside the university, with the supervision of the PhD student Sheikh Nasrullah for the professor Montresor Alberto.
+Questa tesi va a ripercorrere il lavoro svolto da Leonardi Stefano durante il tirocinio svolto all'interno dell'università, con la supervisione del dottorando Sheikh Nasrullah, per il professore Montresor Alberto.
 %
-\section{Introduction}
-The whole internship is based on the paper named "Community-enhanced Network Representation Learning for Network Analysis" alias CNRL, this paper proposes an innovative method for detecting the communities inside a graph, so my purpose is to take the code at the base of this paper, try to replicate the results shown and after that increase if it is possible the potentiality of this algorithm.\newline
-At the start, I had to need to understand the main problem and understand the dynamics at the base of it, therefore I read out some other papers like:
+\section{Introduzione}
+L'intero tirocinio è basato sull'articolo intitolato "Community-enhanced Network Representation Learning for Network Analysis" che può essere abbreviato con la sigle CNRL. Questo articolo propone un innovativo metodo per individuare delle comunità all'interno dei grafi. Lo scopo di questo tirocinio è stato quindi quello di replicare i risultati ivi proposti, una volta compreso il codice alla base, e dove possibile cercare di migliorare le prestazioni dell'algoritmo proposto, anche sfruttando elementi magari non considerati dal metodo originale.\newline
+L'algoritmo proposto nell'articolo sfrutta diverse tecniche, alcune delle quali dettagliatamente spiegate negli articoli:
 \begin{itemize}
 	\item "DeepWalk: Online Learning of Social Representations"
 	\item "node2vec: Scalable Feature Learning for Networks"
 	\item "How exactly does word2vec work?"
 \end{itemize} 
-Before the explaining of the work done, we need to understand why the community detection is so important.
+Di seguito la spiegazione del perché l'individuazione di comunità è una tecnica così importante.
 %
-\section{What are graphs and the communities}
-At the base of all, there are the graphs, a particular data structure formed of the nodes that can represent an entity, eventually with some attributes, and the edges that link two nodes, the edges are all directed or not. With this special data structure, we can represent a huge amount of situations. The purpose of the community detection is to find the communities inside the graph, that are groups of nodes that are similar.\\
-What does this mean?\\
-Two nodes are similar if have an equivalent role inside a group of nodes, they can are a hub of connection or an isolated point or more simply they have the same value for some attribute. To find this groups can permit to who look for it, to manage those nodes in a similar way. Like the possible application of the graphs, the same is for this technology, there are lots of situation and context where those algorithms can work very well.
+\section{Cosa sono i grafi e cosa le comunità}
+Alla base di tutto vi sono i grafi, una particolare struttura dati composta da nodi e archi. I primi possono rappresentare un entità eventualmente anche con l'aiuto di attributi. Diversamente gli archi sono dei collegamenti che legano due nodi, questi possono essere interamente orientati o non orientati. Questa struttura dati permette di rappresentare tantissime situazioni per tale motivo è così importante.\\
+Lo scopo dell'individuazione di comunità è per l'appunto come dice il nome, scovare delle comunità, ossia dei gruppi di nodi simili fra loro.\\
+È importante notare che i nodi possono essere simili per molte diverse ragioni, possono avere le stesse caratteristiche strutturali in quanto sono dei catalizzatori che legano molti altri elementi, magari dei punti isolati da tutto il resto, o più semplicemente hanno valori degli attributi analoghi.\\
+Trovare nodi simili permette di gestirli in maniera omogenea e di sfruttarne le peculiarità. Visto che con i grafi possono rappresentare molte situazioni anche le comunità risultano essere molto versatili, per tale motivo sono tanto importanti.
 %
-\section{How we evaluate the community}
-Up to now, I have explained what are graphs and communities, and from my words seem that when you choose some groups of nodes is may be easily understood if it is a good partition or not. And if you have two partitions to decide which is the best is not difficult. This is not really true. If we have a little graph with only one community we can look at it and decide if the partition is good or not, but this is not possible for a big graph.\\
-So how we evaluate a partition?\\
-First of all, we must explain what we intend with partitions, here the characteristics:
+\section{Come si valutano le comunità}
+È stato spiegato cosa sono i grafi e cosa sono le comunità che vi si possono costruire sopra, ma non è stato spiegato come si può decidere, date due partizioni differenti su un grafo, quale di queste due è la migliore. Intuitivamente se il grafo è molto piccolo tanto da poterlo comprendere guardando unicamente una sua rappresentazione grafica, e le comunità individuate sono poche allora si potrebbe decidere anche ad occhio qual è la migliore partizione.\\
+Se però le comunità individuate sono tante e il grafo non è più piccolo, allora non è più così facile effettuare una scelta e tanto meno riuscire a giustificarla. Esistono perciò dei metodi formali per analizzare e decidere cosa andare a preferire, questi metodi prendono il nome di modularità.\\
+\\
+Prima di parlare di ciò è però necessario formalizzare il concetto di partizione per comprendere di cosa si sta parlando:
 \begin{itemize}
-	\item A partition is a set of communities
-	\item Not all the communities have the same size, or better the same number of nodes
-	\item For the communities, there is not a minimum size neither a maximum size
-	\item Is possible that some nodes do not have a community to which it belongs
-	\item A node can belong to more than one community, this mean that I have an overlapping of communities
+	\item Una partizione è un insieme di comunità
+	\item Non tutte le comunità hanno le stesse dimensioni, ossia lo stesso numero di nodi che vi appartengono
+	\item Le comunità non hanno né una dimensione massima né una dimensione minima.\\
+	In realtà si può considerare che la loro dimensione cade nell'intervallo $[1, n]$, dove il limite inferiore $1$ è dato dal fatto che devono contenere almeno un elemento, mentre il limite superiore $n$ è dato dal fatto che non può contenere più nodi di quelli esistenti nel grafo (che sono in numero di $n$)
+	\item È possibile che un nodo non appartenga a nessuna comunità
+	\item Un nodo del grafo può appartenere a più di una comunità, potenzialmente anche a tutte quelle presenti, questo significa che c'è una sovrapposizione di comunità
 \end{itemize}
-Said that, we can speak about the modularity.\\
-The modularity is the method used for evaluating a partition, there are different implementations of it because the aim is the same but we can have different interest so we can weight different aspect, in our work we have used three different methods: \mmax, \mover and \mmod . The first two are unofficial names, we have chosen them for distinguishing it, the last one is the method used in the CNRL's paper. More explanation of those methods in the chapter on the modularity.
+Come accennato la metrica di valutazione di una partizione è la modularità (il cui simbolo è $Q$). Questo nome può essere associato a diverse metriche infatti a seconda di cosa cerchiamo avremo interesse a valorizzare certi aspetti e penalizzarne altri, per tale motivo la modularità è solo il nome usato per indicare la valutazione di una partizione.\\
+Durante il tirocinio abbiamo adottato tre metodi differenti: \mmax, \mover e \mmod. I primi due nomi non sono ufficiali in quanto li abbiamo scelti al solo scopo di riconoscerle, mentre l'ultimo modified modularity  è quello utilizzato nell'articolo su CNRL.\\
+I dettagli del funzionamento e del perché le abbiamo scelte sono all'interno dell'apposito capitolo sulle metriche di valutazione.
 %
-\section{Our changes}
-The code of CNRL do $x$ random walks (a sequence of $l$ adjacent nodes) on the graph where $x=n*w$: 
+\section{I cambiamenti apportati}
+Per calcolare la partizione il codice di CNRL utilizza un sistema di visite random e grazie a questo poi ricostruisce le possibili somiglianze fra i nodi. Non volendo toccare questa sezione le modifiche da noi riportate si inseriscono all'interno della creazione grazie a tali visite di cammini.\\
+Una cammino è definito come una sequenza di nodi, preso un elemento qualsiasi fra questi deve esser possibile arrivare all'elemento successivo attraversando un solo arco, ossia i due elementi devono essere direttamente connessi, almeno nel senso di percorrenza.\\
+L'algoritmo genera $x$ cammini, ognuno di lunghezza massima $l$, sul grafo, dove $x=n*w$:
 \begin{itemize}
-	\item $n$: is the number of nodes in the graph
-	\item $w$: is the number of walks starting from each node
-	\item $l$: is the maximum length of each walk
+	\item $n$: è il numero di nodi del grafo
+	\item $w$: è il numero di cammini che si fanno partire da ogni singolo nodo
+	\item $l$: è la lunghezza massima di ogni cammino
 \end{itemize}
-Given those walks, the algorithm calculates the partition. Note that CNRL use only the structure of the graph, the nodes and the edges, no other information is considered.\\
-Our approach uses the code of CNRL but introduces the attributes of the nodes, this permit a better evaluation. This because two nodes that before are far, there was no one link between them, now are considered near if they share one or more attributes.
 %
-\section{Results}
-To be continued...
+Con questi dati l'algoritmo di CNRL calcola la suddivisione in comunità, si può notare come tutti questi dati vengono estratti esclusivamente dalla struttura del grafo, ossia da come nodi ed archi sono interconnessi.\\
+L'intuizione sfruttata per modificare l'algoritmo sta nel fatto che c'erano altri dati non utilizzati, ossia gli attributi dei nodi. Tramite la creazione di nuovi particolari cammini è possibile far risultare due nodi in precedenza lontani in quanto non direttamente connessi vicini, in quanto questi due nodi condividono uno o più attributi. È facile intuire che l'introduzione di tutti questi nuovi dati porta ad un radicale cambiamento nella suddivisione in comunità.
+%
+\section{Risultati}
+Parte temporaneamente mancante...
 
 %
 %
