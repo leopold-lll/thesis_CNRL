@@ -5,3 +5,7 @@
 *.toc
 *.dvi
 *.out
+*.pdf
+
+# Except the files
+!tesi_Leonardi_Stefano.pdf
