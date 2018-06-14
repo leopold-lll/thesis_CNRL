@@ -5,39 +5,39 @@
 In questo capitolo vengono spiegati i metodi utilizzati per cercare di migliorare le prestazioni dell'algoritmo di \cnrl.
 \section{Come funziona il codice di \cnrl}
 Prima di tutto, è necessario spiegare come il codice di \cnrl funziona.\\
-In prima istanza vengono presi in input tutti i dati necessari, tra cui anche il grafo su cui si andrà a lavorare, questo vien caricato dal formato edgelist, ossia una lista d'archi identificati da nodo di partenza più nodo d'arrivo. Il grafo vien ora preprocessato per andare ad utilizzare l'algoritmo di \nv per effettuare le visite. \nv è un algoritmo che regola le visite sulla base di due parametri $p$ e $q$, questi due valori possono far variare l'esplorazione del grafo da una simile visita in ampiezza fino ad una simile visita in profondità, permettendo anche delle varianti intermedie.\\
-I cammini individuati grazie alle visite effettuate con questo algoritmo devono sottostare a ben definite caratteristiche. Infatti da ogni nodo (in tutto $n$) sono fatte partire $w$ cammini, per un totale di $w \cdot n$ cammini generati tutti di lunghezza al più $l$. Tali cammini sono lunghi al più  $l$ e non esattamente $l$ in quanto questo algoritmo gestisce sia grafi orientati che non. Di conseguenza se si visita un grafo orientato è possibile imbattersi in un pozzo, ce lo si può immaginare come un vicolo cieco, in tali situazioni la visita si ferma in quanto non è più possibile procedere, pertanto avrà una lunghezza inferiore a $l$. Diversamente se si parla di grafi non orientati tale problema non si pone in quanto, anche se si arrivasse in un pozzo, sarebbe sempre possibile tornare indietro, infatti \nv permette di ritornare su nodi già visitati.\\
+In prima istanza vengono presi in input tutti i dati necessari, tra cui anche il grafo su cui si andrà a lavorare, questo vien caricato dal formato edgelist, ossia una lista d'archi identificati da nodo di partenza più nodo d'arrivo. Il grafo vien ora preprocessato per andare ad utilizzare l'algoritmo di \nv per effettuare le visite. \nv è un algoritmo che regola le visite sulla base di due parametri $p$ e $q$, questi due valori possono far variare l'esplorazione del grafo da una visita similare a quella in ampiezza fino ad una visita similare a quella in profondità, permettendo anche delle varianti intermedie.\\
+I cammini individuati grazie alle visite effettuate con questo algoritmo devono sottostare a ben definite caratteristiche. Infatti da ogni nodo (in tutto $n$) sono fatti partire $w$ cammini, per un totale di $w \cdot n$ cammini generati tutti di lunghezza al più $l$. Tali cammini sono lunghi al più  $l$ e non esattamente $l$ in quanto quest'algoritmo gestisce sia grafi orientati che non. Di conseguenza se si visita un grafo orientato è possibile imbattersi in un pozzo, ce lo si può immaginare come un vicolo cieco, in tali situazioni la visita si ferma in quanto non è più possibile procedere, pertanto avrà una lunghezza inferiore a $l$. Diversamente se si parla di grafi non orientati tale problema non si pone in quanto, anche se si arrivasse ad un pozzo, sarebbe sempre possibile tornare indietro, infatti \nv permette di ritornare su nodi già visitati.\\
 \\
-Durante la creazione di queste visite ci sono alcuni casi limite, perfettamente gestiti dall'algoritmo, ma comunque interessanti da essere riportati.
+Durante la creazione di queste cammini tramite le visite ci sono alcuni casi limite, perfettamente gestiti dall'algoritmo, ma comunque interessanti da riportare.
 \begin{itemize}
-	\item nodo isolato su grafo orientato: si avrà un cammino di lunghezza uno che comprende unicamente quel nodo
-	\item nodo isolato su grafo non orientato: si avrà un cammino lungo $l$ contenente l'ID di quel nodo in continuazione
-	\item loop su grafo orientato: questa è una sequenza di nodi che si ripete costante attraverso il cammino, è possibile iniziare con un nodo già presente nel loop o arrivarci dopo svariati passaggi
-	\item sequenze fisse finali su grafo orientato: è possibile che tanti cammini terminino con la stessa sequenza di nodi, questo è dovuto al fatto che sul grafo vi è un percorso senza possibilità di scelta che porta ad un pozzo, quindi una volta imboccato tale percorso il cammino andrà a terminare sempre con la stessa sequenza
+	\item \textbf{nodo isolato su grafo orientato:} si avrà un cammino di lunghezza $1$, che comprende unicamente quel nodo
+	\item \textbf{nodo isolato su grafo non orientato:} si avrà un cammino lungo $l$ contenente l'ID di quel nodo in continuazione
+	\item \textbf{loop su grafo orientato:} questa è una sequenza di nodi che si ripete costante attraverso il cammino, è possibile iniziare con un nodo già presente nel loop o arrivarci dopo svariati passaggi
+	\item \textbf{sequenze fisse finali su grafo orientato:} è possibile che tanti cammini terminino con la stessa sequenza di nodi, questo è dovuto al fatto che sul grafo vi è un percorso senza possibilità di scelta che porta ad un pozzo, quindi una volta imboccato tale percorso il cammino andrà a terminare sempre con la stessa sequenza
 \end{itemize}
 %
-Una volta che \nv ha generato i cammini è compito di un'altra sezione ricavarne le comunità, questo può essere fatto mediante due metodi differenti. Il primo, il più noto, è \wv che va a considerare gli ID dei nodi come se fossero parole di conseguenza un cammino e quindi un array di nodi vien considerato come un array di parole interpretabili come una frase. I dettagli del funzionamento si possono vedere nell'articolo "How exactly does word2vec work?".\\
-Diversamente il codice di \cnrl utilizza, di default, un algoritmo creato appositamente per questo contesto, non ne riportiamo i funzionamenti esatti in quando non li abbiamo investigati approfonditamente e non esiste una documentazione dettagliata che li spieghi.\\
-Che il codice usi uno o l'altro dei due metodi previsti, entrambi ritornano un insieme di comunità che formano la partizione che stiamo cercando. È ora possibile calcolare la modularità (capitolo apposito) per dare una misurazione al lavoro svolto.
+Una volta che \nv ha generato i cammini è compito di un'altra sezione ricavarne le comunità, questo può essere fatto mediante due metodi differenti. Il primo, il più noto, è \wv che va a considerare gli ID dei nodi come se fossero parole di conseguenza un cammino ossia un array di nodi vien considerato come un array di parole interpretabili come una frase. I dettagli del funzionamento si possono trovare nell'articolo "How exactly does word2vec work?".\\
+Diversamente il codice di \cnrl utilizza, di default, un algoritmo creato appositamente per questo contesto, non ne riportiamo i funzionamenti esatti in quando non sono stati investigati in maniera approfondita e non esiste una documentazione dettagliata che li spieghi.\\
+Che il codice usi uno o l'altro dei due metodi previsti, entrambi ritornano un insieme di comunità che formano la partizione che stiamo cercando. È ora possibile calcolare la modularità\footnote{Spiegata in dettaglio nell'apposito capitolo sui metodi di valutazione} per dare una misurazione al lavoro svolto.
 %
 \section{Introduzione degli attributi}
 Nei passaggi precedenti è stato evidenziato come il codice di \cnrl utilizza unicamente la struttura del grafo, ossia come nodi ed archi sono interconnessi fra di loro, per individuare le comunità esistenti.\\
-Tuttavia entrambi i dataset su cui abbiamo lavorato durante il tirocinio, denominati \cora e \citeseer (meglio spiegati nel capitolo sugli esperimenti) presentano oltre al file che delinea la struttura del grafo anche un secondo, con estensione .content, che contiene per ogni nodo una lista di valori binari, il cui significato è:
+Tuttavia entrambi i dataset su cui si è lavorato durante il tirocinio, denominati \cora e \citeseer (meglio spiegati nel capitolo sugli esperimenti) presentano oltre al file che delinea la struttura del grafo anche un secondo file, con estensione .content, che contiene per ogni nodo una lista di valori binari, il cui significato è:
 \begin{itemize}
-	\item $0$ il nodo non ha l'attributo identificato in questa colonna
-	\item $1$ il nodo ha l'attributo identificato in questa colonna
+	\item $0$ il nodo non ha l'attributo identificato da questa colonna
+	\item $1$ il nodo ha l'attributo identificato da questa colonna
 \end{itemize}
 %
-Tutte le informazioni contenute in questo file non sono considerate dal codice di \cnrl ed è per questo motivo che si è deciso di introdurle. La finestra in cui è possibile apportare modifiche si apre dopo che i dati sono stati caricati in input, e si chiude una volta che le comunità vengono estratte, ciò significa che la sola sezione in cui è possibile intervenire è la generazione dei cammini lungo il grafo.\\
-I cammini che si vanno a generare allo stato attuale non danno informazioni sugli attributi, pertanto è necessario oltre a questi aggiungerne altri che considerino tali informazioni. In particolare due nodi allo stato attuale sono legati unicamente se vi è un arco che va da uno 
+Tutte le informazioni contenute in questo file non sono considerate dal codice di \cnrl ed è per questo motivo che si è deciso di introdurle. La finestra di codice in cui è possibile apportare modifiche si apre dopo che i dati sono stati caricati dall'input, e si chiude una volta che inizia il processo d'estrazione delle comunità, ciò significa che la sola sezione in cui è possibile intervenire apportando delle modifiche è la generazione dei cammini lungo il grafo.\\
+I cammini che si vanno a generare allo stato attuale non danno informazioni sugli attributi, pertanto è necessario oltre a questi aggiungerne altri che considerino tali informazioni. In particolare due nodi sempre allo stato attuale sono legati unicamente se vi è un arco che va da uno 
 all'altro, intuitivamente ora possiamo dire che due nodi sono vicini e quindi legati se sono simili.\\
-Questa somiglianza, se riportata sugli attributi, la possiamo definire come: due nodi sono simili se condividono uno o più attributi, contrariamente non sono simili se non condividono nessun attributo. Per come abbiamo definito la somiglianza di due nodi attraverso gli attributi questa non presenta una direzione pertanto la rappresenteremo attraverso un arco non orientato.\\
+Questa somiglianza, se riportata sugli attributi, la possiamo definire come: due nodi sono simili se condividono uno o più attributi, contrariamente non sono simili se non condividono nessun attributo. Per come abbiamo definito la somiglianza di due nodi attraverso gli attributi, questa non presenta una direzione pertanto la rappresenteremo attraverso un arco non orientato.\\
 È quindi ora possibile creare un nuovo grafo non orientato che tenga conto di tutte le somiglianze derivanti dagli attributi, e su questo richiamare gli algoritmi di \nv o \wv per generare i nuovi cammini.
 %
 \section{Grafo degli attributi}
-In questa sezione verrà formalizzato il concetto di grafo degli attributi ed una volta descritte le due alternative se ne faranno dei paragoni.\\
+In questa sezione verrà formalizzato il concetto di grafo degli attributi ed una volta descritte le due alternative se ne faranno i paragoni.\\
 Prima di tutto è necessario rimuovere gli archi originari del grafo, in quanto se li tenessimo rischieremmo di generare una seconda volta gli stessi cammini. Diversamente i nodi vanno conservati, in quanto sono questi i punti che vogliamo nuovamente collegare, da ora in avanti questo insieme di nodi prende il nome di N1.\\
-Come visto se due nodi condividono lo stesso attributo sono simili e quindi connessi, esistono tuttavia due metodologie per connettere i due nodi, $a$ e $b$, in maniera diretta od indiretta.
+Come visto, se due nodi condividono lo stesso attributo, sono simili e quindi connessi, esistono tuttavia due metodologie per connettere i due nodi, $a$ e $b$, in maniera diretta o indiretta.
 \begin{itemize}
 	\item diretta consiste nel creare un arco non orientato (l'arco $(a, b)$) fra i due nodi, è il metodo semplice
 	\item indiretta consiste nel creare un nuovo nodo $c$, che verrà inserito nell'insieme N2, e creare due archi che collegano ogni nodo originario a $c$, quindi si creano i due archi $(a, c)$ e $(b, c)$\\
@@ -60,7 +60,7 @@ Come visto se due nodi condividono lo stesso attributo sono simili e quindi conn
 Nelle figure~\ref{fig:add_att2} e~\ref{fig:add_att4} sono mostrati i due possibili metodi di collegamento dei nodi attraverso gli attributi. In ambo le figure possiamo osservare tre scene:
 \begin{enumerate}
 	\item ci sono unicamente i nodi appartenenti all'insieme N1 a cui vanno aggiunti gli archi
-	\item è mostrato il collegamento diretto, da ogni punto raggiungo qualsiasi altro elemento attraversando esattamente un arco, devo fare un singolo passo\\
+	\item è mostrato il collegamento diretto, da ogni punto raggiungo qualsiasi altro elemento attraversando esattamente un arco, ossia devo fare un singolo passo\\
 	Questa nuova struttura prende ora il nome di ipergrafo
 	\item il collegamento è indiretto in quanto si passa attraverso il nodo $2$ in figura~\ref{fig:add_att2} e attraverso il nodo $4$ in figura~\ref{fig:add_att4}, questo nodo di collegamento è quello generato dagli attributi e pertanto apparterrà ad N2
 	è necessario utilizzare esattamente due passi per raggiungere un altro nodo\\
@@ -69,21 +69,22 @@ Nelle figure~\ref{fig:add_att2} e~\ref{fig:add_att4} sono mostrati i due possibi
 %
 Si può notare come i due modelli siano molto differenti nella seconda scena si va a creare un grafo completo, ciò vuol dire che il numero di archi presenti è altissimo infatti segue la legge binomiale $ \displaystyle\binom{n}{2}$ dove $n$ rappresenta il numero di nodi coinvolti.\\
 Per il caso in figura~\ref{fig:add_att4} vengono aggiunti $ \displaystyle\binom{4}{2} = 6$ archi però il numero di nodi rimane invariato.\\
-Diversamente nella terza scena viene costruito un grafo a stella, ossia un nodo centrale che fa da fulcro per collegare tutti gli altri nodi che sono legati esclusivamente a lui. Questo comporta che sempre in figura~\ref{fig:add_att4} vengano aggiunti $n$ archi e un nodo.\\
+Diversamente nella terza scena viene costruito un grafo a stella, si ha ossia un nodo centrale che fa da fulcro per collegare tutti gli altri nodi che sono legati esclusivamente a lui. Questo comporta che sempre in figura~\ref{fig:add_att4} vengano aggiunti $n$ archi e un nodo.\\
 \\
 Dipendentemente dalla situazione andremo a preferire uno piuttosto che l'altro, ecco le motivazioni che hanno spinto noi alla scelta.\\
 Se vi sono tanti attributi e ognuno di questi appartiene ad un estremamente ristretto numero di nodi allora ci si può permettere di creare degli ipergrafi. Diversamente se ci sono anche pochi attributi che sono condivisi fra un alto numero di nodi la scelta ricade sul grafo bipartito.\\
-Un esempio di quest'ultimo caso è facile da creare, se esiste un attributo condiviso fra $100$ nodi questo significa che con il grafo bipartito andremo ad aggiungere un nodo e $100$ archi, mentre con l'ipergrafo non si aggiungerà nessun nodo ma in compenso bisogna creare $ \displaystyle\binom{100}{2} = 4950$ nuovi archi.\\
+Un esempio di quest'ultimo caso è facile da ideare, se esiste un attributo condiviso fra $100$ nodi questo significa che con il grafo bipartito andremo ad aggiungere un nodo e $100$ archi, mentre con l'ipergrafo non si aggiungerà nessun nodo ma in compenso bisogna creare $ \displaystyle\binom{100}{2} = 4950$ nuovi archi.\\
 Nei casi che abbiamo dovuto gestire situazioni come quella presentata in quest'esempio sono presenti e quindi per limitare il numero di archi da gestire abbiamo optato per il grafo bipartito.\\
-È importante far presente che quando si cammina sul grafo bipartito esistono tutti i nuovi nodi dell'insieme N2 che sono sconosciuti alle altre parti dell'algoritmo di \cnrl per questo motivo una volta che \nv ha generato i cammini su tale grafo bisogna rimuovere da ognuno di questi gli ID dei nuovi nodi generati, altrimenti i futuri passaggi potrebbero dare errore. Questo non sarebbe necessario se avessimo scelto l'ipergrafo in quanto non va a creare nessun nuovo nodo.
+\\
+È importante far presente che quando si effettuano visite sul grafo bipartito si incontrano tutti i nuovi nodi dell'insieme N2, che sono sconosciuti alle altre parti dell'algoritmo di \cnrl, per questo motivo una volta che \nv ha generato i cammini su tale grafo bisogna rimuovere da ognuno di questi gli ID dei nuovi nodi generati, altrimenti i futuri passaggi potrebbero ritornare un errore. Questo non sarebbe necessario se avessimo scelto l'ipergrafo in quanto non va a creare nessun nuovo nodo.
 %
 \subsection{Grafo bipartito e ipergrafo, origine dei nomi}
 Poco sopra sono stati introdotti questi due nuovi nomi, ma senza un adeguata spiegazione delle loro origini. Le figure~\ref{fig:add_att2} e ~\ref{fig:add_att4} mostrano la situazione di alcuni nodi prendendo in considerazione un unico attributo. Tuttavia nei casi reali vi sono molti attributi di conseguenza entrambe le nuove strutture sono un insieme di tante piccole sezioni, il grafo bipartito è un insieme di grafi a stella, mentre l'ipergrafo è un insieme di grafi completi.\\
 Nel dettaglio:
 %
 \subsubsection*{Grafo bipartito}
-Il grafo è detto bipartito in quando vi sono due insiemi di nodi quelli che in precedenza son stati chiamati N1 (nodi originali) e N2 (nodi derivanti dagli attributi). Tutti gli archi del grafo vanno da un nodo di N1 ad un nodo di N2 e viceversa visto che non sono orientati. Non esistono archi che vanno da N1 a N1 o da N2 a N2.\\
-Questo è esattamente quello che ci si aspetterebbe dalla situazione, un arco da N1 ad N1 è un arco originario ossia che non necessita dell'attributo per passare da un punto ad un altro, ma questi sono stati rimossi in principio. Mentre un arco da N2 a N2 semplicemente non avrebbe significato, due attributi legati non hanno motivo d'esistere.
+Il grafo è detto bipartito in quando vi sono due insiemi di nodi, quelli che in precedenza son stati chiamati N1 (nodi originali) e N2 (nodi derivanti dagli attributi). Tutti gli archi del grafo vanno da un nodo di N1 ad un nodo di N2 e viceversa visto che non sono orientati. Non esistono archi che vanno da N1 a N1 o da N2 a N2.\\
+Questo è esattamente quello che ci si aspetterebbe dalla situazione, un arco da N1 ad N1 è un arco originario, che quindi non necessita dell'attributo per passare da un punto ad un altro, ma questi sono stati rimossi in principio. Mentre un arco da N2 a N2 semplicemente non avrebbe significato, due attributi legati non hanno motivo d'esistere.
 %
 \subsubsection*{Ipergrafo}
 Gli ipergrafi nella loro definizione formale non presentano semplici archi ma dispongono di iperarchi. I normali archi possono essere rappresentati mediante una linea in quanto presentano due estremità entrambe legate ad un nodo, diversamente gli iperarchi non possono essere rappresentati da una linea in quanto potrebbero arrivare ad avere infinite estremità, o meglio $n$ estremità dove $n$ è sempre il numero di nodi nel grafo. Tutti i nodi che sono estremità di un iperarco possono raggiungere una qualsiasi delle altre estremità con un passo di lunghezza uno. Se si volesse rappresentare ciò su un grafo normale è necessario costruire un grafo completo per ogni iperarco.\\
@@ -138,8 +139,9 @@ In questa sezione viene mostrato come un grafo viene trasformato partendo dalla 
 %
 \noindent Nella figura~\ref{fig:7transform_str} si vede la struttura del grafo di partenza.\\
 Nella tabella~\ref{tab:7_ID_to_att} si la lista di attributi che ogni nodo possiede.\\
-Mentre la tabella~\ref{tab:7_att_to_ID} è l'inversa della precedente in quanto per ogni attributo sono mostrati tutti i nodi a cui appartiene.\\
-Sono riportate entrambe per comodità, di comprensione, tipicamente solo una è sufficiente.\\
+Mentre la tabella 2.2 %~\ref{tab:7_att_to_ID} TODO: perchè questo riferimento non funziona??
+è l'inversa della precedente in quanto per ogni attributo sono mostrati tutti i nodi a cui appartiene.\\
+Sono riportate entrambe le tabelle per comodità di comprensione, tipicamente solo una è sufficiente.\\
 È ora possibile mostrare come i due tipi di grafi vengono generati.
 %
 \begin{figure}[htp]
@@ -151,10 +153,10 @@ Sono riportate entrambe per comodità, di comprensione, tipicamente solo una è 
 \\
 Osserviamo per primo l'ipergrafo mostrato in figura~\ref{fig:7transform_hyper}.
 \begin{itemize}
-	\item  si può vedere come alcuni archi non sono più presenti, due esempi sono $(1,3)$ e $(5,7)$, si ricorda che non sono questi due archi che son stati rimossi in quanto tutti sono stati rimossi semplicemente tutti gli altri sono stati nuovamente aggiunti l contrario di questi
+	\item  si può vedere come alcuni archi non sono più presenti, due esempi sono $(1,3)$ e $(5,7)$, si ricorda che non sono questi due archi che son stati rimossi in quanto tutti sono stati rimossi semplicemente tutti gli altri sono stati nuovamente aggiunti al contrario di questi
 	\item  i nodi che condividono gli stessi attributi vanno a formare un grafo completo, due esempi sono $[1,2,4,5]$ con l'attributo $11$ e $[4,6,7]$ con l'attributo $13$
-	\item  se solo un nodo dispone di un particolare attributo, nessun arco sarà creato, questo è il caso dei due attributi $10$ e $14$\\
-	questo può essere spiegato intuitivamente, in quanto si farebbe partire un arco da un nodo ma questo non avrà mai una seconda estremità e quindi non ha senso di esistere, ma anche matematicamente in quanto è questo un caso limite infatti $ \displaystyle\binom{1}{2} = error$ la linea numero $1$ del triangolo di tartaglia è $"1\ 1"$ non esiste il terzo (0°,1°, 2°) elemento
+	\item  se solo un nodo dispone di un particolare attributo, nessun arco sarà creato, questo è il caso dei due attributi $10$ e $14$.\\
+	Questo può essere spiegato intuitivamente, in quanto si farebbe partire un arco da un nodo ma questo non avrà mai una seconda estremità e quindi non ha senso di esistere, ma anche matematicamente in quanto è questo un caso limite infatti $ \displaystyle\binom{1}{2} = error$ la linea numero $1$ del triangolo di tartaglia è $"1\ 1"$ non esiste il terzo (0°, 1°, 2°) elemento
 \end{itemize}
 %
 \begin{figure}[htp]
@@ -165,9 +167,9 @@ Osserviamo per primo l'ipergrafo mostrato in figura~\ref{fig:7transform_hyper}.
 \end{figure}
 %
 Osserviamo ora la più complessa situazione del grafo bipartito mostrato in figura~\ref{fig:7transform_bipartite}. Non è facile capire cosa succede.\\
-I nodi dall'1 al 7, sulla sinistra, sono i nodi originali, mentre i nodi dal 10 al 14 (maggiori o uguali a 10, sulla destra, sono i nuovi nodi generati dagli attributi.
+I nodi dall'1 al 7, sulla sinistra, sono i nodi originali, mentre i nodi dal 10 al 14 (maggiori o uguali a 10), sulla destra, sono i nuovi nodi generati dagli attributi.
 \begin{itemize}
-	\item i nodi sulla sinistra e sulla destra sono separati da un immaginaria linea verticale, rappresentano i due insiemi di cui si parlava in precedenza ossia N1 e N2
+	\item i nodi sulla sinistra e sulla destra sono separati da un immaginaria linea verticale, e rappresentano i due insiemi di cui si parlava in precedenza ossia N1 e N2
 	\item tutti gli archi attraversano la linea immaginaria, andando da sinistra a destra e viceversa
 	\item tutti gli archi presenti nella struttura originaria di figura~\ref{fig:7transform_str} non sono più presenti in quanto son stati rimossi e mai più rimpiazzati, in quanto non esistono archi da N1 a N1
 	\item i nodi che condividono un attributo creano un grafo a stella, due esempi sono $[1,2,4,5]$ con l'attributo $11$ e $[4,6,7]$ con l'attributo $13$
