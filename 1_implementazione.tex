@@ -3,6 +3,7 @@
 %
 \chapter{Implementazione}
 In questo capitolo vengono spiegati i metodi utilizzati per cercare di migliorare le prestazioni dell'algoritmo di \cnrl.
+%
 \section{Come funziona il codice di \cnrl}
 Prima di tutto, è necessario spiegare come il codice di \cnrl funziona.\\
 In prima istanza vengono presi in input tutti i dati necessari, tra cui anche il grafo su cui si andrà a lavorare, questo vien caricato dal formato edgelist, ossia una lista d'archi identificati da nodo di partenza più nodo d'arrivo. Il grafo vien ora preprocessato per andare ad utilizzare l'algoritmo di \nv per effettuare le visite. \nv è un algoritmo che regola le visite sulla base di due parametri $p$ e $q$, questi due valori possono far variare l'esplorazione del grafo da una visita similare a quella in ampiezza fino ad una visita similare a quella in profondità, permettendo anche delle varianti intermedie.\\
@@ -16,7 +17,7 @@ Durante la creazione di queste cammini tramite le visite ci sono alcuni casi lim
 	\item \textbf{sequenze fisse finali su grafo orientato:} è possibile che tanti cammini terminino con la stessa sequenza di nodi, questo è dovuto al fatto che sul grafo vi è un percorso senza possibilità di scelta che porta ad un pozzo, quindi una volta imboccato tale percorso il cammino andrà a terminare sempre con la stessa sequenza
 \end{itemize}
 %
-Una volta che \nv ha generato i cammini è compito di un'altra sezione ricavarne le comunità, questo può essere fatto mediante due metodi differenti. Il primo, il più noto, è \wv che va a considerare gli ID dei nodi come se fossero parole di conseguenza un cammino ossia un array di nodi vien considerato come un array di parole interpretabili come una frase. I dettagli del funzionamento si possono trovare nell'articolo "How exactly does word2vec work?".\\
+Una volta che \nv ha generato i cammini è compito di un'altra sezione ricavarne le comunità, questo può essere fatto mediante due metodi differenti. Il primo, il più noto, è \wv che va a considerare gli ID dei nodi come se fossero parole di conseguenza un cammino ossia un array di nodi vien considerato come un array di parole interpretabili come una frase. I dettagli del funzionamento si possono trovare nell'articolo "How exactly does word2vec work?"\cite{meyer2016exactly}.\\
 Diversamente il codice di \cnrl utilizza, di default, un algoritmo creato appositamente per questo contesto, non ne riportiamo i funzionamenti esatti in quando non sono stati investigati in maniera approfondita e non esiste una documentazione dettagliata che li spieghi.\\
 Che il codice usi uno o l'altro dei due metodi previsti, entrambi ritornano un insieme di comunità che formano la partizione che stiamo cercando. È ora possibile calcolare la modularità\footnote{Spiegata in dettaglio nell'apposito capitolo sui metodi di valutazione} per dare una misurazione al lavoro svolto.
 %
@@ -156,7 +157,7 @@ Osserviamo per primo l'ipergrafo mostrato in figura~\ref{fig:7transform_hyper}.
 	\item  si può vedere come alcuni archi non sono più presenti, due esempi sono $(1,3)$ e $(5,7)$, si ricorda che non sono questi due archi che son stati rimossi in quanto tutti sono stati rimossi semplicemente tutti gli altri sono stati nuovamente aggiunti al contrario di questi
 	\item  i nodi che condividono gli stessi attributi vanno a formare un grafo completo, due esempi sono $[1,2,4,5]$ con l'attributo $11$ e $[4,6,7]$ con l'attributo $13$
 	\item  se solo un nodo dispone di un particolare attributo, nessun arco sarà creato, questo è il caso dei due attributi $10$ e $14$.\\
-	Questo può essere spiegato intuitivamente, in quanto si farebbe partire un arco da un nodo ma questo non avrà mai una seconda estremità e quindi non ha senso di esistere, ma anche matematicamente in quanto è questo un caso limite infatti $ \displaystyle\binom{1}{2} = error$ la linea numero $1$ del triangolo di tartaglia è $"1\ 1"$ non esiste il terzo (0°, 1°, 2°) elemento
+	Questo può essere spiegato intuitivamente, in quanto si farebbe partire un arco da un nodo ma questo non avrà mai una seconda estremità e quindi non ha senso di esistere, ma anche matematicamente in quanto è questo un caso limite infatti $ \displaystyle\binom{1}{2} = error$ la linea numero $1$ del triangolo di tartaglia è $"1\ 1"$ non esiste il terzo elemento
 \end{itemize}
 %
 \begin{figure}[htp]

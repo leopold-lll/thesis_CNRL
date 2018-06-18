@@ -1,11 +1,13 @@
 # Useless files
 *.aux
-*.log
-*.gz
-*.toc
+*.bbl
+*.blg
 *.dvi
+*.gz
+*.log
 *.out
 *.pdf
+*.toc
 
 # Except the files
-!tesi_Leonardi_Stefano.pdf
+!tesi_Stefano_Leonardi.pdf

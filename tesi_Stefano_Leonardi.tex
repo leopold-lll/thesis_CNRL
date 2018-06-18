@@ -1,6 +1,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newif\ifinclude		% if per l'include dei file
-\includetrue	
+\includetrue
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -27,7 +27,6 @@
   		\clearpage
   		\pagestyle{plain} % nessuna intestazione e pie pagina con numero al centro
   	\fi
-
   \mainmatter % inizio numerazione pagine in numeri arabi
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -69,14 +68,12 @@
       	\titlespacing*{\section}{0pt}{0.20in}{0.02in}
       	\titlespacing*{\subsection}{0pt}{0.10in}{0.02in}
       
-	%\ifinclude
-      	% sommario
-      	\input{sommario}
- 	%\fi
+    % sommario
+   	\input{0_sommario}
       
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Nota:
-%% Sommario e' un breve riassunto del lavoro svolto dove si descrive 
+%% Sommario è un breve riassunto del lavoro svolto dove si descrive 
 %% l’obiettivo, l’oggetto della tesi, le metodologie e 
 %% le tecniche usate, i dati elaborati e la spiegazione delle conclusioni 
 %% alle quali siete arrivati.
@@ -93,11 +90,11 @@
     % \input oppure \include
     %
     
-    \input{1_implementazione}		%capitolo 1
-    \input{2_metodi_di_valutazione}	%capitolo 2
-    
-    %\input{capitolo3}	%capitolo 3
-    %\input{capitolo4}	%capitolo 4
+    \input{1_implementazione}			%capitolo 1
+	\input{2_metodi_di_valutazione}	%capitolo 2
+    \input{3_esperimenti}					%capitolo 3
+    %\input{4_lavori_futuri}					%capitolo 4
+    %\input{5_conclusioni}					%capitolo 5
     \endgroup
 
 
@@ -106,9 +103,7 @@
     \addcontentsline{toc}{chapter}{Bibliografia}
     % stile con ordinamento alfabetico in funzione degli autori
     \bibliographystyle{plain}
-    \ifinclude
-    	\bibliography{biblio}
-    \fi
+    %\bibliography{biblio}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Nota:
 %%

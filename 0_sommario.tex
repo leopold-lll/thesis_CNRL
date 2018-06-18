@@ -5,15 +5,15 @@
 %% cos'è?
 %% Il sommario è un breve riassunto del lavoro svolto dove si descrive: l’obiettivo, l’oggetto della tesi, le metodologie e le tecniche usate, i dati elaborati e la spiegazione delle conclusioni alle quali siete arrivati.
 %% Il sommario dell’elaborato consiste al massimo di 3 pagine e deve contenere le seguenti informazioni: contesto e motivazioni breve riassunto del problema affrontato tecniche utilizzate e/o sviluppate risultati raggiunti, sottolineando il contributo personale del laureando/a se vi sono più persone che hanno contribuito...
-Questa tesi va a ripercorrere il lavoro svolto da Leonardi Stefano durante il tirocinio svolto all'interno dell'università, con la supervisione del dottorando Sheikh Nasrullah, per il professore Montresor Alberto.
+Questa tesi va a ripercorrere il lavoro svolto da Stefano Leonardi durante il tirocinio svolto all'interno dell'università, con la supervisione del dottorando Nasrullah Sheikh, per il professore Alberto Montresor.
 %
 \section{Introduzione}
-L'intero tirocinio è basato sull'articolo intitolato "Community-enhanced Network Representation Learning for Network Analysis" che può essere abbreviato con la sigla \cnrl. Questo articolo propone un innovativo metodo per individuare delle comunità all'interno dei grafi. Lo scopo di questo tirocinio è stato quindi quello di replicare i risultati ivi proposti, una volta compreso il codice alla base, e, dove possibile, cercare di migliorare le prestazioni dell'algoritmo proposto, anche sfruttando elementi non originariamente considerati.\newline
+L'intero tirocinio è basato sull'articolo intitolato "Community-enhanced Network Representation Learning for Network Analysis"\cite{CNRL_paper} che può essere abbreviato con la sigla \cnrl. Questo articolo propone un innovativo metodo per individuare delle comunità all'interno dei grafi. Lo scopo di questo tirocinio è stato quindi quello di replicare i risultati ivi proposti, una volta compreso il codice alla base, e, dove possibile, cercare di migliorare le prestazioni dell'algoritmo proposto, anche sfruttando elementi non originariamente considerati.\newline
 L'algoritmo proposto nell'articolo sfrutta diverse tecniche, alcune delle quali dettagliatamente spiegate negli articoli:
 \begin{itemize}
-	\item "DeepWalk: Online Learning of Social Representations"
-	\item "node2vec: Scalable Feature Learning for Networks"
-	\item "How exactly does word2vec work?"
+	\item "DeepWalk: Online Learning of Social Representations"\cite{DW_paper}
+	\item "node2vec: Scalable Feature Learning for Networks"\cite{N2V_paper}
+	\item "How exactly does word2vec work?"\cite{W2V_paper}
 \end{itemize} 
 Di seguito la spiegazione del perché l'individuazione di comunità è una tecnica così importante.
 %
@@ -37,13 +37,13 @@ Prima di parlare di ciò è però necessario formalizzare il concetto di partizi
 	\item Un nodo del grafo può appartenere a più di una comunità, potenzialmente anche a tutte quelle presenti, questo significa che c'è una sovrapposizione di comunità
 \end{itemize}
 Come accennato la metrica di valutazione di una partizione è la modularità (il cui simbolo è $Q$). Questo nome può essere associato a diverse metriche infatti a seconda di cosa cerchiamo avremo interesse a valorizzare certi aspetti e penalizzarne altri, per tale motivo la modularità è solo il nome usato per indicare la valutazione di una partizione.\\
-Durante il tirocinio sono stati adottati tre metodi differenti: \mmax, \mover e \mmod. I primi due nomi non sono ufficiali in quanto sono stati scelti al solo scopo di riconoscerle, mentre l'ultimo \mmod è quello utilizzato nell'articolo su \cnrl .\\
+Durante il tirocinio sono stati adottati tre metodi differenti: \mmax, \mover e \mmod. I primi due nomi non sono ufficiali in quanto sono stati scelti al solo scopo di riconoscerle, mentre l'ultimo \mmod è quello utilizzato nell'articolo su \cnrl \cite{tu2016community}.\\
 I dettagli sul funzionamento e del perché le abbiamo scelte sono all'interno dell'apposito capitolo sulle metriche di valutazione.
 %
 \section{I cambiamenti apportati}
 Per calcolare la partizione il codice di \cnrl utilizza un sistema di visite random e grazie a questo ricostruisce le possibili somiglianze fra i nodi. Non volendo toccare questa sezione le modifiche da noi riportate si inseriscono all'interno della creazione grazie a tali visite, dei cammini.\\
 Una cammino è definito come una sequenza di nodi, preso un elemento qualsiasi fra questi deve esser possibile arrivare all'elemento successivo attraversando un solo arco, ossia i due elementi devono essere direttamente connessi, almeno nel senso di percorrenza.\\
-L'algoritmo genera $x$ cammini, ognuno di lunghezza massima $l$, sul grafo, dove $x=n*w$:
+L'algoritmo genera $x$ cammini, ognuno di lunghezza massima $l$, sul grafo, dove $x=n \cdot w$:
 \begin{itemize}
 	\item $n$: è il numero di nodi del grafo
 	\item $w$: è il numero di cammini che si fanno partire da ogni singolo nodo

@@ -1,6 +1,5 @@
 %\input{import}
 %
-%
 \chapter{Metodi di valutazione}
 Questo capitolo è dedicato alla spiegazione di come si va a valutare una partizione creata dagli algoritmi d'individuazione delle comunità, com'è stato introdotto nel sommario, il metodo scelto nel corso del tirocinio è stato la modularità il cui simbolo è $Q$.\\
 La modularità altro non è che un valore solitamente compreso all'interno dell'intervallo $[-1, 1]$, anche se questo non è sempre vero in quanto dipende strettamente da che metodo d'implementazione si va ad utilizzare. Le prime persone che hanno lavorato sulla modularità sono state Newman e Girvan, in quanto necessitavano di un metodo formale per decidere fra due partizioni di nodi, quale fosse la migliore.\\
@@ -33,7 +32,7 @@ Quando si parla di grafo orientato l'unica parte da modificare è $\displaystyle
 %
 %
 \section{Modularità con sovrapposizione ( \mover )}
-L'algoritmo qui descritto è preso dall'articolo intitolato "Modularity measure of networks with overlapping communities".\\
+L'algoritmo qui descritto è preso dall'articolo intitolato "Modularity measure of networks with overlapping communities"\cite{M-over_paper}.\\
 Come si può intuire dal nome questo metodo permette a due comunità di condividere uno o più nodi e quindi d'aver una sovrapposizione. In linea con diversi altri metodi la modularità generata con questo algoritmo cade nell'intervallo $[-1, 1]$.\\
 Se nel metodo precedente si calcolava un valore di modularità per ogni comunità e poi li si sommava in quanto non era prevista la sovrapposizione, qui la gestione è analoga si calcola un valore per ogni comunità e poi invece di sommarli se ne ricava una media in quanto la sovrapposizione è concessa e quindi uno stesso nodo può portare il suo contributo a diversi elementi della sommatoria.\\
 Di seguito la formula completa:
@@ -68,6 +67,7 @@ Dove gli elementi dell'equazione sono:
 	\item $s_i$ è il numero di comunità a cui il nodo $i$ appartiene
 	\item $a_{ij}$ vale 1 se l'arco dal nodo $i$ al nodo $j$ esiste, altrimenti prende il valore di 0
 \end{itemize}
+%
 È ora il momento di spiegare i dettagli presenti all'interno di quest'equazione (eq:~\ref{eq:m_over}).\\
 Come per il metodo precedente si va a calcolare la densità della comunità (attraverso la formula~\ref{eq:edge_density}), tuttavia ora si confronta il numero di archi interni presenti rispetto al potenziale numero massimo, ossia il numero di archi presenti in un grafo completo con lo stesso numero di nodi.
 \begin{equation}
@@ -96,18 +96,30 @@ Quando si parla di grafo orientato l'unica differenza di cui si deve tener conto
 %
 %
 \section{Modularità modificata}
-Questo algoritmo è preso dall'articolo intitolato "Incorporating Implicit Link Preference Into Overlapping Community Detection".\\
+Questo algoritmo\cite{M-mod_code} è preso dall'articolo intitolato "Incorporating Implicit Link Preference Into Overlapping Community Detection"\cite{M-mod_paper}.\\
 È giunto il momento di spiegare la \mmod, questo è l'algoritmo che è stato scelto dall'articolo di \cnrl ed è per questa ragione che è stato adottato anche da noi. È estremamente importante perché permette di replicare i risultati illustrati nel documento cui facciamo riferimento, si ha quindi un punto fisso da cui partire e con cui all'occorrenza confrontarsi.\\
 Sfortunatamente questo è il più lento dei tre metodi che vengono illustrati in questo capitolo, per il semplice motivo che è il più complesso sia logicamente che computazionalmente.\\
-Di seguito la formula completa:
+Di seguito vi sono due versioni della stessa formula (senza e con sistema):
 \begin{equation}
 	Q = \frac{1}{M} \cdot \sum_{u,v \in V}
-		\left(
+		\left[
 			\left( A \left[ u,v \right] - \frac{ d_{in}\left(u\right) \cdot d_{out}\left(v\right) }{M} \right)
 			\cdot
 			|C_u \cap C_v| 
-		\right)
+		\right]
 	\label{eq:m_mod}
+\end{equation}
+%
+\begin{equation}
+	Q = \frac{1}{M} \cdot \sum_{u,v \in V}
+		\begin{cases}
+			\begin{array}{ll}
+				0 & |C_u \cap C_v| = 0 \\
+				\left[ \left( A \left[ u,v \right] - \frac{ d_{in}\left(u\right) \cdot d_{out}\left(v\right) }{M} \right) \cdot |C_u \cap C_v| \right]
+				& altrimenti
+			\end{array}
+		\end{cases}
+	\label{eq:m_mod_system}
 \end{equation}
 Dove gli elementi dell'equazione sono:
 \begin{itemize}
@@ -120,8 +132,9 @@ Dove gli elementi dell'equazione sono:
 	\item $C_u$ è l'insieme delle comunità a cui il nodo $u$ appartiene
 	\item $|C_u \cap C_v|$ è il numero totale di comunità condivise fra i nodi $u$ e $v$
 \end{itemize}
+%
 Come per i metodi precedenti segue una spiegazione delle varie sezioni di tale formula (eq:~\ref{eq:m_mod}).\\
-Cominciando dalla fine si può notare l'elemento $\displaystyle |C_u \cap C_v|$, questo fattore moltiplicativo ci permette d'ignorare gli archi che legano nodi che non condividono nessuna comunità. Per capire il suo scopo si può pensare ad una partizione che non presenta sovrapposizioni, in questo caso tale componente permetterà di ignorare tutti gli archi che non sono interni ad una singola comunità ma passano da una all'altra, ignorando ora l'assunzione base di Newman e Girvan si può dire che gli unici archi considerati sono quelli che rimangono interni ad almeno una comunità anche se è permesso loro essere di collegamento fra altre.\\
+Cominciando dalla fine si può notare l'elemento $\displaystyle |C_u \cap C_v|$, questo fattore moltiplicativo ci permette d'ignorare gli archi che legano nodi che non condividono nessuna comunità. Per capire il suo scopo si può pensare ad una partizione che non presenta sovrapposizioni, in questo caso tale componente permetterà di ignorare tutti gli archi che non sono interni ad una singola comunità ma passano da una all'altra, ignorando ora l'assunzione base di Newman e Girvan si può dire che gli unici archi considerati sono quelli che rimangono interni ad almeno una comunità anche se è permesso loro essere di collegamento fra altre. Il funzionamento di questo componente è illustrato bene nella seconda versione della formula (eq:~\ref{eq:m_mod_system}), grazie al sistema si nota che se la condizione è verificata si può ignorare tutta la prima parte.\\
 Oltre a filtrare gli archi utilizzabili questo componente assegna un importanza maggiore a quegli archi che connettono nodi che condividono molte comunità.\\
 Osserviamo ora qual'è la base che si va ad ignorare o moltiplicare. Si può vedere che si sta parlando di un valore positivo, se l'arco esiste (questo grazie ad $\displaystyle A \left[ u,v \right]$). 
 \begin{equation}
@@ -129,8 +142,6 @@ Osserviamo ora qual'è la base che si va ad ignorare o moltiplicare. Si può ved
 	\label{eq:d_in-out}
 \end{equation}
 Mentre si sottrae al peso dell'arco il fattore definito nell'espressione~\ref{eq:d_in-out}, questo rappresenta la rilevanza di un arco, indipendentemente dalla sua esistenza. Se questo collega due nodi con gradi elevati risulta essere uno fra molti e quindi ha un'importanza limitata, se diversamente collega nodi con gradi bassi allora assume molta più importanza perché è un caso isolato e quindi prezioso.
-%
-%
 %
 %
 %\end{document}
