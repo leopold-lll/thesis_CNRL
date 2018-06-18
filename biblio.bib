@@ -1,51 +1,193 @@
-% book
-% Required fields: author or editor, title, publisher, year. 
-% Optional fields: volume or number, series, address, edition, month, note.
-@book{coulouris,
-  author = {Coulouris  G.  F.,  Dollimore J. e  Kindberg T},
-  title = {Distributed Systems: concepts and Design},
-  publisher = {Addison-Wesley},
-  year = {1994},
-  edition = "second edition"
+##############################     Datasets     ##################################################################################
 
+Cora e Citeseer
+@inproceedings{Co-Ci_1,
+  title={Link-based classification},
+  author={Lu, Qing and Getoor, Lise},
+  booktitle={Proceedings of the 20th International Conference on Machine Learning (ICML-03)},
+  pages={496--503},
+  year={2003}
+}
+@article{Co-Ci_2,
+  title={Collective classification in network data},
+  author={Sen, Prithviraj and Namata, Galileo and Bilgic, Mustafa and Getoor, Lise and Galligher, Brian and Eliassi-Rad, Tina},
+  journal={AI magazine},
+  volume={29},
+  number={3},
+  pages={93},
+  year={2008}
 }
 
-% article
-% Required fields: author, title, journal, year. 
-% Optional fields: volume, number, pages, month, note.
-@article{donoho,
-  author = {Donoho D. L.},
-  title = {Compressed Sensing},
-  journal = {IEEE Trans. Inf. Theory},
-  volume = {52},
-  number = {4},
-  pages = {1289-1306},
-  year = {2006}
+download:     http://www-personal.umich.edu/~mejn/netdata/
+cora:     https://linqs-data.soe.ucsc.edu/public/lbc/cora.tgz
+citeseer: https://linqs-data.soe.ucsc.edu/public/lbc/citeseer.tgz
+-
+karate:   https://www.cise.ufl.edu/research/sparse/matrices/Newman/karate.html
+Gnutella  https://snap.stanford.edu/data/p2p-Gnutella08.html
+BlogCatalog   http://leitang.net/social_dimension.html
+dolphins  http://networkrepository.com/soc-dolphins.php
+
+Karate
+@misc{Karate,
+  author = {Wayne Zachary},
+  title = {Karate club},
+  year = {1977},
+  howpublished = {\url{https://www.cise.ufl.edu/research/sparse/matrices/Newman/karate.html}}
 }
 
-% conference
-% same as inproceedings
-% Required fields: author, title, booktitle, year. 
-% Optional fields: editor, volume or number, series, pages, address, month, organization, publisher, note
-@conference{dalal,
-  author = {Dalal N., Triggs B.},
-  title = {Histograms of Oriented Gradients for Human Detection},
-  booktitle = {Computer Vision and Pattern Recognition (CVPR)},
-  address = {San Diego, USA},
-  year = {2005},
-  month = {20-26 June},
-  pages = {886-893}
+Gnutella
+@article{Gnutella_1,
+  title={Graph evolution: Densification and shrinking diameters},
+  author={Leskovec, Jure and Kleinberg, Jon and Faloutsos, Christos},
+  journal={ACM Transactions on Knowledge Discovery from Data (TKDD)},
+  volume={1},
+  number={1},
+  pages={2},
+  year={2007},
+  publisher={ACM}
+}
+@article{Gnutella_2,
+  title={Mapping the gnutella network: Properties of large-scale peer-to-peer systems and implications for system design},
+  author={Ripeanu, Matei and Foster, Ian and Iamnitchi, Adriana},
+  journal={arXiv preprint cs/0209028},
+  year={2002}
 }
 
-% website
-% as misc
-% Required fields: none. 
-% Optional fields: author, title, howpublished, month, year, note.
-@misc{ictbusiness,
-  title = {ICT business},
-  howpublished = {http://www.ictbusiness.it/},
-  note = {ultimo accesso 15/06/2015}
+BlogCatalog 
+@misc{BlogCatalog,
+  author = {Lei Tang, Huan Liu},
+  title = {BlogCatalog data},
+  howpublished = {\url{http://leitang.net/social_dimension.html}}
 }
 
+dolphins
+@misc{Dolphins_1,
+  author = {D. Lusseau, K. Schneider, O. J. Boisseau, P. Haase, E. Slooten, S. M. Dawson},
+  title = {social network of dolphins},
+  year = {2003},
+  howpublished = {\url{http://www.cise.ufl.edu/research/sparse/matrices/Newman/dolphins}}
+}
+@misc{Dolphins_2,
+   title={Network Repository},
+   author={Ryan Rossi and Nesreen Ahmed},
+   url={http://networkrepository.com},
+   institution={Purdue University},
+   year={2013}
+}
 
+##############################     Papers     ####################################################################################
 
+Deepwalk
+@inproceedings{DW_paper,
+  title={Deepwalk: Online learning of social representations},
+  author={Perozzi, Bryan and Al-Rfou, Rami and Skiena, Steven},
+  booktitle={Proceedings of the 20th ACM SIGKDD international conference on Knowledge discovery and data mining},
+  pages={701--710},
+  year={2014},
+  organization={ACM}
+}
+
+Node2vec
+@inproceedings{N2V_paper,
+  title={node2vec: Scalable feature learning for networks},
+  author={Grover, Aditya and Leskovec, Jure},
+  booktitle={Proceedings of the 22nd ACM SIGKDD international conference on Knowledge discovery and data mining},
+  pages={855--864},
+  year={2016},
+  organization={ACM}
+}
+
+Word2vec
+@article{W2V_paper,
+  title={How exactly does word2vec work?},
+  author={Meyer, David},
+  year={2016}
+}
+
+CNRL
+@article{CNRL_paper,
+  title={Community-enhanced network representation learning for network analysis},
+  author={Tu, Cunchao and Wang, Hao and Zeng, Xiangkai and Liu, Zhiyuan and Sun, Maosong},
+  journal={arXiv preprint arXiv:1611.06645},
+  year={2016}
+}
+
+SNE
+@article{SNE_paper,
+  title={Attributed social network embedding},
+  author={Liao, Lizi and He, Xiangnan and Zhang, Hanwang and Chua, Tat-Seng},
+  journal={arXiv preprint arXiv:1705.04969},
+  year={2017}
+}
+
+TADW
+@inproceedings{TADW_paper,
+  title={Network Representation Learning with Rich Text Information.},
+  author={Yang, Cheng and Liu, Zhiyuan and Zhao, Deli and Sun, Maosong and Chang, Edward Y},
+  booktitle={IJCAI},
+  pages={2111--2117},
+  year={2015}
+}
+
+Modularità con sovrapposizione
+@article{M-over_paper,
+  title={Modularity measure of networks with overlapping communities},
+  author={L{\'a}z{\'a}r, Anna and Abel, D{\'a}niel and Vicsek, Tam{\'a}s},
+  journal={EPL (Europhysics Letters)},
+  volume={90},
+  number={1},
+  pages={18001},
+  year={2010},
+  publisher={IOP Publishing}
+}
+
+Modularità modificata
+@inproceedings{MMod_paper,
+  title={Incorporating Implicit Link Preference Into Overlapping Community Detection.},
+  author={Zhang, Hongyi and King, Irwin and Lyu, Michael R},
+  booktitle={AAAI},
+  pages={396--402},
+  year={2015}
+}
+
+##############################     Codes     #####################################################################################
+
+Code citation example
+campi possibili: author, title, howpublished, month, year, note, key
+@misc{example_Code,
+  author = {autori},
+  title = {titolo},
+  year = {anno},
+  publisher = {GitHub},
+  howpublished = {\url{link}}
+}
+
+DeepWalk Code -> https://github.com/phanein/deepwalk
+@misc{DW_Code,
+  author = "{Bryan Perozzi, Rami Al-Rfou}",
+  title = {{deepwalk}},
+  publisher = {GitHub},
+  howpublished = {\url{https://github.com/phanein/deepwalk}}
+}
+
+Modified Modularity Code -> https://github.com/zhiyzuo/python-modularity-maximization
+@misc{M-mod_Code,
+  author = "{Zhiya zhiyzuo}",
+  title = {{python-modularity-maximization}},
+  publisher = {GitHub},
+  howpublished = {\url{https://github.com/zhiyzuo/python-modularity-maximization}}
+}
+
+Snap-dev-64 Code -> https://github.com/snap-stanford/snap-dev-64
+@misc{bigClam_Code,
+  author = "{Stanford Network Analysis Platform}",
+  title = {{snap-dev-64}},
+  publisher = {GitHub},
+  howpublished = {\url{https://github.com/snap-stanford/snap-dev-64}}
+}
+
+CNRL Code
+@misc{CNRL_Code,
+  author = "{Cunchao Tu, Hao Wang, Xiangkai Zeng, Zhiyuan Liu, Maosong Sun}",
+  title = {{simplified_CNRL}}
+}
