@@ -16,7 +16,7 @@ Si possono dividere in due gruppi, non solo perché tali gruppi al loro interno 
 		BlogCatalog & 10312 & 333983 & no & 39 & 0\\
 		Gnutella & 6301 & 20777 & no & 0 & 0\\
 		Dolphins & 62 & 159 & no & 0 & 0\\
-		Karate & 34 & 78 & no & 0 & 0\\
+		Karate & 35 & 78 & no & 0 & 0\\
 		\hline
 		\end{tabular}
 		\captionof{table}{Per ogni grafo sono indicate le sue caratteristiche principali}
@@ -38,12 +38,102 @@ Questi quattro grafi vengono presentati in ordine decrescente nel numero dei nod
 	\item \textbf{Karate}\cite{Karate} raccoglie lo storico degli incontri in un club di karate universitario nel 1977. Ogni nodo è un membro del club, ogni arco indica uno scontro terminato in pareggio
 \end{itemize}
 %
+\section{Modello di un grafo}
+In questa sezione viene spiegato cosa si intende per modello di un grafo, e perché è tanto importante per gli algoritmi che vi sono costruiti sopra.\\
+Come descritto nel capitolo sull'implementazione è necessario visitare il grafo per generare su di questo dei cammini. Questi vengono presi in input dall'algoritmo di \wv o \cnrl entrambi mediante una rete neurale vanno a descrivere ogni nodo che s'individua tramite un vettore di valori reali.\\
+\begin{figure}[htp]
+	\centering
+	\includegraphics{immagini/punti_modello}
+	\caption{Son visualizzati i nodi d'un grafo che vengono rappresentati da un modello che dispone di due dimensioni}
+	\label{fig:grafico_modello}
+\end{figure}
+\\
+\begin{center}
+	\begin{tabular}{|l|cc|}
+		\hline
+		ID&X1&X2\\
+		\hline
+		1 & 1 & 2\\
+		2 & 2 & 2\\
+		3 & 7 & 5\\
+		4 & 7 & 3\\
+		5 & 5 & 4\\
+		6 & 3 & 8\\
+		\hline
+	\end{tabular}
+	\captionof{table}{Tabella rappresentativa del modello dei nodi in Figura~\ref{fig:grafico_modello}}
+	\label{tab:coordinate_modello}
+\end{center}
+Di norma ogni vettore è lungo $64$, e ogni numero reale rappresenta una posizione lungo un asse in un piano a $64$ dimensioni. Si può però pensare anche ad un caso più semplice, ad esempio in Figura~\ref{fig:grafico_modello} si possono vedere sei punti che si può immaginare appartenessero ad un grafo e fossero legati fra loro in qualche modo. Una volta che son stati generati i cammini su tale grafo, e questi forniti ad uno dei due algoritmi, viene ritornata la Tabella~\ref{tab:coordinate_modello} dove ad ogni ID di un nodo vengono associati due valori (qui interi per semplicità), sono usati due valori perché così son facili da mostrare con $64$ sarebbe pressoché impossibile. Si possono dunque immaginare come coordinate su un piano cartesiano, ed è così che si arriva alla Figura~\ref{fig:grafico_modello}, qui visivamente si può dire che esistono 3 gruppi distinti che sono evidenziati dai colori, abbiamo quindi $(1, 2) - (3, 4, 5) - (6)$.\\
+Escludendo l'influenza dei colori, il nostro occhio ci suggerisce l'esistenza di questi 3 gruppi in quanto i nodi che vi fanno parte sono vicini fra loro, questo è esattamente ciò che ci si aspetta dalla definizione di somiglianza, tanto più due nodi sono vicini tanto più questi sono simili. Si ricorda che esistono comunque molte definizioni formali di somiglianza e la distanza euclidea è solo una di queste.\\
+\\
+Di conseguenza se due nodi molto simili, e quindi vicini, vengono collegati da un arco allora tale arco assume un valore molto elevato, vicino a $1$, diversamente assumerà un valore molto basso, vicino a $0$, se i nodi che lega sono diversi ossia molto lontani, questo valore lo chiameremo da ora in avanti coerenza\footnote{è il nome migliore che m'è venuto in mente non c'è un vero e proprio termine tecnico per questa definizione} di un arco.
+%
+\section{Link Prediction}
+Ecco il primo di tre algoritmi, che verranno spiegati in questo capitolo, tutti si basano sul modello del grafo appena spiegato.\\
+L'algoritmo di \LPred ha lo scopo d'assegnare un valore al grafo in input, questo valore è una percentuale e per tale motivo ricade nell'intervallo $[0, 1]$. Questa percentuale sta a rappresentare la coerenza degli archi del grafo, nel dettaglio un arco è molto coerente se lega due nodi simili, un grafo è tanto più coerente tanti più archi coerenti ha.
+%
+\subsection{Dinamiche di funzionamento}
+Per primo viene caricato il grafo, sempre come lista d'archi in quanto sono questi il fulcro dell'algoritmo. Si va a spezzare gli archi in due gruppi dopo averli mescolati per non creare delle divisioni sempre uguali, tale rottura viene fatta sulla base del parametro $F$ che indica quale sarà la percentuale degli archi adibiti all'addestramento del modello e quali invece saranno scartati.\\
+Il numero degli archi scartati viene dato dalla Formula~\ref{eq:n_archi_fake}
+\begin{equation}
+	m \cdot \frac{1}{F}
+	\label{eq:n_archi_fake}
+\end{equation} 
+\begin{equation}
+	m \cdot \left( 1- \frac{1}{F} \right)
+	\label{eq:n_archi_true}
+\end{equation}
+mentre quelli utilizzati per l'addestramento corrispondono alla Formula~\ref{eq:n_archi_true}, dove $m$ è il numero di archi del grafo.\\
+Il nuovo grafo (\textbf{G1}) creatosi, inseguito alla rimozione, viene utilizzato per generare il modello.\\
+Gli archi nello stesso numero (Formula~\ref{eq:n_archi_fake}) in cui son stati rimossi vengono ora rimpiazzati, si generano coppie di nodi casuali assicurandosi che non corrispondano ad un arco già esistente. I due insiemi di archi il gruppo per l'addestramento del modello e quelli generati casualmente assieme ai nodi originari formano idealmente l'ultimo grafo (\textbf{G2}).\\
+Disponendo ora di un modello, per ogni arco si va a veder quanto sono simili i nodi che lega e se ne calcola così la coerenza, grazie all'apposita funzione di similarità. Gli archi possono essere valutati sulla base di questo nuovo parametro, per tanto li si riordina.\\
+Siamo ora interessati a capire quanto erano buoni gli archi originari del grafo rispetto a quelli generati casualmente. Si selezionano dunque i primi ($\displaystyle \frac{m}{10}$, $\displaystyle \frac{2m}{10}$, $\displaystyle \frac{3m}{10}$, ... ) archi, e su questa selezione si guarda in che percentuale sono presenti gli archi originali rispetto al totale considerato.\\
+L'andamento di questa percentuale è tendenzialmente decrescente in quanto visto che il modello è stato addestrato sugli archi originali questi dovrebbero assumere valori alti. Non è tuttavia certo si potrebbe partire anche con una percentuale pari a $0$ se ho solo archi fittizi. Comunque sia la percentuale all'inizio, si andrà via via avvicinandosi alla soglia limite di $\displaystyle \left( 1- \frac{1}{F} \right)$, questo accade quando si considerano tutti gli archi di \textbf{G2}. Inoltre si ha il parametro $F$ che influisce infatti più questo si avvicina a $1$ più cresce il numero di archi da scartare in partenza e diminuiscono così i dati su cui fare affidamento per creare un buon modello che rappresenti appieno il grafo di partenza, e quindi si va a diminuire la percentuale iniziale.\\
+È necessario ricordare che la stima qui calcolata dipende fortemente dalla selezione iniziale, ed è per questo motivo che tutto questo processo non viene svolto solo una volta bensì $F$ volte, così da andare a stabilizzare il valore calcolato tramite la media di tutte le iterazioni. Inoltre questo permette di utilizzare via via tutti gli archi per addestrare il modello di \textbf{G1}.\\
+\\
+L'intero algoritmo si basa su assegnare un valore di coerenza agli archi per individuare i più rilevanti, ed è quindi questa la parte più importante e critica, come detto esiste una funzione di similarità che ritorna un valore per ogni arco tanto più questo è alto tanto più l'arco è importante.\\
+La funzione di similarità può essere definita in tante maniere differenti in quanto si possono pesare diversi aspetti. Un esempio classico è basato sulla distanza euclidea più due nodi sono distanti nella rappresentazione del modello meno sono simili. Verranno mostrate le applicazioni di altre funzioni di similarità basate su diversi principi che non verranno qui riportati.
+%
+\subsection{Esempio}
+\begin{center}
+	\begin{tabular}{|c|c|c|c|}
+		\hline
+		arco & vero? & dist & \%\\
+		\hline
+		1-2 & sì & $1$ & \multirow{2}{*}{$100\%$}\\
+		3-4 & sì & $2$ & \\
+		\hline
+		4-5 & sì & $\sqrt{5}$ & \multirow{2}{*}{$75\%$}\\
+		3-5 & no & $\sqrt{5}$ & \\
+		\hline
+		2-5 & no & $\sqrt{13}$ & \multirow{2}{*}{$66\%$}\\
+		5-6 & sì & $\sqrt{20}$ & \\
+		\hline
+		2-6 & no & $\sqrt{37}$ & \multirow{2}{*}{$50\%$}\\
+		1-3 & no & $\sqrt{45}$ & \\
+		\hline
+	\end{tabular}
+	\captionof{table}{Tabella riassuntiva del procedimento di \LPred}
+	\label{tab:dati_esempio_prediction}
+\end{center}
+Consideriamo il modello descritto tramite la Figura~\ref{fig:grafico_modello} e la Tabella~\ref{tab:coordinate_modello}. Inoltre sappiamo che $F=2$, gli archi originali sono $(1, 2), (3, 4), (4, 5), (5, 6)$ mentre quelli generati casualmente sono $(3, 5), (2, 5), (2, 6), (1, 3)$, sono nello stesso numero grazie ad $F$ che ha spezzato a metà.\\
+Nelle prime due colonne della Tabella~\ref{tab:dati_esempio_prediction} sono riassunti questi due dati. Le colonne successive rappresentano invece i passaggi successivi dell'algoritmo.\\
+Nella terza colonna si può notare che ad ogni arco è stata associata un valore che rappresenta la distanza euclidea misurata sul piano cartesiano generato dal modello fra i due estremi dell'arco. Qui la funzione di similarità premia i valori più bassi a discapito degli altri. Inoltre la tabella è stata ordinata in modo che questa colonna risulti con valori crescenti si va quindi dall'arco più importante al meno rilevante.\\
+Nell'ultima colonna si riassume tutto in una percentuale, questa altro non conta che il numero di archi autentici rispetto al totale considerato fino a quel momento. Si possono osservare alcuni peculiarità:
+\begin{itemize}
+	\item nella prima ristretta selezione con due elementi si raggiunge il $100\%$, spesso accade in quanto esistono archi che rispecchiano perfettamente il modello
+	\item nell'ultima selezione vado ad aggiungere solo archi non reali, è molto probabile che alcuni elementi generati casualmente non c'entrino nulla con il modello
+	\item come di norma accade l'andamento della percentuale è decrescente man mano che si aumenta la selezione di archi
+	\item come spiegato se si considerano tutti gli archi (nel nostro caso 8) la percentuale è esattamente pari a $\displaystyle \left( 1- \frac{1}{F} \right)$  nel caso attuale $\displaystyle \left( 1- \frac{1}{2} \right) = 0.5 = 50\%$
+\end{itemize}
+L'algoritmo prevederebbe una seconda iterazione di tutto questo procedimento utilizzando gli archi in principio scartati come nuova base per il modello per poi calcolare la media delle percentuali.\\ Omettiamo questa fase perché uguale a quella appena illustrata.
+%
+\subsection{Risultati}
+%
+%
 %\section{Valutazione dell'individuazione di comunità}
 %
 %\section{Classificazione di nodi}
-%
-
-
-
 %
 \end{document}
