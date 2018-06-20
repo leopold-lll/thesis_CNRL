@@ -74,8 +74,8 @@ Ecco il primo di tre algoritmi, che verranno spiegati in questo capitolo, tutti 
 L'algoritmo di \LPred ha lo scopo d'assegnare un valore al grafo in input, questo valore è una percentuale e per tale motivo ricade nell'intervallo $[0, 1]$. Questa percentuale sta a rappresentare la coerenza degli archi del grafo, nel dettaglio un arco è molto coerente se lega due nodi simili, un grafo è tanto più coerente tanti più archi coerenti ha.
 %
 \subsection{Dinamiche di funzionamento}
-Per primo viene caricato il grafo, sempre come lista d'archi in quanto sono questi il fulcro dell'algoritmo. Si va a spezzare gli archi in due gruppi dopo averli mescolati per non creare delle divisioni sempre uguali, tale rottura viene fatta sulla base del parametro $F$ che indica quale sarà la percentuale degli archi adibiti all'addestramento del modello e quali invece saranno scartati.\\
-Il numero degli archi scartati viene dato dalla Formula~\ref{eq:n_archi_fake}
+Per primo viene caricato il grafo, sempre come lista d'archi in quanto sono questi il fulcro dell'algoritmo. Si va a spezzare gli archi in due gruppi dopo averli mescolati per non creare delle divisioni sempre uguali, tale rottura viene fatta sulla base del parametro $F$ che indica quale sarà la percentuale degli archi adibiti all'addestramento del modello e quali invece saranno adibiti alla fase di test.\\
+Il numero degli archi usati per il test viene dato dalla Formula~\ref{eq:n_archi_fake}
 \begin{equation}
 	m \cdot \frac{1}{F}
 	\label{eq:n_archi_fake}
@@ -85,55 +85,109 @@ Il numero degli archi scartati viene dato dalla Formula~\ref{eq:n_archi_fake}
 	\label{eq:n_archi_true}
 \end{equation}
 mentre quelli utilizzati per l'addestramento corrispondono alla Formula~\ref{eq:n_archi_true}, dove $m$ è il numero di archi del grafo.\\
-Il nuovo grafo (\textbf{G1}) creatosi, inseguito alla rimozione, viene utilizzato per generare il modello.\\
-Gli archi nello stesso numero (Formula~\ref{eq:n_archi_fake}) in cui son stati rimossi vengono ora rimpiazzati, si generano coppie di nodi casuali assicurandosi che non corrispondano ad un arco già esistente. I due insiemi di archi il gruppo per l'addestramento del modello e quelli generati casualmente assieme ai nodi originari formano idealmente l'ultimo grafo (\textbf{G2}).\\
-Disponendo ora di un modello, per ogni arco si va a veder quanto sono simili i nodi che lega e se ne calcola così la coerenza, grazie all'apposita funzione di similarità. Gli archi possono essere valutati sulla base di questo nuovo parametro, per tanto li si riordina.\\
-Siamo ora interessati a capire quanto erano buoni gli archi originari del grafo rispetto a quelli generati casualmente. Si selezionano dunque i primi ($\displaystyle \frac{m}{10}$, $\displaystyle \frac{2m}{10}$, $\displaystyle \frac{3m}{10}$, ... ) archi, e su questa selezione si guarda in che percentuale sono presenti gli archi originali rispetto al totale considerato.\\
-L'andamento di questa percentuale è tendenzialmente decrescente in quanto visto che il modello è stato addestrato sugli archi originali questi dovrebbero assumere valori alti. Non è tuttavia certo si potrebbe partire anche con una percentuale pari a $0$ se ho solo archi fittizi. Comunque sia la percentuale all'inizio, si andrà via via avvicinandosi alla soglia limite di $\displaystyle \left( 1- \frac{1}{F} \right)$, questo accade quando si considerano tutti gli archi di \textbf{G2}. Inoltre si ha il parametro $F$ che influisce infatti più questo si avvicina a $1$ più cresce il numero di archi da scartare in partenza e diminuiscono così i dati su cui fare affidamento per creare un buon modello che rappresenti appieno il grafo di partenza, e quindi si va a diminuire la percentuale iniziale.\\
-È necessario ricordare che la stima qui calcolata dipende fortemente dalla selezione iniziale, ed è per questo motivo che tutto questo processo non viene svolto solo una volta bensì $F$ volte, così da andare a stabilizzare il valore calcolato tramite la media di tutte le iterazioni. Inoltre questo permette di utilizzare via via tutti gli archi per addestrare il modello di \textbf{G1}.\\
+Il nuovo grafo (\textbf{G1}) creatosi, inseguito alla rimozione degli archi per il test, viene utilizzato per generare il modello.\\
+Per ogni arco appartenente all'insieme di test (\textbf{Test=T}) se ne genera un altro (\textbf{Check=C}) tramite una coppia di nodi casuali\footnote{davvero è casualmente?? perché dovrebbero essere più simili al modello allora???} assicurandosi che non corrispondano ad un arco già esistente. Si hanno quindi tre insiemi, il primo adibito all'addestramento stabilisce il modello necessario a discernere quale dei due restanti è la migliore selezione.
+Per ogni arco, di T e C, si va a veder quanto sono simili i nodi che lega e se ne calcola così la coerenza, grazie all'apposita funzione di similarità, ora disponibile. Gli archi possono essere valutati sulla base di questo nuovo parametro.\\
+Siamo interessati a capire quanto erano buoni gli archi originari del grafo, T, rispetto a quelli generati casualmente, C. 
+\begin{equation}
+	\frac{\left( n_1 + \frac{n_2}{2} \right)}{n}
+	\label{eq:AUC_formula}
+\end{equation}
+Si usa perciò la metrica detta AUC\cite{AUC_metric}, che si basa sulla Formula~\ref{eq:AUC_formula}, dove gli elementi sono:
+\begin{itemize}
+	\item $n$ è il numero di archi presenti nell'insieme di test, calcolato mediante la Formula~\ref{eq:n_archi_fake}
+	\item $n1$ sono le volte in cui un arco "casuale" è migliore di un arco reale
+	\item $n2$ sono le volte in cui un arco "casuale" ha pari valore o quasi rispetto ad un arco reale
+\end{itemize}
+Per ogni arco di T se ne associa casualmente un altro di C, e qui si guarda quanto valgono i due archi coinvolti se l'arco di C vale più dell'arco di T si incrementa di $1$ il valore di AUC se uguali o quasi si incrementa di $0.5$. Avendo fatto ciò con ogni arco se ne calcola la media.\\
 \\
-L'intero algoritmo si basa su assegnare un valore di coerenza agli archi per individuare i più rilevanti, ed è quindi questa la parte più importante e critica, come detto esiste una funzione di similarità che ritorna un valore per ogni arco tanto più questo è alto tanto più l'arco è importante.\\
-La funzione di similarità può essere definita in tante maniere differenti in quanto si possono pesare diversi aspetti. Un esempio classico è basato sulla distanza euclidea più due nodi sono distanti nella rappresentazione del modello meno sono simili. Verranno mostrate le applicazioni di altre funzioni di similarità basate su diversi principi che non verranno qui riportati.
+RIVEDERE TUTTA QUESTA PARTE:\\
+\uline{L'andamento di questa percentuale è tendenzialmente decrescente in quanto visto che il modello è stato addestrato sugli archi originali questi dovrebbero assumere valori alti. Non è tuttavia certo si potrebbe partire anche con una percentuale pari a $0$ se ho solo archi fittizi. Comunque sia la percentuale all'inizio, si andrà via via avvicinandosi alla soglia limite di $\displaystyle \left( 1- \frac{1}{F} \right)$, questo accade quando si considerano tutti gli archi di \textbf{G2}. Inoltre si ha il parametro $F$ che influisce infatti più questo si avvicina a $1$ più cresce il numero di archi da scartare in partenza e diminuiscono così i dati su cui fare affidamento per creare un buon modello che rappresenti appieno il grafo di partenza, e quindi si va a diminuire la percentuale iniziale.\\
+È necessario ricordare che la stima qui calcolata dipende fortemente dalla selezione iniziale, ed è per questo motivo che tutto questo processo non viene svolto solo una volta bensì $F$ volte, così da andare a stabilizzare il valore calcolato tramite la media di tutte le iterazioni. Inoltre questo permette di utilizzare via via tutti gli archi per addestrare il modello di \textbf{G1}.}\\
+\\
+L'intero algoritmo si basa su confrontare gli archi grazie al valore che li rappresenta per individuare i più rilevanti, e quindi la parte più importante e critica è la generazione di tale valore mediante la funzione di similarità.\\
+Questa può essere definita in tante maniere differenti in quanto si possono pesare diversi aspetti. Un esempio classico è basato sulla distanza euclidea più due nodi sono distanti nella rappresentazione del modello meno sono simili. Verranno mostrate le applicazioni di altre funzioni di similarità basate su diversi principi che però non verranno qui riportati.
 %
 \subsection{Esempio}
 \begin{center}
 	\begin{tabular}{|c|c|c|c|}
 		\hline
-		arco & vero? & dist & \%\\
+		arco & autentico & dist & AUC\\
 		\hline
-		1-2 & sì & $1$ & \multirow{2}{*}{$100\%$}\\
-		3-4 & sì & $2$ & \\
+		3-4 & sì & $2$ & \multirow{2}{*}{$0$}\\
+		2-6 & no & $\sqrt{37}$ & \\
 		\hline
-		4-5 & sì & $\sqrt{5}$ & \multirow{2}{*}{$75\%$}\\
+		4-5 & sì & $\sqrt{5}$ & \multirow{2}{*}{$0.5$}\\
 		3-5 & no & $\sqrt{5}$ & \\
 		\hline
-		2-5 & no & $\sqrt{13}$ & \multirow{2}{*}{$66\%$}\\
-		5-6 & sì & $\sqrt{20}$ & \\
+		5-6 & sì & $\sqrt{20}$ & \multirow{2}{*}{$1$}\\
+		2-5 & no & $\sqrt{13}$ & \\
 		\hline
-		2-6 & no & $\sqrt{37}$ & \multirow{2}{*}{$50\%$}\\
+		1-2 & sì & $1$ & \multirow{2}{*}{$0$}\\
 		1-3 & no & $\sqrt{45}$ & \\
 		\hline
 	\end{tabular}
 	\captionof{table}{Tabella riassuntiva del procedimento di \LPred}
 	\label{tab:dati_esempio_prediction}
 \end{center}
-Consideriamo il modello descritto tramite la Figura~\ref{fig:grafico_modello} e la Tabella~\ref{tab:coordinate_modello}. Inoltre sappiamo che $F=2$, gli archi originali sono $(1, 2), (3, 4), (4, 5), (5, 6)$ mentre quelli generati casualmente sono $(3, 5), (2, 5), (2, 6), (1, 3)$, sono nello stesso numero grazie ad $F$ che ha spezzato a metà.\\
-Nelle prime due colonne della Tabella~\ref{tab:dati_esempio_prediction} sono riassunti questi due dati. Le colonne successive rappresentano invece i passaggi successivi dell'algoritmo.\\
-Nella terza colonna si può notare che ad ogni arco è stata associata un valore che rappresenta la distanza euclidea misurata sul piano cartesiano generato dal modello fra i due estremi dell'arco. Qui la funzione di similarità premia i valori più bassi a discapito degli altri. Inoltre la tabella è stata ordinata in modo che questa colonna risulti con valori crescenti si va quindi dall'arco più importante al meno rilevante.\\
-Nell'ultima colonna si riassume tutto in una percentuale, questa altro non conta che il numero di archi autentici rispetto al totale considerato fino a quel momento. Si possono osservare alcuni peculiarità:
+Consideriamo il modello descritto tramite la Figura~\ref{fig:grafico_modello} e la Tabella~\ref{tab:coordinate_modello}. Inoltre sappiamo che $F=2$, gli archi originali adibiti al test sono $(1, 2), (3, 4), (4, 5), (5, 6)$ mentre quelli generati casualmente sono $(3, 5), (2, 5), (2, 6), (1, 3)$, i due insiemi sono nello stesso numero perché così possono essere confrontati.\\
+Nelle prime due colonne della Tabella~\ref{tab:dati_esempio_prediction} sono riassunti gli archi e la loro origine. Le colonne seguenti rappresentano invece i passaggi successivi dell'algoritmo.\\
+Nella terza colonna si può notare che ad ogni arco è stato associato un valore che rappresenta la distanza euclidea misurata sul piano cartesiano generato dal modello fra i due estremi dell'arco. Qui la funzione di similarità premia i valori più bassi a discapito degli altri. Inoltre la tabella è stata ordinata in modo che tutti gli archi di un insieme siano associati con uno dell'altro in maniera casuale, si può notare  infatti che nella seconda colonna "sì" e "no" si alternano.\\
+Nell'ultima colonna viene rappresentato l'incremento che si andrà ad apportare alla metrica AUC grazie alla valutazione dei due archi corrispondenti. Questo valore dovrà poi esser diviso per il numero delle coppie in gioco per riportarlo nell'intervallo $[0, 1]$, in questo caso risulta $\displaystyle \frac{\left( 0+0.5+1+0 \right)}{4} = 0.375$\\
+Si possono osservare alcuni peculiarità:
 \begin{itemize}
-	\item nella prima ristretta selezione con due elementi si raggiunge il $100\%$, spesso accade in quanto esistono archi che rispecchiano perfettamente il modello
-	\item nell'ultima selezione vado ad aggiungere solo archi non reali, è molto probabile che alcuni elementi generati casualmente non c'entrino nulla con il modello
-	\item come di norma accade l'andamento della percentuale è decrescente man mano che si aumenta la selezione di archi
-	\item come spiegato se si considerano tutti gli archi (nel nostro caso 8) la percentuale è esattamente pari a $\displaystyle \left( 1- \frac{1}{F} \right)$  nel caso attuale $\displaystyle \left( 1- \frac{1}{2} \right) = 0.5 = 50\%$
+	\item l'accoppiamento degli archi viene fatto in maniera casuale per evitare uno sbilanciamento
+	\item una selezione a favore degli archi autentici porterebbe ad avere un incremento nullo del valore di AUC, al contrario si potrebbe avere un incremento di due unità se si favorissero  gli archi generati casualmente
+	\item non si hanno archi ripetuti perché viene impedito alla creazione ma nulla vieta che un arco di C, corrisponda ad un arco usato in principio per generare il modello
+	\item si può immaginare che più il valore di $F$ è grande e quindi più è grande la selezione di archi per l'addestramento (grazie alla Formula~\ref{eq:n_archi_true}) più il valore della calcolato cresca
 \end{itemize}
 L'algoritmo prevederebbe una seconda iterazione di tutto questo procedimento utilizzando gli archi in principio scartati come nuova base per il modello per poi calcolare la media delle percentuali.\\ Omettiamo questa fase perché uguale a quella appena illustrata.
 %
 \subsection{Risultati}
+Le similarità utilizzate in questi esempi sono\cite{all_metric}:
+\begin{itemize}
+	\item DW = DeepWalk
+	\item CN = Common Neighbors\cite{CN_metric}
+	\item Salton = Salton Index\cite{Salton_metric}
+	\item Jaccard = Jaccard Index
+	\item RA = Resource Allocation\cite{RA_metric}
+\end{itemize}
 %
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width=\linewidth]{immagini/LP_fold3}
+	\caption{\LPred con tre sezioni, $F=3$}
+	\label{fig:LP_fold3}
+\end{figure}
+%
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width=\linewidth]{immagini/LP_CN}
+	\caption{L'andamento della metrica di Common Neighbors, su tre grafi distinti attraverso differenti percentuali di selezione}
+	\label{fig:LP_CN}
+\end{figure}
+%
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width=\linewidth]{immagini/LP_Dolphins}
+	\caption{L'andamento del grafo dolphins su diverse metriche attraverso differenti percentuali di selezione}
+	\label{fig:LP_Dolphins}
+\end{figure}
+Questo algoritmo ha tre possibili variabili su cui si può lavorare:
+\begin{itemize}
+	\item Il parametro $F$ (dall'inglese fold) che viene bloccato nella Figura~\ref{fig:LP_fold3}, si può notare come ogni grafo abbia un livello su cui si attesta, BlogCatalog grazie al fatto che è molto denso ha un valore in media molto alto rispetto ai tre grafi restanti
+	\item Nella Figura~\ref{fig:LP_CN} si lavora su un unica metrica, si utilizza solo la funzione di similarità denominata Common Neighbors, che si basa sui nodi geometricamente vicini agli estremi di un arco all'interno del modello del grafo per valutare la somiglianza.\\
+	Qui si può notare come all'aumentare del parametro $F$ il valore che si associa ad ogni grafo tende ad aumentare, questo è dovuto ad un modello meglio addestrato perché dispone di più dati in partenza, e quindi si ha una migliore valutazione
+	\item La Figura~\ref{fig:LP_Dolphins} è forse la più semplice da osservare in quanto si osserva un solo grafo. Qui come prima si osserva che l'influenza del parametro $F$ è altissima sul risultato finale, inoltre si può vedere che le prestazioni di DeepWalk siano un attimo più alte rispetto al resto che invece tende ad avere le stesse performance 
+\end{itemize}
+Si precisa che questi sono degli esempi rappresentativi dell'andamento generale, che però non viene riportato in quanto sarebbe molto complesso da comprendere.
+%
+\section{Classificazione di nodi}
+
+
+
 %
 %\section{Valutazione dell'individuazione di comunità}
 %
-%\section{Classificazione di nodi}
 %
 \end{document}
