@@ -40,7 +40,7 @@ Questi quattro grafi vengono presentati in ordine decrescente nel numero dei nod
 %
 \section{Modello di un grafo}
 In questa sezione viene spiegato cosa si intende per modello di un grafo, e perché è tanto importante per gli algoritmi che vi sono costruiti sopra.\\
-Come descritto nel capitolo sull'implementazione è necessario visitare il grafo per generare su di questo dei cammini. Questi vengono presi in input dall'algoritmo di \wv o \cnrl entrambi mediante una rete neurale vanno a descrivere ogni nodo che s'individua tramite un vettore di valori reali.\\
+Come descritto nel capitolo sull'implementazione è necessario visitare il grafo per generare su di questo dei cammini. Questi vengono presi in input dall'algoritmo di \wv che tramite una rete neurale va a descrivere ogni nodo che s'individua tramite un vettore di valori reali, mentre \cnrl utilizza un metodo alternativo chiamato Latent Dirichlet Allocation (LDA)\cite{LDA}.\\
 \begin{figure}[htp]
 	\centering
 	\includegraphics{immagini/punti_modello}
@@ -86,7 +86,7 @@ Il numero degli archi usati per il test viene dato dalla Formula~\ref{eq:n_archi
 \end{equation}
 mentre quelli utilizzati per l'addestramento corrispondono alla Formula~\ref{eq:n_archi_true}, dove $m$ è il numero di archi del grafo.\\
 Il nuovo grafo (\textbf{G1}) creatosi, inseguito alla rimozione degli archi per il test, viene utilizzato per generare il modello.\\
-Per ogni arco appartenente all'insieme di test (\textbf{Test=T}) se ne genera un altro (\textbf{Check=C}) tramite una coppia di nodi casuali\footnote{davvero è casualmente?? perché dovrebbero essere più simili al modello allora???} assicurandosi che non corrispondano ad un arco già esistente. Si hanno quindi tre insiemi, il primo adibito all'addestramento stabilisce il modello necessario a discernere quale dei due restanti è la migliore selezione.
+Per ogni arco appartenente all'insieme di test (\textbf{Test=T}) se ne genera un altro (\textbf{Check=C}) tramite una coppia di nodi casuali assicurandosi che non corrispondano ad un arco già esistente. Si hanno quindi tre insiemi, il primo adibito all'addestramento stabilisce il modello necessario a discernere quale dei due restanti è la migliore selezione.
 Per ogni arco, di T e C, si va a veder quanto sono simili i nodi che lega e se ne calcola così la coerenza, grazie all'apposita funzione di similarità, ora disponibile. Gli archi possono essere valutati sulla base di questo nuovo parametro.\\
 Siamo interessati a capire quanto erano buoni gli archi originari del grafo, T, rispetto a quelli generati casualmente, C. 
 \begin{equation}
@@ -96,14 +96,14 @@ Siamo interessati a capire quanto erano buoni gli archi originari del grafo, T, 
 Si usa perciò la metrica detta AUC\cite{AUC_metric}, che si basa sulla Formula~\ref{eq:AUC_formula}, dove gli elementi sono:
 \begin{itemize}
 	\item $n$ è il numero di archi presenti nell'insieme di test, calcolato mediante la Formula~\ref{eq:n_archi_fake}
-	\item $n1$ sono le volte in cui un arco "casuale" è migliore di un arco reale
-	\item $n2$ sono le volte in cui un arco "casuale" ha pari valore o quasi rispetto ad un arco reale
+	\item $n1$ sono le volte in cui un arco di test T è migliore di un arco casuale di C
+	\item $n2$ sono le volte in cui un arco di test T ha pari valore o quasi rispetto ad un arco casuale di C
 \end{itemize}
-Per ogni arco di T se ne associa casualmente un altro di C, e qui si guarda quanto valgono i due archi coinvolti se l'arco di C vale più dell'arco di T si incrementa di $1$ il valore di AUC se uguali o quasi si incrementa di $0.5$. Avendo fatto ciò con ogni arco se ne calcola la media.\\
+Per ogni arco di T se ne associa casualmente un altro di C, e qui si guarda quanto valgono i due archi coinvolti se l'arco di T vale più dell'arco di C si incrementa di $1$ il valore di AUC se uguali o quasi si incrementa di $0.5$. Avendo fatto ciò con ogni arco se ne calcola la media.\\
 \\
-RIVEDERE TUTTA QUESTA PARTE:\\
-\uline{L'andamento di questa percentuale è tendenzialmente decrescente in quanto visto che il modello è stato addestrato sugli archi originali questi dovrebbero assumere valori alti. Non è tuttavia certo si potrebbe partire anche con una percentuale pari a $0$ se ho solo archi fittizi. Comunque sia la percentuale all'inizio, si andrà via via avvicinandosi alla soglia limite di $\displaystyle \left( 1- \frac{1}{F} \right)$, questo accade quando si considerano tutti gli archi di \textbf{G2}. Inoltre si ha il parametro $F$ che influisce infatti più questo si avvicina a $1$ più cresce il numero di archi da scartare in partenza e diminuiscono così i dati su cui fare affidamento per creare un buon modello che rappresenti appieno il grafo di partenza, e quindi si va a diminuire la percentuale iniziale.\\
-È necessario ricordare che la stima qui calcolata dipende fortemente dalla selezione iniziale, ed è per questo motivo che tutto questo processo non viene svolto solo una volta bensì $F$ volte, così da andare a stabilizzare il valore calcolato tramite la media di tutte le iterazioni. Inoltre questo permette di utilizzare via via tutti gli archi per addestrare il modello di \textbf{G1}.}\\
+Il valore finale della metrica AUC dipende fortemente da quale metodo si adotta per abbinare gli archi appartenenti a T e C, un accoppiamento sbagliato può fortemente sbilanciare il risultato, è per questo motivo che si va ad utilizzare un abbinamento casuale.\\
+Inoltre si ha il parametro $F$ che influisce infatti più questo si avvicina a $1$ più cresce il numero di archi da utilizzare per la fase di test, diminuiscono di conseguenza i dati su cui fare affidamento per creare un buon modello che rappresenti appieno il grafo di partenza, e quindi il valore finale da aspettarsi è tendenzialmente più basso.\\
+È necessario ricordare che la stima qui calcolata dipende fortemente dalla selezione iniziale, ed è per questo motivo che tutto questo processo non viene svolto solo una volta bensì $F$ volte, così da andare a stabilizzare il valore calcolato tramite la media di tutte le iterazioni. Inoltre questo permette di utilizzare via via tutti gli archi per addestrare il modello di \textbf{G1}.\\
 \\
 L'intero algoritmo si basa su confrontare gli archi grazie al valore che li rappresenta per individuare i più rilevanti, e quindi la parte più importante e critica è la generazione di tale valore mediante la funzione di similarità.\\
 Questa può essere definita in tante maniere differenti in quanto si possono pesare diversi aspetti. Un esempio classico è basato sulla distanza euclidea più due nodi sono distanti nella rappresentazione del modello meno sono simili. Verranno mostrate le applicazioni di altre funzioni di similarità basate su diversi principi che però non verranno qui riportati.
@@ -114,26 +114,26 @@ Questa può essere definita in tante maniere differenti in quanto si possono pes
 		\hline
 		arco & autentico & dist & AUC\\
 		\hline
-		3-4 & sì & $2$ & \multirow{2}{*}{$0$}\\
+		3-4 & sì & $2$ & \multirow{2}{*}{$1$}\\
 		2-6 & no & $\sqrt{37}$ & \\
 		\hline
 		4-5 & sì & $\sqrt{5}$ & \multirow{2}{*}{$0.5$}\\
 		3-5 & no & $\sqrt{5}$ & \\
 		\hline
-		5-6 & sì & $\sqrt{20}$ & \multirow{2}{*}{$1$}\\
+		5-6 & sì & $\sqrt{20}$ & \multirow{2}{*}{$0$}\\
 		2-5 & no & $\sqrt{13}$ & \\
 		\hline
-		1-2 & sì & $1$ & \multirow{2}{*}{$0$}\\
+		1-2 & sì & $1$ & \multirow{2}{*}{$1$}\\
 		1-3 & no & $\sqrt{45}$ & \\
 		\hline
 	\end{tabular}
 	\captionof{table}{Tabella riassuntiva del procedimento di \LPred}
-	\label{tab:dati_esempio_prediction}
+	\label{tab:dati_es_prediction}
 \end{center}
-Consideriamo il modello descritto tramite la Figura~\ref{fig:grafico_modello} e la Tabella~\ref{tab:coordinate_modello}. Inoltre sappiamo che $F=2$, gli archi originali adibiti al test sono $(1, 2), (3, 4), (4, 5), (5, 6)$ mentre quelli generati casualmente sono $(3, 5), (2, 5), (2, 6), (1, 3)$, i due insiemi sono nello stesso numero perché così possono essere confrontati.\\
-Nelle prime due colonne della Tabella~\ref{tab:dati_esempio_prediction} sono riassunti gli archi e la loro origine. Le colonne seguenti rappresentano invece i passaggi successivi dell'algoritmo.\\
+Consideriamo il modello descritto tramite la Figura~\ref{fig:grafico_modello} e la Tabella~\ref{tab:coordinate_modello}. Inoltre sappiamo che $F=2$, gli archi originali adibiti al test sono $(1, 2), (3, 4), (4, 5), (5, 6)$ mentre quelli generati casualmente sono $(3, 5), (2, 5), (2, 6), (1, 3)$, i due insiemi sono nello stesso numero per creazione e perché così possono essere confrontati.\\
+Nelle prime due colonne della Tabella~\ref{tab:dati_es_prediction} sono riassunti gli archi e la loro origine. Le colonne seguenti rappresentano invece i passaggi successivi dell'algoritmo.\\
 Nella terza colonna si può notare che ad ogni arco è stato associato un valore che rappresenta la distanza euclidea misurata sul piano cartesiano generato dal modello fra i due estremi dell'arco. Qui la funzione di similarità premia i valori più bassi a discapito degli altri. Inoltre la tabella è stata ordinata in modo che tutti gli archi di un insieme siano associati con uno dell'altro in maniera casuale, si può notare  infatti che nella seconda colonna "sì" e "no" si alternano.\\
-Nell'ultima colonna viene rappresentato l'incremento che si andrà ad apportare alla metrica AUC grazie alla valutazione dei due archi corrispondenti. Questo valore dovrà poi esser diviso per il numero delle coppie in gioco per riportarlo nell'intervallo $[0, 1]$, in questo caso risulta $\displaystyle \frac{\left( 0+0.5+1+0 \right)}{4} = 0.375$\\
+Nell'ultima colonna viene rappresentato l'incremento che si andrà ad apportare alla metrica AUC grazie alla valutazione dei due archi corrispondenti. Questo valore dovrà poi esser diviso per il numero delle coppie in gioco per riportarlo nell'intervallo $[0, 1]$, in questo caso risulta $\displaystyle \frac{\left( 1+0.5+0+1 \right)}{4} = 0.625$\\
 Si possono osservare alcuni peculiarità:
 \begin{itemize}
 	\item l'accoppiamento degli archi viene fatto in maniera casuale per evitare uno sbilanciamento
@@ -173,21 +173,151 @@ Le similarità utilizzate in questi esempi sono\cite{all_metric}:
 	\caption{L'andamento del grafo dolphins su diverse metriche attraverso differenti percentuali di selezione}
 	\label{fig:LP_Dolphins}
 \end{figure}
+%
 Questo algoritmo ha tre possibili variabili su cui si può lavorare:
 \begin{itemize}
-	\item Il parametro $F$ (dall'inglese fold) che viene bloccato nella Figura~\ref{fig:LP_fold3}, si può notare come ogni grafo abbia un livello su cui si attesta, BlogCatalog grazie al fatto che è molto denso ha un valore in media molto alto rispetto ai tre grafi restanti
-	\item Nella Figura~\ref{fig:LP_CN} si lavora su un unica metrica, si utilizza solo la funzione di similarità denominata Common Neighbors, che si basa sui nodi geometricamente vicini agli estremi di un arco all'interno del modello del grafo per valutare la somiglianza.\\
+	\item \textbf{Il parametro $F$} (dall'inglese fold) che viene bloccato nella Figura~\ref{fig:LP_fold3}, si può notare come ogni grafo abbia un livello su cui si attesta, BlogCatalog grazie al fatto che è molto denso ha un valore in media molto alto rispetto ai tre grafi restanti
+	\item Nella Figura~\ref{fig:LP_CN} si lavora su un \textbf{unica metrica}, si utilizza solo la funzione di similarità denominata Common Neighbors, che si basa sui nodi geometricamente vicini agli estremi di un arco all'interno del modello del grafo per valutare la somiglianza.\\
 	Qui si può notare come all'aumentare del parametro $F$ il valore che si associa ad ogni grafo tende ad aumentare, questo è dovuto ad un modello meglio addestrato perché dispone di più dati in partenza, e quindi si ha una migliore valutazione
-	\item La Figura~\ref{fig:LP_Dolphins} è forse la più semplice da osservare in quanto si osserva un solo grafo. Qui come prima si osserva che l'influenza del parametro $F$ è altissima sul risultato finale, inoltre si può vedere che le prestazioni di DeepWalk siano un attimo più alte rispetto al resto che invece tende ad avere le stesse performance 
+	\item La Figura~\ref{fig:LP_Dolphins} è forse la più semplice da osservare in quanto si osserva \textbf{un solo grafo}. Qui come prima si osserva che l'influenza del parametro $F$ è altissima sul risultato finale, inoltre si può vedere che le prestazioni di DeepWalk siano un attimo più alte rispetto al resto che invece tende ad avere le stesse performance 
 \end{itemize}
 Si precisa che questi sono degli esempi rappresentativi dell'andamento generale, che però non viene riportato in quanto sarebbe molto complesso da comprendere.
 %
-\section{Classificazione di nodi}
-
-
-
+\section{Classificazione dei nodi}
+Il problema della classificazione dei nodi/vertici punta a riconoscere partendo dalla rappresentazione di un elemento a quale classe questo appartiene, per definizione un elemento può appartenere ad una ed una sola classe, è tuttavia possibile pensare a classi interne ad altre classi o a sovrapposizioni. Per esempio data la classe A e la classe B si ha che, per come sono state definite, tutti gli elementi di A appartengono anche a B ($\displaystyle A \subseteq B$) di conseguenza $\displaystyle A \cap B = A$, tuttavia questo vale per l'insiemistica, nei problemi di classificazione fra A e B non c'è nessuna relazione e conseguentemente si ha che $\displaystyle A \cap B = \emptyset$.%esempio anche per intersezione???
 %
+\subsection{Dinamiche di funzionamento}
+Il punto di partenza è costante, dato il grafo lo si visita per generare i cammini e con questi s'invoca l'algoritmo che genera il modello. Il modello viene disordinato e spezzato secondo il parametro di training ratio $T_r$, ossia percentuale d'addestramento, questo indica che percentuale del modello dovrà essere usata per l'addestramento, la restante sarà per i test.\\
+In aggiunta si considerano anche le etichette o classi d'appartenenza di ogni nodo, si hanno quindi delle triplette contenenti:
+\begin{itemize}
+	\item ID del nodo che può anche essere dimenticato
+	\item il vettore di numeri reali presi dal modello che lo rappresenta
+	\item l'identificativo della classe a cui si appartiene
+\end{itemize}
+Con questi dati viene addestrata la funzione di classificazione, o classificatore, il cui scopo sarà predire la classe d'appartenenza dato in input il vettore di un qualche nodo.\\
+\\
+In seguito per ogni nodo appartenente all'insieme di test si cerca di predire la sua classe sottoponendo il suo vettore al classificatore e una volta terminato si confronta se l'esito corrisponde con la reale classe, nota grazie allo stesso file di etichette utilizzato per l'addestramento.\\
+È importante far notare che il modello viene spezzato in due perché il classificatore deve essere addestrato su dati diversi da quelli che prenderà in seguito in input, altrimenti non ci sarebbe nulla da predire in quanto i dati passati vengono ricordati e quindi è impossibile sbagliare a dare una risposta.\\
+\\
+La valutazione delle predizioni effettuate può avvenire mediante il metodo più semplice ossia il \textbf{tasso d'errore}, che corrisponde alla Formula~\ref{eq:tasso_errore}, si contano quanti errori si son fatti rispetto al totale o si usa il metodo opposto ossia \textbf{l'accuratezza}, definita nella Formula~\ref{eq:accuratezza}, che conta i risultati con esito positivo rispetto al totale.
+%
+\begin{equation}
+	T_{err} = \frac{N(errori)}{N(previsioni)}
+	\label{eq:tasso_errore}
+\end{equation}
+%
+\begin{equation}
+	Acc = 1 - \left( \frac{N(errori)}{N(previsioni)} \right) = \frac{N(corretti)}{N(previsioni)}
+	\label{eq:accuratezza}
+\end{equation}
+%
+Se si vogliono fare delle misurazioni particolari si sfrutta invece la \textbf{matrice di confusione}, mostrata in Tabella~\ref{tab:matrice_confusione}, ideata inizialmente per valutare casi con solo due opzioni (Sì-positivo / No-negativo), può essere generalizzata per gestire la valutazione di un classificatore con più di due esiti, tramite due metodi differenti.
+\begin{itemize}
+	\item si amplia la matrice per avere invece che due righe e due colonne, K righe e colonne.\\
+	Dove K è il numero di possibili valori ritornati dal classificatore
+	\item si possono creare K matrici di confusione e ogni volta si sceglie una specifica classe come positiva tutte le altre vengono implose nel valore negativo
+\end{itemize}
+%
+\begin{multicols}{2}
+\begin{center}
+	\begin{tabular}{cc|c|c| c|r|l|}
+		 &  & \multicolumn{2}{|c|}{Previsione}\\
+		 &  & Sì & No\\
+		 \hline
+		 Risposta & Sì & TP & FN\\
+		 \hline
+		 corretta & No & FP & TN\\
+		\hline
+	\end{tabular}
+	\captionof{table}{Viene rappresentata una matrice di confusione}
+	\label{tab:matrice_confusione}
+	%
+	\begin{tabular}{|c|c|}
+		\hline
+		TP & True Positive \\
+		FN & False Negative \\
+		FP & False Positive \\
+		TN & True Negative \\
+		\hline
+	\end{tabular}
+	\label{tab:MC_significato}
+	\captionof{table}{Significato delle sigle della matrice di confusione}
+\end{center}
+\end{multicols}
+%
+Da questa matrice possiamo estrarre diverse misure:
+\begin{itemize}
+	\item \textbf{accuratezza} qui prende una nuova formulazione: $\displaystyle Acc = \frac{TP + TN}{TP + TN + FP + FN} $
+	\item \textbf{sensibilità} penalizza le risposte negative sbagliate di conseguenza è meglio dare per positivo un esito se non è certo.\\
+	Definita come: $\displaystyle S = \frac{TP}{TP + FN} $
+	\item \textbf{precisione} penalizza le risposte positive sbagliate di conseguenza è meglio dare per negativo un esito se non è certo.\\
+	Definita come: $\displaystyle P = \frac{TP}{TP + FP} $
+	\item \textbf{Macro} precisione/sensibilità è la media aritmetica fra più valori di S o di P.\\
+	Definita come: $\displaystyle Macro_{S} = \frac{S_1 + ... + S_n}{n} $
+	\item \textbf{Micro} precisione/sensibilità è la media aritmetica delle componenti di S o di P prima di calcolarle, per poi considerarle un unica S o P.\\
+	Definita come: $\displaystyle Micro_{P} = \frac{TP_1 + ... + TP_n }{ (TP_1 + ... + TP_n) + (FP_1 + ... + FP_n) } $
+	\item \textbf{F1-Score} è la media armonica di: micro o macro o normale sensibilità e precisione.\\
+	Definita come: $\displaystyle F1-Score = \frac{2}{ \frac{1}{S} + \frac{1}{P} } = \frac{2 \cdot S \cdot P}{ S + P }$
+\end{itemize}
+Nel nostro caso sensibilità e precisione non possono essere utilizzate in quanto ci sono troppi dati, mentre usare micro e macro non ha senso in quanto le classi sono perfettamente equivalenti, di conseguenza premiarne una a discapito di un'altra non ha significato. Per questo se serve si adotta l'F1-score. Tuttavia questa procedura non è veloce da calcolare pertanto spesso si adotta il più semplice e veloce metodo dell'accuratezza.
+%
+\subsection{Esempio}
+\begin{center}
+	\begin{tabular}{|c|c|c|c|c|}
+		\hline
+		ID & x & Previsione & Classe & Corretta\\
+		\hline
+		$5$ & $9$ & $0$ & $1$ & $0$\\
+		$1$ & $13$ & $0$ & $0$ & $1$\\
+		$2$ & $15$ & $0$ & $0$ & $1$\\
+		$3$ & $27$ & $0$ & $1$ & $0$\\
+		$4$ & $34$ & $1$ & $1$ & $1$\\
+		$8$ & $36$ & $1$ & $0$ & $0$\\
+		$6$ & $48$ & $2$ & $2$ & $1$\\
+		$7$ & $59$ & $2$ & $2$ & $1$\\
+		\hline
+	\end{tabular}
+	\captionof{table}{Tabella riassuntiva del procedimento di classificazione dei vertici}
+	\label{tab:dati_es_classify}
+\end{center}
+Tutti i dati dell'esempio sull'algoritmo di classificazione sono riassunti nella Tabella~\ref{tab:dati_es_classify}. Nella prima colonna abbiamo gli ID dei nodi coinvolti, elemento che l'algoritmo ignora completamente, la seconda colonna contiene il vettore rappresentativo di ogni nodo, qui per semplicità è stato ridotto ad un solo numero.
+%
+\begin{equation}
+	C(x)=
+		\begin{cases}
+			\begin{array}{ll}
+				0 & se \ x < 30\\
+				1 & se \ 30 \leq x \ \&\  x < 45\\
+				2 & se \ 45 \leq x
+			\end{array}
+		\end{cases}
+	\label{eq:classificatore_esempio}
+\end{equation}
+%
+Si assume il classificatore definito nella Formula~\ref{eq:classificatore_esempio}, che darà come risposte i valori contenuti nella colonna "Previsione".\\
+Mentre nella colonna "Classe" mostra il valore autentico del nodo. Infine nell'ultima colonna è indicato se la previsione è risultata corretta o meno.\\
+\\
+Per una valutazione mediante accuratezza è sufficiente calcolare la media aritmetica dell'ultima colonna, ossia $\displaystyle Acc = \frac{1+1+1+1+1}{8} = \frac{5}{8} = 0.625$. Mentre per l'F1-score sarebbe necessario calcolare sensibilità e precisione di ognuna delle 3 classi, riassumerli mediante micro o macro, ed infine arrivare ad un valore con F1-score.
+%
+\subsection{Risultati}
+%
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width=\linewidth]{immagini/VC_cora}
+	\caption{L'andamento del grafo Cora, con 3 differenti algoritmi di creazione del modello e 3 diverse interpretazioni iniziali, valutato mediante l'accuratezza}
+	\label{fig:LP_CN}
+\end{figure}
+%
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width=\linewidth]{immagini/VC_citeseer}
+	\caption{L'andamento del grafo Citeseer, con 3 differenti algoritmi di creazione del modello e 3 diverse interpretazioni iniziali, valutato mediante l'accuratezza}
+	\label{fig:LP_Dolphins}
+\end{figure}
+%
+
 %\section{Valutazione dell'individuazione di comunità}
+%
 %
 %
 \end{document}
