@@ -220,7 +220,7 @@ Se si vogliono fare delle misurazioni particolari si sfrutta invece la \textbf{m
 %
 \begin{multicols}{2}
 \begin{center}
-	\begin{tabular}{cc|c|c| c|r|l|}
+	\begin{tabular}{cc|c|c|}
 		 &  & \multicolumn{2}{|c|}{Previsione}\\
 		 &  & Sì & No\\
 		 \hline
@@ -330,5 +330,86 @@ Ecco alcuni dettagli che emergono dai due grafici:
 \end{itemize}
 %
 \section{Valutazione dell'individuazione di comunità}
+Questa sezione ripercorre il corpo principale del tirocinio, ossia l'integrazione degli attributi. Vengono presentate quattro situazioni ognuna approfondisce un aspetto.
+%
+\subsection{Confronto numero comunità}
+%
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width=\linewidth]{immagini/MOD_1_num_cmty}
+	\caption{Accuratezza rappresentativa al variare del numero delle comunità da generare}
+	\label{fig:MOD_1_num_cmty}
+\end{figure}
+%
+
+\subsection{Metriche di valutazione}
+Nella Tabella~\ref{tab:2_metriche} vengono mostrati i due grafi di Cora e Citeseer, valutati mediante le tre metriche di calcolo della modularità spiegate.\\
+Ambo i grafi sono stati caricati senza considerare gli attributi dei nodi ma solo la struttura, la creazione del modello è avvenuta con S-CNRL e il suo algoritmo LDA, tramite cui sono state ricavate anche le $10$ comunità che vengono  valutate in Tabella.\\
+\\
+Non ha senso confrontare i tre differenti metodi di calcolo della modularità, in quanto premiano aspetti diversi. Inoltre ognuno si posiziona su un diverso ordine di grandezza, spicca sopratutto \mover che presenta tutti i valori molto vicini a 0, questo perché come riporta la Tabella~\ref{tab:dati_grafi} ambo i grafi sono estremamente sparsi e a causa di ciò \mover ha il valore assoluto della modularità calcolata molto vicino a $0$.\\
+Tutti i metodi assegnano a Cora il valore più alto, e questo fa capire che se una partizione è nettamente migliore di un'altra allora verrà premiata indipendentemente dalla metrica di valutazione usata.\\
+La \mmod è stata scelta come metrica ufficiale degli esperimenti, oltre al fatto che è quella usata nell'articolo di \cnrl, anche perché presenta dei valori facilmente analizzabili e comprensibili, \mover funziona bene ma è sempre difficile comprendere i risultati a cui s'arriva e si rischiano incomprensioni.
+%
+\begin{center}
+	% Schema num: 2 -> confronto metriche (cmty=10, no_att, valutazione con grafo norm, metric 8 -> HalfLDA)
+	\begin{tabular}{|l|c|c|c|} % \multicolumn{2}{|c|}{testo}  \multirow{2}{*}{testo}   $ \e{-}$
+		\hline
+		\ & \mmax & \mover & \mmod \\
+		\hline
+		Cora & $2.04 \e{-1}$ & $1.21 \e{-5}$ & $5.31 \e{-1}$ \\
+		Citeseer & $8.42 \e{-2}$ & $-3.55 \e{-6}$ & $3.67 \e{-1}$ \\
+		%2.04E-01	1.21E-05	5.31E-01
+		%8.42E-02	-3.55E-06	3.67E-01
+		\hline
+	\end{tabular}
+	\captionof{table}{Confronto fra i metodi di modularità spiegati, partendo dal grafo normale con $10$ comunità}
+	\label{tab:2_metriche}
+\end{center}
+%
+\subsection{Confronto metodi d'elaborazione}
+In Figura~\ref{fig:MOD_3_elaborazione} vengono confrontati tre differenti metodi d'elaborazione dei grafi per arrivare a trovare le comunità.\\
+Viene presentato il grafo Cora su cui si cercato d'individuare tramite una progressione da $3$ a $50$ comunità, tutte valutate in seguito tramite la \mmod. I tre metodi utilizzati sono:
+\begin{itemize}
+	\item noAtt: si considera in partenza unicamente la struttura del grafo, dai cui si ricavano i cammini e vengono elaborati con LDA
+	\item Att: oltre ai cammini derivanti dalla struttura si crea anche il grafo bipartito degli attributi, il tutto elaborato sempre mediante LDA
+	\item bigClam: è il metodo tratto dall'articolo "Overlapping community detection at scale: a nonnegative matrix factorization approach"\cite{bigClam_paper}, implementato dall'università di Stanford\cite{bigClam_code}.\\
+	È stato scelto come algoritmo di controllo per verificare l'andamento delle prestazioni di S-CNRL
+\end{itemize}
+Come mostrato in Figura~\ref{fig:MOD_1_num_cmty} anche qui con l'aumentare del numero di comunità si ha un aumento di prestazioni.
+
+%
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width=\linewidth]{immagini/MOD_3_elaborazione}
+	\caption{Prestazioni dei diversi procedimenti d'elaborazione del modello al variare del numero di comunità da ricercare}
+	\label{fig:MOD_3_elaborazione}
+\end{figure}
+%
+\subsection{Confronto criteri di valutazione}
+%
+\begin{center}
+	% Schema num: 4 -> confronto valutazioni -> trovata inconsistenza AKA errore
+	\begin{tabular}{|cc|c|c|} % \multicolumn{2}{|c|}{testo}  \multirow{2}{*}{testo}   $ \e{-}$
+		\hline
+		\multicolumn{2}{|c|}{\textbf{Cora}} & \multicolumn{2}{|c|}{valutazione} \\
+		\multicolumn{2}{|c|}{\ } & structure & hypergraph \\
+		\hline
+		\multirow{2}{*}{elaborazione} & Dir & \textcolor{red}{$5.31\e{-1}$} & \textcolor{red}{$3.85 \e{-3}$} \\
+		& Att & $4.83 \e{-2}$ & $6.46 \e{-5}$ \\
+		\hline
+		\hline
+		\hline
+		\multicolumn{2}{|c|}{\textbf{Citeseer}} & \multicolumn{2}{|c|}{valutazione} \\
+		\multicolumn{2}{|c|}{\ } & structure & hypergraph \\
+		\hline
+		\multirow{2}{*}{elaborazione} & Dir & $3.38\e{-1}$ & $-9.46 \e{-5}$ \\
+		& Att & \textcolor{red}{$5.32 \e{-1}$} & \textcolor{red}{$1.50 \e{-2}$} \\
+		\hline
+	\end{tabular}
+	\captionof{table}{Le misurazioni effettuate sono incoerenti, è quindi presente un errore}
+	\label{tab:4_valutazioni_err}
+\end{center}
+
+
 
 \end{document}
