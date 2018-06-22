@@ -6,17 +6,17 @@ In questa sezione vengono spiegati i dataset utilizzati e le loro origini.\\
 Si possono dividere in due gruppi, non solo perché tali gruppi al loro interno presentino caratteristiche d'affinità, ma anche in quanto i grafi che vi appartengono sono stati utilizzati nel corso del tirocinio per due applicazioni differenti. Nella Tabella~\ref{tab:dati_grafi} sono elencati i dettagli tecnici di ogni dataset.
 %
 \begin{center}
-	\begin{tabular}{|l|r|r|c|c|r|}
+	\begin{tabular}{|l|r|r|r|c|c|r|}
 		\hline
-		grafi&nodi&archi&diretto&etichette&attributi\\
+		grafi&nodi&archi&archi/nodi&diretto&etichette&attributi\\
 		\hline
-		Cora & 2708 & 5429 & sì & 7 & 1433\\
-		Citeseer & 3312 & 4732 & sì & 6 & 3703\\
+		Cora & 2708 & 5429 & 2.0 & sì & 7 & 1433\\
+		Citeseer & 3312 & 4732 & 1.4 & sì & 6 & 3703\\
 		\hline
-		BlogCatalog & 10312 & 333983 & no & 39 & 0\\
-		Gnutella & 6301 & 20777 & no & 0 & 0\\
-		Dolphins & 62 & 159 & no & 0 & 0\\
-		Karate & 35 & 78 & no & 0 & 0\\
+		BlogCatalog & 10312 & 333983 & 32.4 & no & 39 & 0\\
+		Gnutella & 6301 & 20777 & 3.3 & no & 0 & 0\\
+		Dolphins & 62 & 159 & 2.6 & no & 0 & 0\\
+		Karate & 35 & 78 & 2.2 & no & 0 & 0\\
 		\hline
 		\end{tabular}
 		\captionof{table}{Per ogni grafo sono indicate le sue caratteristiche principali}
@@ -40,7 +40,7 @@ Questi quattro grafi vengono presentati in ordine decrescente nel numero dei nod
 %
 \section{Modello di un grafo}
 In questa sezione viene spiegato cosa si intende per modello di un grafo, e perché è tanto importante per gli algoritmi che vi sono costruiti sopra.\\
-Come descritto nel capitolo sull'implementazione è necessario visitare il grafo per generare su di questo dei cammini. Questi vengono presi in input dall'algoritmo di \wv che tramite una rete neurale va a descrivere ogni nodo che s'individua tramite un vettore di valori reali, mentre \cnrl utilizza un metodo alternativo chiamato Latent Dirichlet Allocation (LDA)\cite{LDA}.\\
+Come descritto nel capitolo sull'implementazione è necessario visitare il grafo per generare su di questo dei cammini. Questi vengono presi in input dall'algoritmo di \wv che tramite una rete neurale va a descrivere ogni nodo che s'individua tramite un vettore di valori reali, mentre \cnrl utilizza un metodo alternativo chiamato Latent Dirichlet Allocation (LDA)\cite{LDA} o una sua variante detta HalfLDA.\\
 \begin{figure}[htp]
 	\centering
 	\includegraphics{immagini/punti_modello}
@@ -300,24 +300,35 @@ Mentre nella colonna "Classe" mostra il valore autentico del nodo. Infine nell'u
 Per una valutazione mediante accuratezza è sufficiente calcolare la media aritmetica dell'ultima colonna, ossia $\displaystyle Acc = \frac{1+1+1+1+1}{8} = \frac{5}{8} = 0.625$. Mentre per l'F1-score sarebbe necessario calcolare sensibilità e precisione di ognuna delle 3 classi, riassumerli mediante micro o macro, ed infine arrivare ad un valore con F1-score.
 %
 \subsection{Risultati}
+I grafi scelti per questa applicazione sono Cora (Figura~\ref{fig:VC_cora}) e Citeseer (Figura~\ref{fig:VC_citeseer}) perché fra quelli presentati nella Tabella~\ref{tab:dati_grafi} sono gli unici che sono forniti di attributi sui nodi, e questo permette di mostrare come l'utilizzo del grafo bipartito per l'introduzione degli attributi modifica le prestazioni.
 %
 \begin{figure}[htp]
 	\centering
 	\includegraphics[width=\linewidth]{immagini/VC_cora}
 	\caption{L'andamento del grafo Cora, con 3 differenti algoritmi di creazione del modello e 3 diverse interpretazioni iniziali, valutato mediante l'accuratezza}
-	\label{fig:LP_CN}
+	\label{fig:VC_cora}
 \end{figure}
 %
 \begin{figure}[htp]
 	\centering
 	\includegraphics[width=\linewidth]{immagini/VC_citeseer}
 	\caption{L'andamento del grafo Citeseer, con 3 differenti algoritmi di creazione del modello e 3 diverse interpretazioni iniziali, valutato mediante l'accuratezza}
-	\label{fig:LP_Dolphins}
+	\label{fig:VC_citeseer}
 \end{figure}
 %
+Sull'asse delle ordinate vi sono i valori compresi nell'intervallo $[0, 1]$ misurati mediante la tecnica dell'accuratezza. Mentre sull'asse delle ascisse vi sono i tre algoritmi utilizzati per creare il modello del grafo partendo dai cammini. \wv è il metodo di controllo, mentre S-CNRL e E-CNRL che lavorano rispettivamente con LDA e HalfLDA, sono i nuovi algoritmi proposti. Entrambi per alcune parti continuano ad usare \wv.\\
+Sia Cora che Citeseer sono grafi originariamente diretti (misurazioni rosse), tuttavia si è provato ad interpretarli anche come se fossero indiretti (campionamento blu), l'ultimo andamento è dato dall'introduzione degli attributi (dati verdi).\\
+Ecco alcuni dettagli che emergono dai due grafici:
+\begin{itemize}
+	\item \wv mostra prestazioni, anche se di poco, maggiori delle due alternative che invece tendono ad equivalersi
+	\item la media dei valori delle misurazione nel grafico di Cora~\ref{fig:VC_cora} ($0.696$) rispetto a quella di Citeseer~\ref{fig:VC_citeseer} ($0.491$) è maggiore di circa $\displaystyle \frac{2}{10}$ questo è dovuto anche al fatto che Cora abbia una $\displaystyle densita' = \frac{archi}{nodi}$ maggiore rispetto a Citeseer
+	\item un alta densità degli archi permette di creare molte interazioni fra i nodi e quindi il modello meglio rappresenta il grafo, si noti però che questo non è sempre facile da individuare, qui è presente uno stacco evidente in quanto entrambi i grafi hanno un estremamente bassa densità si dice infatti che sono sparsi
+	\item si è provato ad aumentare la densità considerando ambo i grafi come indiretti (ogni arco indiretto può essere rappresentato come due archi diretti) si ha quindi poco meno di un raddoppio della densità, è infatti possibile che un arco avesse già il suo opposto e quindi non risente del cambiamento.
+	L'effetto per entrambi è stato un innalzamento del valore medio lungo i 3 algoritmi usati
+	\item con il grafo indiretto l'incremento di S-CNRL e E-CNRL è molto maggiore rispetto a quello di \wv questo può indicare, che \wv lavora molto bene con i grafi orientati a dispetto degli altri metodi
+	\item l'introduzione degli attributi tramite il grafo bipartito ha notevolmente cambiato la situazione portando ad un incremento di prestazioni. Questi valori vanno confrontati con i dati del grafo orientato in quanto quello è il valore corretto, i punti blu del grafo non-orientato non sono comparabili in quanto servivano a mostrare come la densità influiva sul risultato tuttavia rappresentano un nuovo grafo diverso dall'originale, e quindi non paragonabile
+\end{itemize}
+%
+\section{Valutazione dell'individuazione di comunità}
 
-%\section{Valutazione dell'individuazione di comunità}
-%
-%
-%
 \end{document}
