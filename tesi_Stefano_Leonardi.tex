@@ -12,8 +12,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \input{import}
-	
- 	% nessuna numerazione
 	\ifinclude
   		\pagenumbering{gobble} 
   		\input{prima_pagina}
@@ -82,28 +80,25 @@
 %%   breve riassunto del problema affrontato
 %%   tecniche utilizzate e/o sviluppate
 %%   risultati raggiunti
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-      
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    % lista dei capitoli
-    %
-    % \input oppure \include
-    %
-    
-    \input{1_implementazione}			%capitolo 1
+	% lista dei capitoli
+   	%
+   	% \input oppure \include
+   	%
+	
+   	\input{1_implementazione}			%capitolo 1
 	\input{2_metodi_di_valutazione}	%capitolo 2
-    %\input{3_esperimenti}					%capitolo 3
-    %\input{4_lavori_futuri}					%capitolo 4
-    %\input{5_conclusioni}					%capitolo 5
-    \endgroup
+   	\input{3_esperimenti}					%capitolo 3
+   	\endgroup
 
 
-    % bibliografia in formato bibtex
-    % aggiunta del capitolo nell'indice
-    \addcontentsline{toc}{chapter}{Bibliografia}
-    % stile con ordinamento alfabetico in funzione degli autori
-    \bibliographystyle{plain}
-    \bibliography{biblio}
+   	% bibliografia in formato bibtex
+   	% aggiunta del capitolo nell'indice
+   	\addcontentsline{toc}{chapter}{Bibliografia}
+   	% stile con ordinamento alfabetico in funzione degli autori
+   	\bibliographystyle{plain}
+   	\bibliography{biblio}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Nota:
 %%

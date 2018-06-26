@@ -1,4 +1,4 @@
-\input{import}
+%\input{import}
 %
 \chapter{Esperimenti}
 \section{Origini dei grafi}
@@ -132,7 +132,7 @@ Questa può essere definita in tante maniere differenti in quanto si possono pes
 \end{center}
 Consideriamo il modello descritto tramite la Figura~\ref{fig:grafico_modello} e la Tabella~\ref{tab:coordinate_modello}. Inoltre sappiamo che $F=2$, gli archi originali adibiti al test sono $(1, 2), (3, 4), (4, 5), (5, 6)$ mentre quelli generati casualmente sono $(3, 5), (2, 5), (2, 6), (1, 3)$, i due insiemi sono nello stesso numero per creazione e perché così possono essere confrontati.\\
 Nelle prime due colonne della Tabella~\ref{tab:dati_es_prediction} sono riassunti gli archi e la loro origine. Le colonne seguenti rappresentano invece i passaggi successivi dell'algoritmo.\\
-Nella terza colonna si può notare che ad ogni arco è stato associato un valore che rappresenta la distanza euclidea misurata sul piano cartesiano generato dal modello fra i due estremi dell'arco. Qui la funzione di similarità premia i valori più bassi a discapito degli altri. Inoltre la tabella è stata ordinata in modo che tutti gli archi di un insieme siano associati con uno dell'altro in maniera casuale, si può notare  infatti che nella seconda colonna "sì" e "no" si alternano.\\
+Nella terza colonna si può notare che ad ogni arco è stato associato un valore che rappresenta la distanza euclidea misurata sul piano cartesiano generato dal modello fra i due estremi dell'arco. Qui la funzione di similarità premia i valori più bassi a discapito degli altri. Inoltre la Tabella è stata ordinata in modo che tutti gli archi di un insieme siano associati con uno dell'altro in maniera casuale, si può notare  infatti che nella seconda colonna "sì" e "no" si alternano.\\
 Nell'ultima colonna viene rappresentato l'incremento che si andrà ad apportare alla metrica AUC grazie alla valutazione dei due archi corrispondenti. Questo valore dovrà poi esser diviso per il numero delle coppie in gioco per riportarlo nell'intervallo $[0, 1]$, in questo caso risulta $\displaystyle \frac{\left( 1+0.5+0+1 \right)}{4} = 0.625$\\
 Si possono osservare alcuni peculiarità:
 \begin{itemize}
@@ -330,9 +330,9 @@ Ecco alcuni dettagli che emergono dai due grafici:
 \end{itemize}
 %
 \section{Valutazione dell'individuazione di comunità}
-Questa sezione ripercorre il corpo principale del tirocinio, ossia l'integrazione degli attributi. Vengono presentate quattro situazioni ognuna approfondisce un aspetto.
+Questa sezione ripercorre il corpo principale del tirocinio, ossia l'integrazione degli attributi e la valutazione di un partizione mediante la modularità. Vengono presentate quattro situazioni ognuna approfondisce un aspetto affrontato.
 %
-\subsection{Confronto numero comunità}
+\subsection{Confronto numero comunità}%1
 %
 \begin{figure}[htp]
 	\centering
@@ -341,14 +341,24 @@ Questa sezione ripercorre il corpo principale del tirocinio, ossia l'integrazion
 	\label{fig:MOD_1_num_cmty}
 \end{figure}
 %
+In Figura~\ref{fig:MOD_1_num_cmty} è possibile vedere l'andamento dell'algoritmo di d'individuazione delle comunità LDA, applicato al grafo Citeseer di cui si considera solo la struttura, la valutazione vien fatta con la \mmod.\\
+L'unico parametro che viene modificato è mostrato sull'asse delle ascisse ed è il numero di comunità che si vanno a ricercare all'interno del grafo. Ecco cosa s'osserva:
+\begin{itemize}
+	\item la progressione del numero di comunità da ricercare è stata scelta per mostrare la rapida crescita della modularità quando piccoli numeri sono coinvolti
+	\item il valore di $2$ comunità è estremamente basso perché difficilmente riesce a rappresentare a dovere una vasta selezione di nodi
+	\item la modularità cresce costantemente con l'aumentare delle comunità, che premiano sempre più le peculiarità del grafo
+	\item c'è un massimo compreso fra $30$ e $50$ dove questa crescita si interrompe
+	\item gli ultimi due dati $50$ e $100$ decrescono, questo è noto come il problema dell'overfitting, a causa di un addestramento eccessivo il risultato raggiunto non è più in linea con le aspettative.\\
+	Via via che i gruppi di nodi si stringono perdono di rappresentazione portando così ad un decremento della modularità. Si osserva questo fenomeno anche in Figura~\ref{fig:MOD_3_elaborazione}
+\end{itemize}
 
-\subsection{Metriche di valutazione}
-Nella Tabella~\ref{tab:2_metriche} vengono mostrati i due grafi di Cora e Citeseer, valutati mediante le tre metriche di calcolo della modularità spiegate.\\
-Ambo i grafi sono stati caricati senza considerare gli attributi dei nodi ma solo la struttura, la creazione del modello è avvenuta con S-CNRL e il suo algoritmo LDA, tramite cui sono state ricavate anche le $10$ comunità che vengono  valutate in Tabella.\\
+\subsection{Metriche di valutazione}%2
+Nella Tabella~\ref{tab:2_metriche} vengono mostrati i due grafi di Cora e Citeseer, valutati mediante tre differenti metriche di calcolo della modularità.\\
+Ambo i grafi sono stati caricati senza considerare gli attributi dei nodi ma solo la loro struttura, la creazione del modello è avvenuta con S-CNRL e il suo algoritmo LDA, tramite cui sono state ricavate anche le $10$ comunità che vengono  valutate in Tabella.\\
 \\
-Non ha senso confrontare i tre differenti metodi di calcolo della modularità, in quanto premiano aspetti diversi. Inoltre ognuno si posiziona su un diverso ordine di grandezza, spicca sopratutto \mover che presenta tutti i valori molto vicini a 0, questo perché come riporta la Tabella~\ref{tab:dati_grafi} ambo i grafi sono estremamente sparsi e a causa di ciò \mover ha il valore assoluto della modularità calcolata molto vicino a $0$.\\
+Non ha senso confrontare i tre differenti metodi di calcolo della modularità, in quanto premiano aspetti differenti. Inoltre ognuno si posiziona su un diverso ordine di grandezza, spicca sopratutto \mover che presenta tutti i valori molto vicini a 0, questo perché come riporta la Tabella~\ref{tab:dati_grafi} ambo i grafi sono estremamente sparsi e a causa di ciò \mover ha il valore assoluto della modularità calcolata molto vicino a $0$.\\
 Tutti i metodi assegnano a Cora il valore più alto, e questo fa capire che se una partizione è nettamente migliore di un'altra allora verrà premiata indipendentemente dalla metrica di valutazione usata.\\
-La \mmod è stata scelta come metrica ufficiale degli esperimenti, oltre al fatto che è quella usata nell'articolo di \cnrl, anche perché presenta dei valori facilmente analizzabili e comprensibili, \mover funziona bene ma è sempre difficile comprendere i risultati a cui s'arriva e si rischiano incomprensioni.
+La \mmod è stata scelta come metrica ufficiale degli esperimenti, oltre al fatto che è quella usata nell'articolo di \cnrl, anche perché presenta dei valori facilmente analizzabili e comprensibili, \mover funziona bene ma è sempre difficile comprendere i risultati a cui s'arriva rischiando incomprensioni.
 %
 \begin{center}
 	% Schema num: 2 -> confronto metriche (cmty=10, no_att, valutazione con grafo norm, metric 8 -> HalfLDA)
@@ -356,8 +366,8 @@ La \mmod è stata scelta come metrica ufficiale degli esperimenti, oltre al fatt
 		\hline
 		\ & \mmax & \mover & \mmod \\
 		\hline
-		Cora & $2.04 \e{-1}$ & $1.21 \e{-5}$ & $5.31 \e{-1}$ \\
-		Citeseer & $8.42 \e{-2}$ & $-3.55 \e{-6}$ & $3.67 \e{-1}$ \\
+		Cora & $2.04$ \e{-1} & $1.21$ \e{-5} & $5.31$ \e{-1} \\
+		Citeseer & $8.42$ \e{-2} & $-3.55$ \e{-6} & $3.67$ \e{-1} \\
 		%2.04E-01	1.21E-05	5.31E-01
 		%8.42E-02	-3.55E-06	3.67E-01
 		\hline
@@ -366,17 +376,7 @@ La \mmod è stata scelta come metrica ufficiale degli esperimenti, oltre al fatt
 	\label{tab:2_metriche}
 \end{center}
 %
-\subsection{Confronto metodi d'elaborazione}
-In Figura~\ref{fig:MOD_3_elaborazione} vengono confrontati tre differenti metodi d'elaborazione dei grafi per arrivare a trovare le comunità.\\
-Viene presentato il grafo Cora su cui si cercato d'individuare tramite una progressione da $3$ a $50$ comunità, tutte valutate in seguito tramite la \mmod. I tre metodi utilizzati sono:
-\begin{itemize}
-	\item noAtt: si considera in partenza unicamente la struttura del grafo, dai cui si ricavano i cammini e vengono elaborati con LDA
-	\item Att: oltre ai cammini derivanti dalla struttura si crea anche il grafo bipartito degli attributi, il tutto elaborato sempre mediante LDA
-	\item bigClam: è il metodo tratto dall'articolo "Overlapping community detection at scale: a nonnegative matrix factorization approach"\cite{bigClam_paper}, implementato dall'università di Stanford\cite{bigClam_code}.\\
-	È stato scelto come algoritmo di controllo per verificare l'andamento delle prestazioni di S-CNRL
-\end{itemize}
-Come mostrato in Figura~\ref{fig:MOD_1_num_cmty} anche qui con l'aumentare del numero di comunità si ha un aumento di prestazioni.
-
+\subsection{Confronto metodi d'elaborazione}%3
 %
 \begin{figure}[htp]
 	\centering
@@ -385,7 +385,24 @@ Come mostrato in Figura~\ref{fig:MOD_1_num_cmty} anche qui con l'aumentare del n
 	\label{fig:MOD_3_elaborazione}
 \end{figure}
 %
-\subsection{Confronto criteri di valutazione}
+In Figura~\ref{fig:MOD_3_elaborazione} vengono confrontati tre differenti metodi d'elaborazione dei grafi per arrivare a trovare le comunità.\\
+Viene presentato il grafo Cora su cui si è cercato d'individuare tramite una progressione da $3$ a $50$ comunità, tutte valutate in seguito tramite la \mmod. I tre metodi utilizzati sono:
+\begin{itemize}
+	\item noAtt: si considera in partenza unicamente la struttura del grafo, dai cui si ricavano i cammini e vengono elaborati con LDA
+	\item Att: oltre ai cammini derivanti dalla struttura si crea anche il grafo bipartito degli attributi, il tutto elaborato sempre mediante LDA
+	\item bigClam: è il metodo tratto dall'articolo "Overlapping community detection at scale: a nonnegative matrix factorization approach"\cite{bigClam_paper}, implementato dall'università di Stanford\cite{bigClam_code}.\\
+	È stato scelto come algoritmo di controllo per verificare l'andamento delle prestazioni di S-CNRL
+\end{itemize}
+Dalla Figura possiamo capire:
+\begin{itemize}
+	\item come avviene in Figura~\ref{fig:MOD_1_num_cmty} con l'aumentare del numero di comunità si ha il problema dell'overfitting, qui è lo stesso.\\
+	Per Citeseer il problema si rivela quando si cercano $50$ comunità e analogo è per Cora, questo sembra non valere per bigClam anche se è inevitabile che accada con numeri molto alti di comunità cercate
+	\item durante la crescita le prestazioni di bigClam restano costantemente inferiori
+	\item l'apice è raggiunto mediante gli attributi con $20$ comunità e un valore di $Q=0.986$, è importante notare non tutti gli apici dei vari metodi si posizionano a $20$ comunità, al contrario. BigClam sembra aver questo massimo oltre le $50$ comunità
+	\item valutare il grafo mediante e senza gli attributi sembra non influire troppo, anche se così non dovrebbe essere (meglio analizzato in Tabella~\ref{tab:4_valutazioni_err}
+\end{itemize}
+%
+\subsection{Confronto criteri di valutazione}%4
 %
 \begin{center}
 	% Schema num: 4 -> confronto valutazioni -> trovata inconsistenza AKA errore
@@ -394,22 +411,27 @@ Come mostrato in Figura~\ref{fig:MOD_1_num_cmty} anche qui con l'aumentare del n
 		\multicolumn{2}{|c|}{\textbf{Cora}} & \multicolumn{2}{|c|}{valutazione} \\
 		\multicolumn{2}{|c|}{\ } & structure & hypergraph \\
 		\hline
-		\multirow{2}{*}{elaborazione} & Dir & \textcolor{red}{$5.31\e{-1}$} & \textcolor{red}{$3.85 \e{-3}$} \\
-		& Att & $4.83 \e{-2}$ & $6.46 \e{-5}$ \\
+		\multirow{2}{*}{elaborazione} & Dir & \textcolor{red}{$5.31$ \e{-1}} & \textcolor{red}{$3.85$ \e{-3}} \\
+		& Att & $4.83$ \e{-2} & $6.46$ \e{-5} \\
 		\hline
 		\hline
 		\hline
 		\multicolumn{2}{|c|}{\textbf{Citeseer}} & \multicolumn{2}{|c|}{valutazione} \\
 		\multicolumn{2}{|c|}{\ } & structure & hypergraph \\
 		\hline
-		\multirow{2}{*}{elaborazione} & Dir & $3.38\e{-1}$ & $-9.46 \e{-5}$ \\
-		& Att & \textcolor{red}{$5.32 \e{-1}$} & \textcolor{red}{$1.50 \e{-2}$} \\
+		\multirow{2}{*}{elaborazione} & Dir & $3.38$ \e{-1} & $-9.46$ \e{-5} \\
+		& Att & \textcolor{red}{$5.32$ \e{-1}} & \textcolor{red}{$1.50$ \e{-2}} \\
 		\hline
 	\end{tabular}
 	\captionof{table}{Le misurazioni effettuate sono incoerenti, è quindi presente un errore}
 	\label{tab:4_valutazioni_err}
 \end{center}
 
+\chapter{Conclusioni}
+???
+
+%\end{document}
 
 
-\end{document}
+
+
