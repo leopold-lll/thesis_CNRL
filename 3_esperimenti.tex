@@ -2,13 +2,14 @@
 %
 \chapter{Esperimenti}
 \section{Origini dei grafi}
-In questa sezione vengono spiegati i dataset utilizzati e le loro origini.\\
-Si possono dividere in due gruppi, non solo perché tali gruppi al loro interno presentino caratteristiche d'affinità, ma anche in quanto i grafi che vi appartengono sono stati utilizzati nel corso del tirocinio per due applicazioni differenti. Nella Tabella~\ref{tab:dati_grafi} sono elencati i dettagli tecnici di ogni dataset.
+In questa sezione vengono spiegati i dataset utilizzati e cosa rappresentano.\\
+Si possono dividere in due gruppi, in quanto presentano caratteristiche d'affinità, ma anche perché i grafi dei due gruppi sono stati utilizzati nel corso del tirocinio per tre applicazioni differenti.\\
+Nella Tabella~\ref{tab:dati_grafi} sono elencati i dettagli tecnici di ogni dataset.
 %
 \begin{center}
 	\begin{tabular}{|l|r|r|r|c|c|r|}
 		\hline
-		grafi&nodi&archi&archi/nodi&diretto&etichette&attributi\\
+		nome&nodi&archi&archi/nodi&diretto&etichette&attributi\\
 		\hline
 		Cora & 2708 & 5429 & 2.0 & sì & 7 & 1433\\
 		Citeseer & 3312 & 4732 & 1.4 & sì & 6 & 3703\\
@@ -27,7 +28,7 @@ Si possono dividere in due gruppi, non solo perché tali gruppi al loro interno 
 Il dataset di \textbf{Cora} è un grafo diretto che rappresenta una rete di articoli scientifici sull'apprendimento automatico, ogni nodo è un articolo. Mentre ogni arco rappresenta il collegamento fra un documento è l'altro, se il documento $A$ cita il documento $B$ si avrà l'arco $(A, B)$. La rete è costruita in modo che ogni nodo abbia almeno un arco entrante o uscente.\\
 Ogni articolo appartiene ad esattamente una classe identificata da un etichetta. Ogni attributo rappresenta la presenza (deve apparire almeno 10 volte) o meno di una determinata parola nel testo del documento.\\
 \\
-Il dataset di \textbf{Citeseer} è un grafo diretto che rappresenta una rete analoga a quella di Cora, anche qui si hanno articoli scientifici che si citano vicendevolmente. L'etichetta è la classe d'appartenenza cui l'articolo appartiene, e gli attributi son nuovamente la presenza o meno di certe parole nel testo.\\
+Il dataset di \textbf{Citeseer} è un grafo diretto che rappresenta una rete analoga a quella di Cora, anche qui si hanno articoli scientifici che si citano vicendevolmente. L'etichetta è la classe d'appartenenza di cui l'articolo fa parte, e gli attributi son nuovamente la presenza o meno di certe parole all'interno del testo.\\
 %
 \subsection*{Grafi per esperimenti minori}
 Questi quattro grafi vengono presentati in ordine decrescente nel numero dei nodi, così come fatto nella seconda parte della Tabella~\ref{tab:dati_grafi}.\\
@@ -40,11 +41,11 @@ Questi quattro grafi vengono presentati in ordine decrescente nel numero dei nod
 %
 \section{Modello di un grafo}
 In questa sezione viene spiegato cosa si intende per modello di un grafo, e perché è tanto importante per gli algoritmi che vi sono costruiti sopra.\\
-Come descritto nel capitolo sull'implementazione è necessario visitare il grafo per generare su di questo dei cammini. Questi vengono presi in input dall'algoritmo di \wv che tramite una rete neurale va a descrivere ogni nodo che s'individua tramite un vettore di valori reali, mentre \cnrl utilizza un metodo alternativo chiamato Latent Dirichlet Allocation (LDA)\cite{LDA} o una sua variante detta HalfLDA.\\
+Come descritto nel capitolo sull'implementazione è necessario visitare il grafo per generare su questo dei cammini. Tali vettori di nodi vengono presi in input dall'algoritmo di \wv che tramite una rete neurale va a descrivere ogni nodo che coinvolto tramite un vettore di valori reali, mentre \cnrl utilizza un metodo alternativo chiamato Latent Dirichlet Allocation (LDA)\cite{LDA} o in alternativa una sua variante detta HalfLDA, entrambe sono comunque basate su \wv.\\
 \begin{figure}[htp]
 	\centering
 	\includegraphics{immagini/punti_modello}
-	\caption{Son visualizzati i nodi d'un grafo che vengono rappresentati da un modello che dispone di due dimensioni}
+	\caption{Son visualizzati i nodi d'un grafo che vengono rappresentati da un modello che dispone di due dimensioni, mostrato in Tabella~\ref{tab:coordinate_modello}}
 	\label{fig:grafico_modello}
 \end{figure}
 \\
@@ -64,17 +65,18 @@ Come descritto nel capitolo sull'implementazione è necessario visitare il grafo
 	\captionof{table}{Tabella rappresentativa del modello dei nodi in Figura~\ref{fig:grafico_modello}}
 	\label{tab:coordinate_modello}
 \end{center}
-Di norma ogni vettore è lungo $64$, e ogni numero reale rappresenta una posizione lungo un asse in un piano a $64$ dimensioni. Si può però pensare anche ad un caso più semplice, ad esempio in Figura~\ref{fig:grafico_modello} si possono vedere sei punti che si può immaginare appartenessero ad un grafo e fossero legati fra loro in qualche modo. Una volta che son stati generati i cammini su tale grafo, e questi forniti ad uno dei due algoritmi, viene ritornata la Tabella~\ref{tab:coordinate_modello} dove ad ogni ID di un nodo vengono associati due valori (qui interi per semplicità), sono usati due valori perché così son facili da mostrare con $64$ sarebbe pressoché impossibile. Si possono dunque immaginare come coordinate su un piano cartesiano, ed è così che si arriva alla Figura~\ref{fig:grafico_modello}, qui visivamente si può dire che esistono 3 gruppi distinti che sono evidenziati dai colori, abbiamo quindi $(1, 2) - (3, 4, 5) - (6)$.\\
-Escludendo l'influenza dei colori, il nostro occhio ci suggerisce l'esistenza di questi 3 gruppi in quanto i nodi che vi fanno parte sono vicini fra loro, questo è esattamente ciò che ci si aspetta dalla definizione di somiglianza, tanto più due nodi sono vicini tanto più questi sono simili. Si ricorda che esistono comunque molte definizioni formali di somiglianza e la distanza euclidea è solo una di queste.\\
+Di norma ogni vettore è lungo $64$, e ogni numero reale rappresenta una posizione lungo un asse in uno spazio a $64$ dimensioni. È possibile pensare anche ad un caso più semplice, ad esempio in Figura~\ref{fig:grafico_modello} si possono vedere sei punti che si può immaginare appartenessero ad un grafo e fossero legati fra loro in qualche modo. Una volta che son stati generati i cammini su tale grafo, e questi forniti ad uno dei due algoritmi, viene ritornata la Tabella~\ref{tab:coordinate_modello} dove ad ogni ID di un nodo vengono associati due valori (qui interi per semplicità), vengono ora usati due valori perché son facili da mostrare con $64$ sarebbe pressoché impossibile. Si possono dunque immaginare come coordinate su un piano cartesiano, ed è così che si arriva alla Figura~\ref{fig:grafico_modello}, visivamente si può dire che esistono 3 gruppi distinti evidenziati dai colori, abbiamo quindi $(1, 2) - (3, 4, 5) - (6)$.\\
+Escludendo l'influenza causata dai colori, il nostro occhio ci suggerisce l'esistenza di questi 3 gruppi in quanto i nodi che vi fanno parte sono vicini fra loro, questo ricalca alla perfezione la definizione di somiglianza, tanto più due nodi sono vicini tanto più questi sono simili. Si ricorda che esistono comunque molte definizioni formali di somiglianza e la distanza euclidea è solo una di queste.\\
 \\
-Di conseguenza se due nodi molto simili, e quindi vicini, vengono collegati da un arco allora tale arco assume un valore molto elevato, vicino a $1$, diversamente assumerà un valore molto basso, vicino a $0$, se i nodi che lega sono diversi ossia molto lontani, questo valore lo chiameremo da ora in avanti coerenza\footnote{è il nome migliore che m'è venuto in mente non c'è un vero e proprio termine tecnico per questa definizione} di un arco.
+Se due nodi molto simili, e quindi vicini, vengono collegati da un arco allora tale arco assume un valore molto elevato, vicino a $1$, diversamente assumerà un valore molto basso, vicino a $0$, se i nodi che lega sono diversi ossia molto lontani.\\
+Questo valore verrà chiamato d'ora in avanti coerenza di un arco\footnote{Non esiste un vero e proprio termine tecnico per questa definizione}.
 %
 \section{Link Prediction}
-Ecco il primo di tre algoritmi, che verranno spiegati in questo capitolo, tutti si basano sul modello del grafo appena spiegato.\\
+Questo è il primo di tre algoritmi, che verranno spiegati in questo capitolo, tutti e tre basati sul modello del grafo appena spiegato.\\
 L'algoritmo di \LPred ha lo scopo d'assegnare un valore al grafo in input, questo valore è una percentuale e per tale motivo ricade nell'intervallo $[0, 1]$. Questa percentuale sta a rappresentare la coerenza degli archi del grafo, nel dettaglio un arco è molto coerente se lega due nodi simili, un grafo è tanto più coerente tanti più archi coerenti ha.
 %
 \subsection{Dinamiche di funzionamento}
-Per primo viene caricato il grafo, sempre come lista d'archi in quanto sono questi il fulcro dell'algoritmo. Si va a spezzare gli archi in due gruppi dopo averli mescolati per non creare delle divisioni sempre uguali, tale rottura viene fatta sulla base del parametro $F$ che indica quale sarà la percentuale degli archi adibiti all'addestramento del modello e quali invece saranno adibiti alla fase di test.\\
+In prima istanza viene caricato il grafo, sempre come lista d'archi in quanto sono questi il fulcro dell'algoritmo. Si va poi a spezzare gli archi in due gruppi, dopo averli mescolati per non creare delle divisioni sempre uguali, tale separazione viene fatta sulla base del parametro $F$ che indica quale sarà la percentuale degli archi adibiti all'addestramento del modello e quali invece saranno adibiti alla fase di test.\\
 Il numero degli archi usati per il test viene dato dalla Formula~\ref{eq:n_archi_fake}
 \begin{equation}
 	m \cdot \frac{1}{F}
@@ -86,27 +88,27 @@ Il numero degli archi usati per il test viene dato dalla Formula~\ref{eq:n_archi
 \end{equation}
 mentre quelli utilizzati per l'addestramento corrispondono alla Formula~\ref{eq:n_archi_true}, dove $m$ è il numero di archi del grafo.\\
 Il nuovo grafo (\textbf{G1}) creatosi, inseguito alla rimozione degli archi per il test, viene utilizzato per generare il modello.\\
-Per ogni arco appartenente all'insieme di test (\textbf{Test=T}) se ne genera un altro (\textbf{Check=C}) tramite una coppia di nodi casuali assicurandosi che non corrispondano ad un arco già esistente. Si hanno quindi tre insiemi, il primo adibito all'addestramento stabilisce il modello necessario a discernere quale dei due restanti è la migliore selezione.
-Per ogni arco, di T e C, si va a veder quanto sono simili i nodi che lega e se ne calcola così la coerenza, grazie all'apposita funzione di similarità, ora disponibile. Gli archi possono essere valutati sulla base di questo nuovo parametro.\\
-Siamo interessati a capire quanto erano buoni gli archi originari del grafo, T, rispetto a quelli generati casualmente, C. 
+Per ogni arco appartenente all'insieme di test (\textbf{Test=T}) se ne genera un altro (\textbf{Check=C}) tramite una coppia di nodi casuali assicurandosi che non corrispondano ad un arco già esistente. Si hanno quindi tre insiemi, il primo adibito all'addestramento stabilisce il modello necessario a discernere, quale delle due restanti selezioni, è la migliore.
+Per ogni arco, di T e di C, si va a veder quanto sono simili i nodi che lega e se ne calcola così la coerenza, grazie all'apposita funzione di similarità, ora disponibile. Gli archi possono essere valutati sulla base di questo nuovo parametro.\\
+Si è interessati a capire quanto sono buoni gli archi originari del grafo, T, rispetto a quelli generati casualmente, C. 
 \begin{equation}
 	\frac{\left( n_1 + \frac{n_2}{2} \right)}{n}
 	\label{eq:AUC_formula}
 \end{equation}
-Si usa perciò la metrica detta AUC\cite{AUC_metric}, che si basa sulla Formula~\ref{eq:AUC_formula}, dove gli elementi sono:
+Si usa perciò la metrica detta AUC\cite{AUC_metric}, che si basa sulla Formula~\ref{eq:AUC_formula}, i cui elementi sono:
 \begin{itemize}
 	\item $n$ è il numero di archi presenti nell'insieme di test, calcolato mediante la Formula~\ref{eq:n_archi_fake}
 	\item $n1$ sono le volte in cui un arco di test T è migliore di un arco casuale di C
 	\item $n2$ sono le volte in cui un arco di test T ha pari valore o quasi rispetto ad un arco casuale di C
 \end{itemize}
-Per ogni arco di T se ne associa casualmente un altro di C, e qui si guarda quanto valgono i due archi coinvolti se l'arco di T vale più dell'arco di C si incrementa di $1$ il valore di AUC se uguali o quasi si incrementa di $0.5$. Avendo fatto ciò con ogni arco se ne calcola la media.\\
+Per ogni arco di T se ne associa casualmente un altro di C, e si guarda quanto valgono i due archi coinvolti se l'arco di T vale più dell'arco di C si incrementa di $1$ il valore di AUC se uguali o quasi (differenza inferiore ad una soglia detta $\displaystyle \epsilon$) si incrementa di $0.5$. Avendo fatto ciò con ogni arco se ne calcola la media.\\
 \\
 Il valore finale della metrica AUC dipende fortemente da quale metodo si adotta per abbinare gli archi appartenenti a T e C, un accoppiamento sbagliato può fortemente sbilanciare il risultato, è per questo motivo che si va ad utilizzare un abbinamento casuale.\\
-Inoltre si ha il parametro $F$ che influisce infatti più questo si avvicina a $1$ più cresce il numero di archi da utilizzare per la fase di test, diminuiscono di conseguenza i dati su cui fare affidamento per creare un buon modello che rappresenti appieno il grafo di partenza, e quindi il valore finale da aspettarsi è tendenzialmente più basso.\\
+Il parametro $F$ influisce sul risultato finale, infatti più questo si avvicina a $1$ più cresce il numero di archi da utilizzare per la selezione di test, diminuiscono di conseguenza i dati su cui fare affidamento per creare un buon modello che rappresenti appieno il grafo di partenza, quindi il valore finale da aspettarsi è tendenzialmente più basso.\\
 È necessario ricordare che la stima qui calcolata dipende fortemente dalla selezione iniziale, ed è per questo motivo che tutto questo processo non viene svolto solo una volta bensì $F$ volte, così da andare a stabilizzare il valore calcolato tramite la media di tutte le iterazioni. Inoltre questo permette di utilizzare via via tutti gli archi per addestrare il modello di \textbf{G1}.\\
 \\
-L'intero algoritmo si basa su confrontare gli archi grazie al valore che li rappresenta per individuare i più rilevanti, e quindi la parte più importante e critica è la generazione di tale valore mediante la funzione di similarità.\\
-Questa può essere definita in tante maniere differenti in quanto si possono pesare diversi aspetti. Un esempio classico è basato sulla distanza euclidea più due nodi sono distanti nella rappresentazione del modello meno sono simili. Verranno mostrate le applicazioni di altre funzioni di similarità basate su diversi principi che però non verranno qui riportati.
+L'intero algoritmo si basa su confrontare gli archi grazie al valore che li rappresenta per individuare i più rilevanti, quindi la parte critica e più importante è la generazione di tale valore mediante la funzione di similarità.\\
+Questa può essere definita in svariate maniere differenti in quanto si possono pesare diversi aspetti. Un esempio classico è basato sulla distanza euclidea più due nodi sono distanti nella rappresentazione del modello meno sono simili. Verranno mostrate le applicazioni di altre funzioni di similarità basate su diversi principi che però non verranno qui riportati.
 %
 \subsection{Esempio}
 \begin{center}
@@ -130,20 +132,21 @@ Questa può essere definita in tante maniere differenti in quanto si possono pes
 	\captionof{table}{Tabella riassuntiva del procedimento di \LPred}
 	\label{tab:dati_es_prediction}
 \end{center}
-Consideriamo il modello descritto tramite la Figura~\ref{fig:grafico_modello} e la Tabella~\ref{tab:coordinate_modello}. Inoltre sappiamo che $F=2$, gli archi originali adibiti al test sono $(1, 2), (3, 4), (4, 5), (5, 6)$ mentre quelli generati casualmente sono $(3, 5), (2, 5), (2, 6), (1, 3)$, i due insiemi sono nello stesso numero per creazione e perché così possono essere confrontati.\\
+Si consideri il modello descritto tramite la Figura~\ref{fig:grafico_modello} e la Tabella~\ref{tab:coordinate_modello}. Si sa inoltre che $F=2$, gli archi originali adibiti al test sono $(1, 2), (3, 4), (4, 5), (5, 6)$ mentre quelli generati casualmente sono $(3, 5), (2, 5), (2, 6), (1, 3)$, i due insiemi sono nello stesso numero per creazione e perché così possono essere facilmente confrontati.\\
 Nelle prime due colonne della Tabella~\ref{tab:dati_es_prediction} sono riassunti gli archi e la loro origine. Le colonne seguenti rappresentano invece i passaggi successivi dell'algoritmo.\\
-Nella terza colonna si può notare che ad ogni arco è stato associato un valore che rappresenta la distanza euclidea misurata sul piano cartesiano generato dal modello fra i due estremi dell'arco. Qui la funzione di similarità premia i valori più bassi a discapito degli altri. Inoltre la Tabella è stata ordinata in modo che tutti gli archi di un insieme siano associati con uno dell'altro in maniera casuale, si può notare  infatti che nella seconda colonna "sì" e "no" si alternano.\\
+Nella terza colonna si può notare che ad ogni arco è stato associato un valore che rappresenta la distanza euclidea misurata sul piano cartesiano generato dal modello fra i due estremi dell'arco. La funzione di similarità premia i valori più bassi a discapito degli altri. Inoltre la Tabella è stata ordinata in modo che tutti gli archi di un insieme siano associati con uno dell'altro in maniera casuale, si può notare  infatti che nella seconda colonna "sì" e "no" s'alternano.\\
 Nell'ultima colonna viene rappresentato l'incremento che si andrà ad apportare alla metrica AUC grazie alla valutazione dei due archi corrispondenti. Questo valore dovrà poi esser diviso per il numero delle coppie in gioco per riportarlo nell'intervallo $[0, 1]$, in questo caso risulta $\displaystyle \frac{\left( 1+0.5+0+1 \right)}{4} = 0.625$\\
-Si possono osservare alcuni peculiarità:
+Si possono osservare alcune peculiarità:
 \begin{itemize}
 	\item l'accoppiamento degli archi viene fatto in maniera casuale per evitare uno sbilanciamento
-	\item una selezione a favore degli archi autentici porterebbe ad avere un incremento nullo del valore di AUC, al contrario si potrebbe avere un incremento di due unità se si favorissero  gli archi generati casualmente
-	\item non si hanno archi ripetuti perché viene impedito alla creazione ma nulla vieta che un arco di C, corrisponda ad un arco usato in principio per generare il modello
-	\item si può immaginare che più il valore di $F$ è grande e quindi più è grande la selezione di archi per l'addestramento (grazie alla Formula~\ref{eq:n_archi_true}) più il valore della calcolato cresca
+	\item nel caso mostrato una selezione a favore degli archi autentici porterebbe ad avere un incremento nullo del valore di AUC, al contrario si potrebbe avere un incremento di due unità se si favorissero  gli archi generati casualmente
+	\item non si hanno archi ripetuti perché viene impedito alla creazione, ma questo non vuol dire che un arco di C non possa corrispondere ad un arco usato in principio per generare il modello
+	\item si può immaginare che più il valore di $F$ è grande e quindi più è grande la selezione di archi per l'addestramento (grazie alla Formula~\ref{eq:n_archi_true}), più il valore di AUC calcolato cresca
 \end{itemize}
-L'algoritmo prevederebbe una seconda iterazione di tutto questo procedimento utilizzando gli archi in principio scartati come nuova base per il modello per poi calcolare la media delle percentuali.\\ Omettiamo questa fase perché uguale a quella appena illustrata.
+L'algoritmo prevederebbe una seconda iterazione di tutto questo procedimento utilizzando gli archi in principio scartati come nuova base per il modello per poi calcolare la media delle percentuali.\\
+Si omette questa fase perché uguale a quella appena illustrata.
 %
-\subsection{Risultati}
+\subsection{Applicazioni}
 Le similarità utilizzate in questi esempi sono\cite{all_metric}:
 \begin{itemize}
 	\item DW = DeepWalk
@@ -163,43 +166,43 @@ Le similarità utilizzate in questi esempi sono\cite{all_metric}:
 \begin{figure}[htp]
 	\centering
 	\includegraphics[width=\linewidth]{immagini/LP_CN}
-	\caption{L'andamento della metrica di Common Neighbors, su tre grafi distinti attraverso differenti percentuali di selezione}
+	\caption{Andamento della metrica di Common Neighbors, su tre grafi distinti attraverso differenti percentuali di selezione}
 	\label{fig:LP_CN}
 \end{figure}
 %
 \begin{figure}[htp]
 	\centering
 	\includegraphics[width=\linewidth]{immagini/LP_Dolphins}
-	\caption{L'andamento del grafo dolphins su diverse metriche attraverso differenti percentuali di selezione}
+	\caption{Andamento del grafo dolphins su diverse metriche attraverso differenti percentuali di selezione}
 	\label{fig:LP_Dolphins}
 \end{figure}
 %
 Questo algoritmo ha tre possibili variabili su cui si può lavorare:
 \begin{itemize}
-	\item \textbf{Il parametro $F$} (dall'inglese fold) che viene bloccato nella Figura~\ref{fig:LP_fold3}, si può notare come ogni grafo abbia un livello su cui si attesta, BlogCatalog grazie al fatto che è molto denso ha un valore in media molto alto rispetto ai tre grafi restanti
+	\item \textbf{Il parametro $F$} (dall'inglese fold) viene fissato nella Figura~\ref{fig:LP_fold3}, si può notare come ogni grafo abbia un livello su cui si attesta, BlogCatalog grazie al fatto che è estremamente denso ha un valore in media molto alto rispetto ai tre grafi restanti
 	\item Nella Figura~\ref{fig:LP_CN} si lavora su un \textbf{unica metrica}, si utilizza solo la funzione di similarità denominata Common Neighbors, che si basa sui nodi geometricamente vicini agli estremi di un arco all'interno del modello del grafo per valutare la somiglianza.\\
-	Qui si può notare come all'aumentare del parametro $F$ il valore che si associa ad ogni grafo tende ad aumentare, questo è dovuto ad un modello meglio addestrato perché dispone di più dati in partenza, e quindi si ha una migliore valutazione
-	\item La Figura~\ref{fig:LP_Dolphins} è forse la più semplice da osservare in quanto si osserva \textbf{un solo grafo}. Qui come prima si osserva che l'influenza del parametro $F$ è altissima sul risultato finale, inoltre si può vedere che le prestazioni di DeepWalk siano un attimo più alte rispetto al resto che invece tende ad avere le stesse performance 
+	Si può notare come all'aumentare del parametro $F$ il valore che si associa ad ogni grafo tende ad aumentare, questo è dovuto ad un modello meglio addestrato perché dispone di più dati in partenza, e quindi si ha una migliore valutazione
+	\item La Figura~\ref{fig:LP_Dolphins} è forse la più semplice da osservare in quanto si osserva \textbf{un solo grafo}. Come prima si vede che l'influenza del parametro $F$ sul risultato finale è altissima, inoltre si può notare che le prestazioni di DeepWalk sono leggermente più alte rispetto al resto che invece tende ad avere le stesse performance 
 \end{itemize}
 Si precisa che questi sono degli esempi rappresentativi dell'andamento generale, che però non viene riportato in quanto sarebbe molto complesso da comprendere.
 %
 \section{Classificazione dei nodi}
-Il problema della classificazione dei nodi/vertici punta a riconoscere partendo dalla rappresentazione di un elemento a quale classe questo appartiene, per definizione un elemento può appartenere ad una ed una sola classe, è tuttavia possibile pensare a classi interne ad altre classi o a sovrapposizioni. Per esempio data la classe A e la classe B si ha che, per come sono state definite, tutti gli elementi di A appartengono anche a B ($\displaystyle A \subseteq B$) di conseguenza $\displaystyle A \cap B = A$, tuttavia questo vale per l'insiemistica, nei problemi di classificazione fra A e B non c'è nessuna relazione e conseguentemente si ha che $\displaystyle A \cap B = \emptyset$.%esempio anche per intersezione???
+Il problema della classificazione dei nodi/vertici punta a riconoscere partendo dalla rappresentazione di un elemento a quale classe questo appartenga, per definizione un elemento può appartenere ad una ed una sola classe, è tuttavia possibile pensare a classi interne ad altre classi o a sovrapposizioni. Per esempio data la classe A e la classe B si ha che, per come sono state definite, tutti gli elementi di A appartengono anche a B ($\displaystyle A \subseteq B$) di conseguenza $\displaystyle A \cap B = A$, tuttavia questo vale per l'insiemistica, nei problemi di classificazione fra A e B non c'è nessuna relazione e conseguentemente si ha che $\displaystyle A \cap B = \emptyset$.%esempio anche per intersezione???
 %
 \subsection{Dinamiche di funzionamento}
-Il punto di partenza è costante, dato il grafo lo si visita per generare i cammini e con questi s'invoca l'algoritmo che genera il modello. Il modello viene disordinato e spezzato secondo il parametro di training ratio $T_r$, ossia percentuale d'addestramento, questo indica che percentuale del modello dovrà essere usata per l'addestramento, la restante sarà per i test.\\
-In aggiunta si considerano anche le etichette o classi d'appartenenza di ogni nodo, si hanno quindi delle triplette contenenti:
+Il punto di partenza è costante, dato il grafo lo si visita per generare i cammini e con questi s'invoca l'algoritmo che genera il modello. Il modello viene disordinato e spezzato secondo il parametro di training ratio $T_r$, ossia la percentuale d'addestramento, questo indica la percentuale del modello che dovrà essere usata per l'addestramento, la restante sarà per i test.\\
+In aggiunta si considerano anche le etichette o classi d'appartenenza, quindi per ogni nodo si ha una tripletta contenente:
 \begin{itemize}
 	\item ID del nodo che può anche essere dimenticato
-	\item il vettore di numeri reali presi dal modello che lo rappresenta
+	\item il vettore di numeri reali che lo rappresenta, vengono presi dal modello
 	\item l'identificativo della classe a cui si appartiene
 \end{itemize}
-Con questi dati viene addestrata la funzione di classificazione, o classificatore, il cui scopo sarà predire la classe d'appartenenza dato in input il vettore di un qualche nodo.\\
+Con questi dati viene addestrata la \textbf{funzione di classificazione}, o \textbf{classificatore}, il cui scopo sarà predire la classe d'appartenenza dato in input il vettore di un qualsiasi nodo.\\
 \\
 In seguito per ogni nodo appartenente all'insieme di test si cerca di predire la sua classe sottoponendo il suo vettore al classificatore e una volta terminato si confronta se l'esito corrisponde con la reale classe, nota grazie allo stesso file di etichette utilizzato per l'addestramento.\\
 È importante far notare che il modello viene spezzato in due perché il classificatore deve essere addestrato su dati diversi da quelli che prenderà in seguito in input, altrimenti non ci sarebbe nulla da predire in quanto i dati passati vengono ricordati e quindi è impossibile sbagliare a dare una risposta.\\
 \\
-La valutazione delle predizioni effettuate può avvenire mediante il metodo più semplice ossia il \textbf{tasso d'errore}, che corrisponde alla Formula~\ref{eq:tasso_errore}, si contano quanti errori si son fatti rispetto al totale o si usa il metodo opposto ossia \textbf{l'accuratezza}, definita nella Formula~\ref{eq:accuratezza}, che conta i risultati con esito positivo rispetto al totale.
+La valutazione delle predizioni effettuate può avvenire mediante un metodo semplice ossia il \textbf{tasso d'errore}, che corrisponde alla Formula~\ref{eq:tasso_errore}, si contano quanti errori si son fatti rispetto al totale o si usa il metodo opposto ossia \textbf{l'accuratezza}, definita nella Formula~\ref{eq:accuratezza}, che conta i risultati con esito positivo rispetto al totale.
 %
 \begin{equation}
 	T_{err} = \frac{N(errori)}{N(previsioni)}
@@ -207,7 +210,7 @@ La valutazione delle predizioni effettuate può avvenire mediante il metodo più
 \end{equation}
 %
 \begin{equation}
-	Acc = 1 - \left( \frac{N(errori)}{N(previsioni)} \right) = \frac{N(corretti)}{N(previsioni)}
+	Acc = 1 - T_{err} = 1 - \left( \frac{N(errori)}{N(previsioni)} \right) = \frac{N(corretti)}{N(previsioni)}
 	\label{eq:accuratezza}
 \end{equation}
 %
@@ -245,7 +248,7 @@ Se si vogliono fare delle misurazioni particolari si sfrutta invece la \textbf{m
 \end{center}
 \end{multicols}
 %
-Da questa matrice possiamo estrarre diverse misure:
+Da questa matrice possiamo estrarre diverse misurazioni:
 \begin{itemize}
 	\item \textbf{accuratezza} qui prende una nuova formulazione: $\displaystyle Acc = \frac{TP + TN}{TP + TN + FP + FN} $
 	\item \textbf{sensibilità} penalizza le risposte negative sbagliate di conseguenza è meglio dare per positivo un esito se non è certo.\\
@@ -256,10 +259,10 @@ Da questa matrice possiamo estrarre diverse misure:
 	Definita come: $\displaystyle Macro_{S} = \frac{S_1 + ... + S_n}{n} $
 	\item \textbf{Micro} precisione/sensibilità è la media aritmetica delle componenti di S o di P prima di calcolarle, per poi considerarle un unica S o P.\\
 	Definita come: $\displaystyle Micro_{P} = \frac{TP_1 + ... + TP_n }{ (TP_1 + ... + TP_n) + (FP_1 + ... + FP_n) } $
-	\item \textbf{F1-Score} è la media armonica di: micro o macro o normale sensibilità e precisione.\\
+	\item \textbf{F1-Score} è la media armonica di: micro/macro/normale sensibilità e precisione.\\
 	Definita come: $\displaystyle F1-Score = \frac{2}{ \frac{1}{S} + \frac{1}{P} } = \frac{2 \cdot S \cdot P}{ S + P }$
 \end{itemize}
-Nel nostro caso sensibilità e precisione non possono essere utilizzate in quanto ci sono troppi dati, mentre usare micro e macro non ha senso in quanto le classi sono perfettamente equivalenti, di conseguenza premiarne una a discapito di un'altra non ha significato. Per questo se serve si adotta l'F1-score. Tuttavia questa procedura non è veloce da calcolare pertanto spesso si adotta il più semplice e veloce metodo dell'accuratezza.
+Nel caso mostrato sensibilità e precisione non possono essere utilizzate in quanto ci sono troppi dati, mentre usare micro e macro non ha senso in quanto le classi sono perfettamente equivalenti, di conseguenza premiarne una a discapito di un'altra non ha significato. Per questo se serve si adotta l'F1-score. Tuttavia questa procedura non è veloce da calcolare pertanto spesso si adotta il più semplice e veloce metodo dell'accuratezza.
 %
 \subsection{Esempio}
 \begin{center}
@@ -280,7 +283,7 @@ Nel nostro caso sensibilità e precisione non possono essere utilizzate in quant
 	\captionof{table}{Tabella riassuntiva del procedimento di classificazione dei vertici}
 	\label{tab:dati_es_classify}
 \end{center}
-Tutti i dati dell'esempio sull'algoritmo di classificazione sono riassunti nella Tabella~\ref{tab:dati_es_classify}. Nella prima colonna abbiamo gli ID dei nodi coinvolti, elemento che l'algoritmo ignora completamente, la seconda colonna contiene il vettore rappresentativo di ogni nodo, qui per semplicità è stato ridotto ad un solo numero.
+Tutti i dati dell'esempio sull'algoritmo di classificazione sono riassunti nella Tabella~\ref{tab:dati_es_classify}. Nella prima colonna abbiamo gli ID dei nodi coinvolti, elemento che l'algoritmo ignora completamente. La seconda colonna contiene il vettore rappresentativo di ogni nodo, qui per semplicità è stato ridotto ad un solo numero.
 %
 \begin{equation}
 	C(x)=
@@ -299,34 +302,34 @@ Mentre nella colonna "Classe" mostra il valore autentico del nodo. Infine nell'u
 \\
 Per una valutazione mediante accuratezza è sufficiente calcolare la media aritmetica dell'ultima colonna, ossia $\displaystyle Acc = \frac{1+1+1+1+1}{8} = \frac{5}{8} = 0.625$. Mentre per l'F1-score sarebbe necessario calcolare sensibilità e precisione di ognuna delle 3 classi, riassumerli mediante micro o macro, ed infine arrivare ad un valore con F1-score.
 %
-\subsection{Risultati}
+\subsection{Applicazioni}
 I grafi scelti per questa applicazione sono Cora (Figura~\ref{fig:VC_cora}) e Citeseer (Figura~\ref{fig:VC_citeseer}) perché fra quelli presentati nella Tabella~\ref{tab:dati_grafi} sono gli unici che sono forniti di attributi sui nodi, e questo permette di mostrare come l'utilizzo del grafo bipartito per l'introduzione degli attributi modifica le prestazioni.
 %
 \begin{figure}[htp]
 	\centering
 	\includegraphics[width=\linewidth]{immagini/VC_cora}
-	\caption{L'andamento del grafo Cora, con 3 differenti algoritmi di creazione del modello e 3 diverse interpretazioni iniziali, valutato mediante l'accuratezza}
+	\caption{Andamento del grafo Cora, con 3 differenti algoritmi di creazione del modello e 3 diverse interpretazioni iniziali, valutato mediante l'accuratezza}
 	\label{fig:VC_cora}
 \end{figure}
 %
 \begin{figure}[htp]
 	\centering
 	\includegraphics[width=\linewidth]{immagini/VC_citeseer}
-	\caption{L'andamento del grafo Citeseer, con 3 differenti algoritmi di creazione del modello e 3 diverse interpretazioni iniziali, valutato mediante l'accuratezza}
+	\caption{Andamento del grafo Citeseer, con 3 differenti algoritmi di creazione del modello e 3 diverse interpretazioni iniziali, valutato mediante l'accuratezza}
 	\label{fig:VC_citeseer}
 \end{figure}
 %
 Sull'asse delle ordinate vi sono i valori compresi nell'intervallo $[0, 1]$ misurati mediante la tecnica dell'accuratezza. Mentre sull'asse delle ascisse vi sono i tre algoritmi utilizzati per creare il modello del grafo partendo dai cammini. \wv è il metodo di controllo, mentre S-CNRL e E-CNRL che lavorano rispettivamente con LDA e HalfLDA, sono i nuovi algoritmi proposti. Entrambi per alcune parti continuano ad usare \wv.\\
-Sia Cora che Citeseer sono grafi originariamente diretti (misurazioni rosse), tuttavia si è provato ad interpretarli anche come se fossero indiretti (campionamento blu), l'ultimo andamento è dato dall'introduzione degli attributi (dati verdi).\\
+Sia Cora che Citeseer sono grafi originariamente diretti (\textcolor{red}{misurazioni rosse}), tuttavia si è provato ad interpretarli anche come se fossero indiretti (\textcolor{blue}{campionamento blu}), l'ultimo andamento è dato dall'introduzione degli attributi (\textcolor{green}{dati verdi}).\\
 Ecco alcuni dettagli che emergono dai due grafici:
 \begin{itemize}
 	\item \wv mostra prestazioni, anche se di poco, maggiori delle due alternative che invece tendono ad equivalersi
-	\item la media dei valori delle misurazione nel grafico di Cora~\ref{fig:VC_cora} ($0.696$) rispetto a quella di Citeseer~\ref{fig:VC_citeseer} ($0.491$) è maggiore di circa $\displaystyle \frac{2}{10}$ questo è dovuto anche al fatto che Cora abbia una $\displaystyle densita' = \frac{archi}{nodi}$ maggiore rispetto a Citeseer
+	\item la media dei valori delle misurazione nel grafico di Cora (Figura~\ref{fig:VC_cora}) è $0.696$ rispetto a quella di Citeseer (Figura~\ref{fig:VC_citeseer}) che è $0.491$, la prima risulta essere maggiore di circa $\displaystyle \frac{2}{10}$ questo è dovuto anche al fatto che Cora abbia una $\displaystyle densita' = \frac{archi}{nodi}$ maggiore rispetto a Citeseer
 	\item un alta densità degli archi permette di creare molte interazioni fra i nodi e quindi il modello meglio rappresenta il grafo, si noti però che questo non è sempre facile da individuare, qui è presente uno stacco evidente in quanto entrambi i grafi hanno un estremamente bassa densità si dice infatti che sono sparsi
 	\item si è provato ad aumentare la densità considerando ambo i grafi come indiretti (ogni arco indiretto può essere rappresentato come due archi diretti) si ha quindi poco meno di un raddoppio della densità, è infatti possibile che un arco avesse già il suo opposto e quindi non risente del cambiamento.
 	L'effetto per entrambi è stato un innalzamento del valore medio lungo i 3 algoritmi usati
-	\item con il grafo indiretto l'incremento di S-CNRL e E-CNRL è molto maggiore rispetto a quello di \wv questo può indicare, che \wv lavora molto bene con i grafi orientati a dispetto degli altri metodi
-	\item l'introduzione degli attributi tramite il grafo bipartito ha notevolmente cambiato la situazione portando ad un incremento di prestazioni. Questi valori vanno confrontati con i dati del grafo orientato in quanto quello è il valore corretto, i punti blu del grafo non-orientato non sono comparabili in quanto servivano a mostrare come la densità influiva sul risultato tuttavia rappresentano un nuovo grafo diverso dall'originale, e quindi non paragonabile
+	\item con il grafo indiretto l'incremento di S-CNRL e E-CNRL è molto maggiore rispetto a quello di \wv questo può indicare, che \wv lavora molto bene con i grafi orientati a dispetto degli altri due metodi
+	\item l'introduzione degli attributi tramite il grafo bipartito cambia notevolmente la situazione portando ad un incremento di prestazioni. Questi valori vanno confrontati con i dati del grafo orientato in quanto quello è il valore corretto, i punti blu del grafo non-orientato non sono comparabili in quanto servono a mostrare come la densità influisce sul risultato, rappresentano però un nuovo grafo diverso dall'originale, e quindi non paragonabile
 \end{itemize}
 %
 \section{Valutazione dell'individuazione di comunità}
@@ -345,20 +348,20 @@ In Figura~\ref{fig:MOD_1_num_cmty} è possibile vedere l'andamento dell'algoritm
 L'unico parametro che viene modificato è mostrato sull'asse delle ascisse ed è il numero di comunità che si vanno a ricercare all'interno del grafo. Ecco cosa s'osserva:
 \begin{itemize}
 	\item la progressione del numero di comunità da ricercare è stata scelta per mostrare la rapida crescita della modularità quando piccoli numeri sono coinvolti
-	\item il valore di $2$ comunità è estremamente basso perché difficilmente riesce a rappresentare a dovere una vasta selezione di nodi
-	\item la modularità cresce costantemente con l'aumentare delle comunità, che premiano sempre più le peculiarità del grafo
-	\item c'è un massimo compreso fra $30$ e $50$ dove questa crescita si interrompe
-	\item gli ultimi due dati $50$ e $100$ decrescono, questo è noto come il problema dell'overfitting, a causa di un addestramento eccessivo il risultato raggiunto non è più in linea con le aspettative.\\
+	\item il valore calcolato su $2$ comunità è estremamente basso perché difficilmente riesce a rappresentare a dovere una vasta selezione di nodi
+	\item la modularità cresce con l'aumentare delle comunità, che premiano sempre più le peculiarità del grafo
+	\item c'è un massimo compreso fra $30$ e $50$ dove questa crescita s'interrompe
+	\item gli ultimi due dati $50$ e $100$ decrescono, questo è noto come il \textbf{problema dell'overfitting}, a causa di un addestramento eccessivo il risultato raggiunto non è più in linea con le aspettative.\\
 	Via via che i gruppi di nodi si stringono perdono di rappresentazione portando così ad un decremento della modularità. Si osserva questo fenomeno anche in Figura~\ref{fig:MOD_3_elaborazione}
 \end{itemize}
 
 \subsection{Metriche di valutazione}%2
 Nella Tabella~\ref{tab:2_metriche} vengono mostrati i due grafi di Cora e Citeseer, valutati mediante tre differenti metriche di calcolo della modularità.\\
-Ambo i grafi sono stati caricati senza considerare gli attributi dei nodi ma solo la loro struttura, la creazione del modello è avvenuta con S-CNRL e il suo algoritmo LDA, tramite cui sono state ricavate anche le $10$ comunità che vengono  valutate in Tabella.\\
+Ambo i grafi sono stati caricati senza considerare gli attributi dei nodi ma solo la loro struttura, la creazione del modello è avvenuta con S-CNRL e il suo algoritmo LDA, tramite cui sono state ricavate le $10$ comunità che vengono  valutate in Tabella.\\
 \\
-Non ha senso confrontare i tre differenti metodi di calcolo della modularità, in quanto premiano aspetti differenti. Inoltre ognuno si posiziona su un diverso ordine di grandezza, spicca sopratutto \mover che presenta tutti i valori molto vicini a 0, questo perché come riporta la Tabella~\ref{tab:dati_grafi} ambo i grafi sono estremamente sparsi e a causa di ciò \mover ha il valore assoluto della modularità calcolata molto vicino a $0$.\\
+Non ha senso confrontare i tre differenti metodi di calcolo della modularità, in quanto premiano aspetti differenti. Inoltre ognuno si posiziona su un diverso ordine di grandezza, spicca sopratutto \mover che presenta tutti i valori molto vicini a 0, questo perché come riporta la Tabella~\ref{tab:dati_grafi} ambo i grafi sono estremamente sparsi e a causa di ciò \mover ha il valore assoluto della modularità calcolata vicino a $0$.\\
 Tutti i metodi assegnano a Cora il valore più alto, e questo fa capire che se una partizione è nettamente migliore di un'altra allora verrà premiata indipendentemente dalla metrica di valutazione usata.\\
-La \mmod è stata scelta come metrica ufficiale degli esperimenti, oltre al fatto che è quella usata nell'articolo di \cnrl, anche perché presenta dei valori facilmente analizzabili e comprensibili, \mover funziona bene ma è sempre difficile comprendere i risultati a cui s'arriva rischiando incomprensioni.
+La \mmod è stata scelta come metrica ufficiale degli esperimenti, non solo per il fatto che è quella usata nell'articolo di \cnrl, ma anche perché presenta dei valori facilmente analizzabili e comprensibili, \mover funziona bene ma è sempre difficile comprendere i risultati a cui s'arriva rischiando incomprensioni.
 %
 \begin{center}
 	% Schema num: 2 -> confronto metriche (cmty=10, no_att, valutazione con grafo norm, metric 8 -> HalfLDA)
@@ -385,12 +388,13 @@ La \mmod è stata scelta come metrica ufficiale degli esperimenti, oltre al fatt
 	\label{fig:MOD_3_elaborazione}
 \end{figure}
 %
-In Figura~\ref{fig:MOD_3_elaborazione} vengono confrontati tre differenti metodi d'elaborazione dei grafi per arrivare a trovare le comunità.\\
-Viene presentato il grafo Cora su cui si è cercato d'individuare tramite una progressione da $3$ a $50$ comunità, tutte valutate in seguito tramite la \mmod. I tre metodi utilizzati sono:
+In Figura~\ref{fig:MOD_3_elaborazione} vengono confrontati tre differenti metodi d'elaborazione dei grafi, il cui scopo è trovare le comunità.\\
+Viene presentato il grafo Cora su cui si è cercato d'individuare tramite una progressione da $3$ a $50$ comunità, tutte valutate in seguito tramite la \mmod. \\
+I tre metodi utilizzati sono:
 \begin{itemize}
-	\item noAtt: si considera in partenza unicamente la struttura del grafo, dai cui si ricavano i cammini e vengono elaborati con LDA
-	\item Att: oltre ai cammini derivanti dalla struttura si crea anche il grafo bipartito degli attributi, il tutto elaborato sempre mediante LDA
-	\item bigClam: è il metodo tratto dall'articolo "Overlapping community detection at scale: a nonnegative matrix factorization approach"\cite{bigClam_paper}, implementato dall'università di Stanford\cite{bigClam_code}.\\
+	\item \textbf{noAtt}: si considera in partenza unicamente la struttura del grafo, dai cui si ricavano i cammini e vengono elaborati con LDA
+	\item \textbf{Att}: oltre ai cammini derivanti dalla struttura si crea anche il grafo bipartito degli attributi, il tutto elaborato sempre mediante LDA
+	\item \textbf{bigClam}: è il metodo tratto dall'articolo "Overlapping community detection at scale: a nonnegative matrix factorization approach"\cite{bigClam_paper}, implementato dall'università di Stanford\cite{bigClam_code}.\\
 	È stato scelto come algoritmo di controllo per verificare l'andamento delle prestazioni di S-CNRL
 \end{itemize}
 Dalla Figura possiamo capire:
@@ -398,8 +402,8 @@ Dalla Figura possiamo capire:
 	\item come avviene in Figura~\ref{fig:MOD_1_num_cmty} con l'aumentare del numero di comunità si ha il problema dell'overfitting, qui è lo stesso.\\
 	Per Citeseer il problema si rivela quando si cercano $50$ comunità e analogo è per Cora, questo sembra non valere per bigClam anche se è inevitabile che accada con numeri molto alti di comunità cercate
 	\item durante la crescita le prestazioni di bigClam restano costantemente inferiori
-	\item l'apice è raggiunto mediante gli attributi con $20$ comunità e un valore di $Q=0.986$, è importante notare non tutti gli apici dei vari metodi si posizionano a $20$ comunità, al contrario. BigClam sembra aver questo massimo oltre le $50$ comunità
-	\item valutare il grafo mediante e senza gli attributi sembra non influire troppo, anche se così non dovrebbe essere (meglio analizzato in Tabella~\ref{tab:4_valutazioni_err}
+	\item l'apice è raggiunto mediante gli attributi con $20$ comunità ad un valore di $Q=0.986$, è importante notare non tutti gli apici dei vari metodi si posizionano a $20$ comunità, al contrario. BigClam sembra aver questo massimo oltre le $50$ comunità
+	\item valutare il grafo mediante e senza gli attributi sembra non influire troppo, anche se così non dovrebbe essere (caso meglio analizzato in Tabella~\ref{tab:4_valutazioni_err})
 \end{itemize}
 %
 \subsection{Confronto criteri di valutazione}%4
