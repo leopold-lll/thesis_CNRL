@@ -11,8 +11,8 @@ Nella Tabella~\ref{tab:dati_grafi} sono elencati i dettagli tecnici di ogni data
 		\hline
 		nome&nodi&archi&archi/nodi&diretto&etichette&attributi\\
 		\hline
-		Cora & 2708 & 5429 & 2.0 & sì & 7 & 1433\\
-		Citeseer & 3312 & 4732 & 1.4 & sì & 6 & 3703\\
+		\cora & 2708 & 5429 & 2.0 & sì & 7 & 1433\\
+		\citeseer & 3312 & 4732 & 1.4 & sì & 6 & 3703\\
 		\hline
 		BlogCatalog & 10312 & 333983 & 32.4 & no & 39 & 0\\
 		Gnutella & 6301 & 20777 & 3.3 & no & 0 & 0\\
@@ -24,11 +24,11 @@ Nella Tabella~\ref{tab:dati_grafi} sono elencati i dettagli tecnici di ogni data
 		\label{tab:dati_grafi}
 \end{center}
 %
-\subsection*{Esperimento principale: Cora - Citeseer}\cite{Co-Ci_1}\cite{Co-Ci_2}
-Il dataset di \textbf{Cora} è un grafo diretto che rappresenta una rete di articoli scientifici sull'apprendimento automatico, ogni nodo è un articolo. Mentre ogni arco rappresenta il collegamento fra un documento è l'altro, se il documento $A$ cita il documento $B$ si avrà l'arco $(A, B)$. La rete è costruita in modo che ogni nodo abbia almeno un arco entrante o uscente.\\
+\subsection*{Esperimento principale: \cora - \citeseer}\cite{Co-Ci_1}\cite{Co-Ci_2}
+Il dataset di \textbf{\cora} è un grafo diretto che rappresenta una rete di articoli scientifici sull'apprendimento automatico, ogni nodo è un articolo. Mentre ogni arco rappresenta il collegamento fra un documento è l'altro, se il documento $A$ cita il documento $B$ si avrà l'arco $(A, B)$. La rete è costruita in modo che ogni nodo abbia almeno un arco entrante o uscente.\\
 Ogni articolo appartiene ad esattamente una classe identificata da un etichetta. Ogni attributo rappresenta la presenza (deve apparire almeno 10 volte) o meno di una determinata parola nel testo del documento.\\
 \\
-Il dataset di \textbf{Citeseer} è un grafo diretto che rappresenta una rete analoga a quella di Cora, anche qui si hanno articoli scientifici che si citano vicendevolmente. L'etichetta è la classe d'appartenenza di cui l'articolo fa parte, e gli attributi son nuovamente la presenza o meno di certe parole all'interno del testo.\\
+Il dataset di \textbf{\citeseer} è un grafo diretto che rappresenta una rete analoga a quella di \cora, anche qui si hanno articoli scientifici che si citano vicendevolmente. L'etichetta è la classe d'appartenenza di cui l'articolo fa parte, e gli attributi son nuovamente la presenza o meno di certe parole all'interno del testo.\\
 %
 \subsection*{Grafi per esperimenti minori}
 Questi quattro grafi vengono presentati in ordine decrescente nel numero dei nodi, così come fatto nella seconda parte della Tabella~\ref{tab:dati_grafi}.\\
@@ -303,28 +303,28 @@ Mentre nella colonna "Classe" mostra il valore autentico del nodo. Infine nell'u
 Per una valutazione mediante accuratezza è sufficiente calcolare la media aritmetica dell'ultima colonna, ossia $\displaystyle Acc = \frac{1+1+1+1+1}{8} = \frac{5}{8} = 0.625$. Mentre per l'F1-score sarebbe necessario calcolare sensibilità e precisione di ognuna delle 3 classi, riassumerli mediante micro o macro, ed infine arrivare ad un valore con F1-score.
 %
 \subsection{Applicazioni}
-I grafi scelti per questa applicazione sono Cora (Figura~\ref{fig:VC_cora}) e Citeseer (Figura~\ref{fig:VC_citeseer}) perché fra quelli presentati nella Tabella~\ref{tab:dati_grafi} sono gli unici che sono forniti di attributi sui nodi, e questo permette di mostrare come l'utilizzo del grafo bipartito per l'introduzione degli attributi modifica le prestazioni.
+I grafi scelti per questa applicazione sono \cora (Figura~\ref{fig:VC_cora}) e \citeseer (Figura~\ref{fig:VC_citeseer}) perché fra quelli presentati nella Tabella~\ref{tab:dati_grafi} sono gli unici che sono forniti di attributi sui nodi, e questo permette di mostrare come l'utilizzo del grafo bipartito per l'introduzione degli attributi modifica le prestazioni.
 %
 \begin{figure}[htp]
 	\centering
 	\includegraphics[width=\linewidth]{immagini/VC_cora}
-	\caption{Andamento del grafo Cora, con 3 differenti algoritmi di creazione del modello e 3 diverse interpretazioni iniziali, valutato mediante l'accuratezza}
+	\caption{Andamento del grafo \cora, con 3 differenti algoritmi di creazione del modello e 3 diverse interpretazioni iniziali, valutato mediante l'accuratezza}
 	\label{fig:VC_cora}
 \end{figure}
 %
 \begin{figure}[htp]
 	\centering
 	\includegraphics[width=\linewidth]{immagini/VC_citeseer}
-	\caption{Andamento del grafo Citeseer, con 3 differenti algoritmi di creazione del modello e 3 diverse interpretazioni iniziali, valutato mediante l'accuratezza}
+	\caption{Andamento del grafo \citeseer, con 3 differenti algoritmi di creazione del modello e 3 diverse interpretazioni iniziali, valutato mediante l'accuratezza}
 	\label{fig:VC_citeseer}
 \end{figure}
 %
 Sull'asse delle ordinate vi sono i valori compresi nell'intervallo $[0, 1]$ misurati mediante la tecnica dell'accuratezza. Mentre sull'asse delle ascisse vi sono i tre algoritmi utilizzati per creare il modello del grafo partendo dai cammini. \wv è il metodo di controllo, mentre S-CNRL e E-CNRL che lavorano rispettivamente con LDA e HalfLDA, sono i nuovi algoritmi proposti. Entrambi per alcune parti continuano ad usare \wv.\\
-Sia Cora che Citeseer sono grafi originariamente diretti (\textcolor{red}{misurazioni rosse}), tuttavia si è provato ad interpretarli anche come se fossero indiretti (\textcolor{blue}{campionamento blu}), l'ultimo andamento è dato dall'introduzione degli attributi (\textcolor{green}{dati verdi}).\\
+Sia \cora che \citeseer sono grafi originariamente diretti (\textcolor{red}{misurazioni rosse}), tuttavia si è provato ad interpretarli anche come se fossero indiretti (\textcolor{blue}{campionamento blu}), l'ultimo andamento è dato dall'introduzione degli attributi (\textcolor{green}{dati verdi}).\\
 Ecco alcuni dettagli che emergono dai due grafici:
 \begin{itemize}
 	\item \wv mostra prestazioni, anche se di poco, maggiori delle due alternative che invece tendono ad equivalersi
-	\item la media dei valori delle misurazione nel grafico di Cora (Figura~\ref{fig:VC_cora}) è $0.696$ rispetto a quella di Citeseer (Figura~\ref{fig:VC_citeseer}) che è $0.491$, la prima risulta essere maggiore di circa $\displaystyle \frac{2}{10}$ questo è dovuto anche al fatto che Cora abbia una $\displaystyle densita' = \frac{archi}{nodi}$ maggiore rispetto a Citeseer
+	\item la media dei valori delle misurazione nel grafico di \cora (Figura~\ref{fig:VC_cora}) è $0.696$ rispetto a quella di \citeseer (Figura~\ref{fig:VC_citeseer}) che è $0.491$, la prima risulta essere maggiore di circa $\displaystyle \frac{2}{10}$ questo è dovuto anche al fatto che \cora abbia una $\displaystyle densita' = \frac{archi}{nodi}$ maggiore rispetto a \citeseer
 	\item un alta densità degli archi permette di creare molte interazioni fra i nodi e quindi il modello meglio rappresenta il grafo, si noti però che questo non è sempre facile da individuare, qui è presente uno stacco evidente in quanto entrambi i grafi hanno un estremamente bassa densità si dice infatti che sono sparsi
 	\item si è provato ad aumentare la densità considerando ambo i grafi come indiretti (ogni arco indiretto può essere rappresentato come due archi diretti) si ha quindi poco meno di un raddoppio della densità, è infatti possibile che un arco avesse già il suo opposto e quindi non risente del cambiamento.
 	L'effetto per entrambi è stato un innalzamento del valore medio lungo i 3 algoritmi usati
@@ -344,7 +344,7 @@ Questa sezione ripercorre il corpo principale del tirocinio, ossia l'integrazion
 	\label{fig:MOD_1_num_cmty}
 \end{figure}
 %
-In Figura~\ref{fig:MOD_1_num_cmty} è possibile vedere l'andamento dell'algoritmo di d'individuazione delle comunità LDA, applicato al grafo Citeseer di cui si considera solo la struttura, la valutazione vien fatta con la \mmod.\\
+In Figura~\ref{fig:MOD_1_num_cmty} è possibile vedere l'andamento dell'algoritmo di d'individuazione delle comunità LDA, applicato al grafo \citeseer di cui si considera solo la struttura, la valutazione vien fatta con la \mmod.\\
 L'unico parametro che viene modificato è mostrato sull'asse delle ascisse ed è il numero di comunità che si vanno a ricercare all'interno del grafo. Ecco cosa s'osserva:
 \begin{itemize}
 	\item la progressione del numero di comunità da ricercare è stata scelta per mostrare la rapida crescita della modularità quando piccoli numeri sono coinvolti
@@ -356,11 +356,11 @@ L'unico parametro che viene modificato è mostrato sull'asse delle ascisse ed è
 \end{itemize}
 
 \subsection{Metriche di valutazione}%2
-Nella Tabella~\ref{tab:2_metriche} vengono mostrati i due grafi di Cora e Citeseer, valutati mediante tre differenti metriche di calcolo della modularità.\\
+Nella Tabella~\ref{tab:2_metriche} vengono mostrati i due grafi di \cora e \citeseer, valutati mediante tre differenti metriche di calcolo della modularità.\\
 Ambo i grafi sono stati caricati senza considerare gli attributi dei nodi ma solo la loro struttura, la creazione del modello è avvenuta con S-CNRL e il suo algoritmo LDA, tramite cui sono state ricavate le $10$ comunità che vengono  valutate in Tabella.\\
 \\
 Non ha senso confrontare i tre differenti metodi di calcolo della modularità, in quanto premiano aspetti differenti. Inoltre ognuno si posiziona su un diverso ordine di grandezza, spicca sopratutto \mover che presenta tutti i valori molto vicini a 0, questo perché come riporta la Tabella~\ref{tab:dati_grafi} ambo i grafi sono estremamente sparsi e a causa di ciò \mover ha il valore assoluto della modularità calcolata vicino a $0$.\\
-Tutti i metodi assegnano a Cora il valore più alto, e questo fa capire che se una partizione è nettamente migliore di un'altra allora verrà premiata indipendentemente dalla metrica di valutazione usata.\\
+Tutti i metodi assegnano a \cora il valore più alto, e questo fa capire che se una partizione è nettamente migliore di un'altra allora verrà premiata indipendentemente dalla metrica di valutazione usata.\\
 La \mmod è stata scelta come metrica ufficiale degli esperimenti, non solo per il fatto che è quella usata nell'articolo di \cnrl, ma anche perché presenta dei valori facilmente analizzabili e comprensibili, \mover funziona bene ma è sempre difficile comprendere i risultati a cui s'arriva rischiando incomprensioni.
 %
 \begin{center}
@@ -369,8 +369,8 @@ La \mmod è stata scelta come metrica ufficiale degli esperimenti, non solo per 
 		\hline
 		\ & \mmax & \mover & \mmod \\
 		\hline
-		Cora & $2.04$ \e{-1} & $1.21$ \e{-5} & $5.31$ \e{-1} \\
-		Citeseer & $8.42$ \e{-2} & $-3.55$ \e{-6} & $3.67$ \e{-1} \\
+		\cora & $2.04$ \e{-1} & $1.21$ \e{-5} & $5.31$ \e{-1} \\
+		\citeseer & $8.42$ \e{-2} & $-3.55$ \e{-6} & $3.67$ \e{-1} \\
 		%2.04E-01	1.21E-05	5.31E-01
 		%8.42E-02	-3.55E-06	3.67E-01
 		\hline
@@ -384,12 +384,12 @@ La \mmod è stata scelta come metrica ufficiale degli esperimenti, non solo per 
 \begin{figure}[htp]
 	\centering
 	\includegraphics[width=\linewidth]{immagini/MOD_3_elaborazione}
-	\caption{Prestazioni dei diversi procedimenti d'elaborazione del modello al variare del numero di comunità da ricercare}
+	\caption{Prestazioni dei diversi procedimenti d'elaborazione del modello al variare del numero di comunità da ricercare (grafo \cora)}
 	\label{fig:MOD_3_elaborazione}
 \end{figure}
 %
 In Figura~\ref{fig:MOD_3_elaborazione} vengono confrontati tre differenti metodi d'elaborazione dei grafi, il cui scopo è trovare le comunità.\\
-Viene presentato il grafo Cora su cui si è cercato d'individuare tramite una progressione da $3$ a $50$ comunità, tutte valutate in seguito tramite la \mmod. \\
+Viene presentato il grafo \cora su cui si è cercato d'individuare tramite una progressione da $3$ a $50$ comunità, tutte valutate in seguito tramite la \mmod. \\
 I tre metodi utilizzati sono:
 \begin{itemize}
 	\item \textbf{noAtt}: si considera in partenza unicamente la struttura del grafo, dai cui si ricavano i cammini e vengono elaborati con LDA
@@ -400,39 +400,67 @@ I tre metodi utilizzati sono:
 Dalla Figura possiamo capire:
 \begin{itemize}
 	\item come avviene in Figura~\ref{fig:MOD_1_num_cmty} con l'aumentare del numero di comunità si ha il problema dell'overfitting, qui è lo stesso.\\
-	Per Citeseer il problema si rivela quando si cercano $50$ comunità e analogo è per Cora, questo sembra non valere per bigClam anche se è inevitabile che accada con numeri molto alti di comunità cercate
+	Per \citeseer il problema si rivela quando si cercano $50$ comunità e analogo è per \cora, questo sembra non valere per bigClam anche se è inevitabile che accada con numeri molto alti di comunità cercate
 	\item durante la crescita le prestazioni di bigClam restano costantemente inferiori
 	\item l'apice è raggiunto mediante gli attributi con $20$ comunità ad un valore di $Q=0.986$, è importante notare non tutti gli apici dei vari metodi si posizionano a $20$ comunità, al contrario. BigClam sembra aver questo massimo oltre le $50$ comunità
-	\item valutare il grafo mediante e senza gli attributi sembra non influire troppo, anche se così non dovrebbe essere (caso meglio analizzato in Tabella~\ref{tab:4_valutazioni_err})
+	\item valutare il grafo mediante e senza gli attributi sembra non influire troppo, anche se così non dovrebbe essere (caso meglio analizzato in Tabella~\ref{tab:4_valutazioni})
 \end{itemize}
 %
 \subsection{Confronto criteri di valutazione}%4
 %
 \begin{center}
-	% Schema num: 4 -> confronto valutazioni -> trovata inconsistenza AKA errore
+	% Schema num: 4 -> confronto valutazioni
 	\begin{tabular}{|cc|c|c|} % \multicolumn{2}{|c|}{testo}  \multirow{2}{*}{testo}   $ \e{-}$
 		\hline
-		\multicolumn{2}{|c|}{\textbf{Cora}} & \multicolumn{2}{|c|}{valutazione} \\
-		\multicolumn{2}{|c|}{\ } & structure & hypergraph \\
+		\multicolumn{2}{|c|}{\textbf{\cora}} & \multicolumn{2}{|c|}{valutazione} \\
+		\multicolumn{2}{|c|}{\ } & struttura & ipergrafo \\
 		\hline
-		\multirow{2}{*}{elaborazione} & Dir & \textcolor{red}{$5.31$ \e{-1}} & \textcolor{red}{$3.85$ \e{-3}} \\
-		& Att & $4.83$ \e{-2} & $6.46$ \e{-5} \\
+		\multirow{2}{*}{elaborazione} & noAtt & $8.24$ \e{-1} & $9.83$ \e{-3} \\
+		& Att & $8.29$ \e{-1} & $2.33$ \e{-2} \\
 		\hline
 		\hline
 		\hline
-		\multicolumn{2}{|c|}{\textbf{Citeseer}} & \multicolumn{2}{|c|}{valutazione} \\
-		\multicolumn{2}{|c|}{\ } & structure & hypergraph \\
+		\multicolumn{2}{|c|}{\textbf{\citeseer}} & \multicolumn{2}{|c|}{valutazione} \\
+		\multicolumn{2}{|c|}{\ } & struttura & ipergrafo \\
 		\hline
-		\multirow{2}{*}{elaborazione} & Dir & $3.38$ \e{-1} & $-9.46$ \e{-5} \\
-		& Att & \textcolor{red}{$5.32$ \e{-1}} & \textcolor{red}{$1.50$ \e{-2}} \\
+		\multirow{2}{*}{elaborazione} & noAtt & $4.14$ \e{-1} & $8.86$ \e{-6} \\
+		& Att & $4.14$ \e{-1} & $2.30$ \e{-2} \\
 		\hline
 	\end{tabular}
-	\captionof{table}{Le misurazioni effettuate sono incoerenti, è quindi presente un errore}
-	\label{tab:4_valutazioni_err}
+	\captionof{table}{Misurazione delle comunità, generate attraverso due differenti metodi d'elaborazione, e analizzate su due tipologie di valutazione}
+	\label{tab:4_valutazioni}
 \end{center}
+Nella Tabella~\ref{tab:4_valutazioni} vengono mostrati entrambi i grafi di \cora e \citeseer, su ognuno son state fatte quattro differenti valutazioni.\\
+Sulle righe vi sono i metodi  d'elaborazione utilizzati per trovare le comunità:
+\begin{itemize}
+	\item \textbf{noAtt} indica che del grafo è stata utilizzata solamente la struttura per la generazione dei cammini
+	\item \textbf{Att} indica invece che oltre ai dati della struttura vengono utilizzati anche gli attributi introdotti tramite un grafo bipartito
+\end{itemize}
+%
+Sulle colonne sono invece riportati i due metodi per la valutazione della partizione generata:
+\begin{itemize}
+	\item \textbf{struttura} indica che il grafo utilizzato per la valutazione tramite \mmod è quello originale, che contiene appunto solo la struttura
+	\item \textbf{ipergrafo} il grafo per la valutazione con \mmod contiene anche gli archi degli attributi, non è possibile utilizzare un grafo bipartito in quanto contiene nodi (l'insieme N2) non appartenenti al grafo originario, si opta quindi per l'ipergrafo.\\
+	Quello qui utilizzato, rispetto a quello mostrato in Figura~\ref{fig:7transform_hyper}, mantiene anche gli archi originali e per non creare incoerenze considera tutti gli archi come diretti, ciò porta a più d'un raddoppio del numero d'archi, partendo da un numero base già elevatissimo
+\end{itemize}
+%
+Dalla Figura~\ref{fig:MOD_3_elaborazione} si può vedere che con $10$ comunità la valutazione di \cora elaborato con e senza attributi è molto simile, s'è scelto d'utilizzare quindi le $10$ comunità per osservare le variazioni quando si adotta una valutazione attraverso l'ipergrafo.\\
+Ecco cosa si può notare:
+\begin{itemize}
+	\item per la scelta del numero di comunità i dati di \cora valutati sulla struttura sono pressoché uguali
+	\item per \citeseer accade o stesso, qui i due valori sono identici.\\
+	Il dato di $4.14$ \e{-1} è già apparso in Tabella~\ref{fig:MOD_1_num_cmty}
+	\item se la valutazione avviene sull'ipergrafo sia nel caso di \cora che di \citeseer il valore più alto viene generato con l'elaborazione effettuata sugli attributi.\\
+	È in linea con le aspettative, perché i cammini aggiunti dal grafo bipartito vanno a descrivere una sezione che l'elaborazione utilizzante solo la struttura non può conoscere e quindi non vi si può adattare
+	\item il fatto che tutte le valutazioni sull'ipergrafo sono così vicine allo $0$ è dovuto al fatto che l'Espressione~\ref{eq:d_in-out} parte della Formula~\ref{eq:m_mod} della \mmod in presenza di un grafo molto denso, ed è questo il caso, abbassa notevolmente il valore della misurazione
+\end{itemize}
+%
+Nonostante i dati mostrati in Tabella~\ref{tab:4_valutazioni} siano perfettamente in linea con le aspettative, non è possibile affermare che quanto mostrato in questa sottosezione sia sempre vero in ogni possibile situazione, in quanto i risultati restituiti dalla \mmod presentano una non trascurabile variabilità.
+
+
 
 \chapter{Conclusioni}
-???
+Cosa si scrive nelle conclusioni?
 
 %\end{document}
 

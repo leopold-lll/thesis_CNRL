@@ -7,6 +7,13 @@
 %% Il sommario dell’elaborato consiste al massimo di 3 pagine e deve contenere le seguenti informazioni: contesto e motivazioni breve riassunto del problema affrontato tecniche utilizzate e/o sviluppate risultati raggiunti, sottolineando il contributo personale del laureando/a se vi sono più persone che hanno contribuito...
 Questa tesi va a ripercorrere il lavoro svolto da Stefano Leonardi durante il tirocinio svolto all'interno dell'università, con la supervisione del dottorando Nasrullah Sheikh, per il professore Alberto Montresor.
 %
+\section{Com'è strutturata la tesi}
+Nel sommario vi sono accenni alle tecniche più importanti, le metodologie utilizzate nonché le innovazioni che si è cercato d'introdurre.\\
+Segue il capitolo sull'implementazione che spiega le dinamiche base dell'algoritmo principale da cui è partito tutto il lavoro, in aggiunta viene descritta l'idea per un incremento di prestazioni mediante gli attributi, ed è mostrato un esempio di come viene applicata.\\
+Nel capitolo tre sono esposte le metriche di valutazione fulcro degli esperimenti principali, d'ognuna son spiegate le dinamiche e le motivazioni per cui son state scelte.\\
+Il quarto capitolo è dedicato agli esperimenti, vengono fornite le conoscenze di base per capire i tre algoritmi su cui s'è lavorato, e d'ognuno di questi vengono descritte le meccaniche, anche tramite un esempio e sono poi illustrati i risultati raggiunti.\\
+Si termina con conclusioni e bibliografia.
+%
 \section{Introduzione}
 Il tirocinio è basato sull'articolo intitolato "Community-enhanced Network Representation Learning for Network Analysis"\cite{CNRL_paper} abbreviato dalla sigla \cnrl. Questo articolo propone un innovativo metodo per l'individuazione delle comunità all'interno dei grafi. Lo scopo di questo tirocinio è stato quindi quello di replicare i risultati ivi proposti, una volta compreso il codice che ne è la base, e, dove possibile, cercare di migliorare le prestazioni dell'algoritmo, anche sfruttando elementi non originariamente considerati.\newline
 L'algoritmo proposto nell'articolo sfrutta diverse tecniche, alcune delle quali dettagliatamente spiegate negli articoli:
@@ -58,8 +65,19 @@ L'idea di introdurre gli attributi per migliorare l'efficienza dell'algoritmo è
 	\item "Network Representation Learning with Rich Text Information"\cite{TADW_paper}
 \end{itemize}
 %
-\section{Risultati}
-Parte temporaneamente mancante...
+\section{Esperimenti}
+Gli esperimenti che sono stati eseguiti nel corso del tirocinio si dividono in tre principali gruppi, in quanto ognuno di questi è dedicato ad un diverso algoritmo.\\
+Le tre aree sono:
+\begin{itemize}
+	\item \textbf{\LPred} è un algoritmo che mediante la creazione di archi finti anche se verosimili e potenzialmente reali, che tuttavia non appaiono in una particolare selezione denominata di test. Va a verificare se sono più coerenti gli archi generati casualmente rispetto a quelli reali (di test).\\
+	Per assegnare un valore comparabile ad un arco, si guarda la relazione, che lega i due nodi agli estremi del collegamento, valutata mediante apposite funzioni di similarità.\\
+	Gli archi dei due insiemi sono in seguito accoppiati e, in base a quale dei due ha valore più alto, si assegna un punteggio. Calcolando tale punteggio per ogni elemento questo andrà a rappresentare con quale attendibilità si riuscirà a predire in maniera corretta un nuovo arco.
+	\item \textbf{Classificazione dei nodi} è una tecnica che grazie ad una rappresentazione univoca di ogni nodo come un punto all'interno di uno spazio a $64$ dimensioni e disponendo per ognuno di questi anche della classe a cui appartiene (solo una).\\
+	Permette di predire per un qualsiasi nuovo nodo rappresentato nella stessa forma degli altri, a quale classe andrà ad appartenere. I test svolti analizzano con quale percentuale il classificatore, ossia la funzione che assegna la classe, riesce a predire in maniera esatta la classe di un nodo.
+	\item La \textbf{valutazione dell'individuazione di comunità} si occupa in prima istanza di creare le comunità di nodi simili fra loro secondo determinate caratteristiche, e poi mediante i metodi della modularità di valutare se le partizioni individuate sono ben costruite oppure no
+\end{itemize}
+%
+
 \newpage
 %\end{document}
 
