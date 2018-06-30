@@ -5,18 +5,11 @@
 %% cos'è?
 %% Il sommario è un breve riassunto del lavoro svolto dove si descrive: l’obiettivo, l’oggetto della tesi, le metodologie e le tecniche usate, i dati elaborati e la spiegazione delle conclusioni alle quali siete arrivati.
 %% Il sommario dell’elaborato consiste al massimo di 3 pagine e deve contenere le seguenti informazioni: contesto e motivazioni breve riassunto del problema affrontato tecniche utilizzate e/o sviluppate risultati raggiunti, sottolineando il contributo personale del laureando/a se vi sono più persone che hanno contribuito...
-Questa tesi va a ripercorrere il lavoro svolto da Stefano Leonardi durante il tirocinio svolto all'interno dell'università, con la supervisione del dottorando Nasrullah Sheikh, per il professore Alberto Montresor.
-%
-\section{Com'è strutturata la tesi}
-Nel sommario vi sono accenni alle tecniche più importanti, le metodologie utilizzate nonché le innovazioni che si è cercato d'introdurre.\\
-Segue il capitolo sull'implementazione che spiega le dinamiche base dell'algoritmo principale da cui è partito tutto il lavoro, in aggiunta viene descritta l'idea per un incremento di prestazioni mediante gli attributi, ed è mostrato un esempio di come viene applicata.\\
-Nel capitolo tre sono esposte le metriche di valutazione fulcro degli esperimenti principali, d'ognuna son spiegate le dinamiche e le motivazioni per cui son state scelte.\\
-Il quarto capitolo è dedicato agli esperimenti, vengono fornite le conoscenze di base per capire i tre algoritmi su cui s'è lavorato, e d'ognuno di questi vengono descritte le meccaniche, anche tramite un esempio e sono poi illustrati i risultati raggiunti.\\
-Si termina con conclusioni e bibliografia.
+Questa tesi va a ripercorrere il lavoro eseguito da Stefano Leonardi durante il tirocinio svolto all'interno dell'università, con la supervisione del dottorando Nasrullah Sheikh, per il professore Alberto Montresor.
 %
 \section{Introduzione}
-Il tirocinio è basato sull'articolo intitolato "Community-enhanced Network Representation Learning for Network Analysis"\cite{CNRL_paper} abbreviato dalla sigla \cnrl. Questo articolo propone un innovativo metodo per l'individuazione delle comunità all'interno dei grafi. Lo scopo di questo tirocinio è stato quindi quello di replicare i risultati ivi proposti, una volta compreso il codice che ne è la base, e, dove possibile, cercare di migliorare le prestazioni dell'algoritmo, anche sfruttando elementi non originariamente considerati.\newline
-L'algoritmo proposto nell'articolo sfrutta diverse tecniche, alcune delle quali dettagliatamente spiegate negli articoli:
+Il tirocinio è basato sul documento intitolato "Community-enhanced Network Representation Learning for Network Analysis"\cite{CNRL_paper} abbreviato dalla sigla \cnrl. Questo testo propone un innovativo metodo per l'individuazione delle comunità all'interno dei grafi. Lo scopo di questo tirocinio è quello di replicare i risultati ivi proposti. Una volta compreso il codice che ne è la base, abbiamo cercato di migliorare le prestazioni dell'algoritmo, anche sfruttando elementi non originariamente considerati.\newline
+L'algoritmo proposto nell'articolo utilizza diverse tecniche, alcune delle quali dettagliatamente spiegate in altri documenti:
 \begin{itemize}
 	\item "DeepWalk: Online Learning of Social Representations"\cite{DW_paper}
 	\item "node2vec: Scalable Feature Learning for Networks"\cite{N2V_paper}
@@ -25,31 +18,31 @@ L'algoritmo proposto nell'articolo sfrutta diverse tecniche, alcune delle quali 
 Segue la spiegazione del perché l'individuazione di comunità è una tecnica così importante.
 %
 \section{Cosa sono i grafi e cosa le comunità}
-La base sono i grafi, una particolare struttura dati composta da nodi/vertici $V$ (dove $n=|V|$) e archi/bordi/lati $E$ (dove $m=|E|$). I primi possono rappresentare un entità eventualmente anche con l'aiuto di attributi. Diversamente gli archi sono dei collegamenti che legano due nodi, possono essere interamente orientati/diretti o non orientati/indiretti. Questa struttura dati permette di rappresentare tantissime situazioni per tale motivo è così importante.\\
-Lo scopo dell'individuazione di comunità è, scovare delle comunità, ossia dei gruppi di nodi simili fra loro.\\
-Si noti che i nodi risultano essere simili per diverse ragioni, possono avere le stesse caratteristiche strutturali in quanto sono dei cardini che legano molti altri elementi, magari dei punti isolati da tutto il resto, o più semplicemente hanno dei valori analoghi sugli attributi.\\
-Gruppi di nodi simili possono essere gestiti in maniera omogenea, questo permette di sfruttarne le peculiarità. La versatilità d'applicazione dei grafi conferisce ad algoritmi che vi lavorano sopra, come l'individuazione di comunità, una grande importanza.
+La base sono i grafi, una particolare struttura dati composta da nodi/vertici $V$ (dove $n=|V|$) e archi/bordi/lati $E$ (dove $m=|E|$). I primi possono rappresentare un entità eventualmente anche con l'aiuto di attributi. Diversamente gli archi sono dei collegamenti che legano due nodi. Possono essere interamente orientati/diretti o non orientati/indiretti. Questa struttura dati permette di rappresentare molte situazioni e per tale motivo è importante.\\
+Lo scopo dell'individuazione delle comunità è riconoscere dei gruppi di nodi simili fra loro.\\
+Si fa notare che i nodi risultano essere simili per diverse ragioni. Possono avere le stesse caratteristiche strutturali in quanto sono dei cardini che legano molti altri elementi, oppure punti isolati da tutto il resto, o più semplicemente  valori analoghi sugli attributi.\\
+Gruppi di nodi simili possono essere gestiti in maniera omogenea; questo permette di sfruttarne le peculiarità. La versatilità d'applicazione dei grafi conferisce a questi algoritmi una grande importanza.
 %
 \section{Come si valutano le comunità}
-Date due partizioni differenti su un grafo, è necessario capire quale di queste due è la migliore. Intuitivamente se il grafo è molto piccolo, tanto da poterlo comprendere guardando unicamente una sua rappresentazione grafica, e le comunità individuate sono poche allora si potrebbe decidere anche ad occhio qual è la migliore partizione.\\
-Se però le comunità individuate sono tante e il grafo non è più piccolo, allora non è più facile effettuare una scelta e ancor meno riuscire a giustificarla. Esistono metodi formali per analizzare e decidere quale partizione andare a scegliere, questi metodi prendono il nome di modularità.\\
+Date due partizioni differenti su un grafo, è necessario capire quale di queste è la migliore. Se il grafo è molto piccolo, tanto da poterlo comprendere guardando unicamente una sua rappresentazione grafica, e le comunità individuate sono poche, si potrebbe visivamente decidere anche ad occhio qual è la partizione migliore.\\
+Se invece le comunità individuate sono tante e il grafo non è piccolo, allora non è facile effettuare una scelta e ancor meno riuscire a giustificarla. Esistono metodi formali per analizzare e decidere quale partizione scegliere: questi metodi prendono il nome di modularità.\\
 \\
 Le partizioni vengono così definite:
 \begin{itemize}
 	\item Una partizione è un insieme di comunità
 	\item Non tutte le comunità hanno le stesse dimensioni, ossia lo stesso numero di nodi che vi appartengono
 	\item Le comunità non hanno né una dimensione massima né una dimensione minima.\\
-	In realtà si può considerare che la loro dimensione cada nell'intervallo $[1, n]$, dove il limite inferiore $1$ è dato dal fatto che devono contenere almeno un elemento, mentre il limite superiore $n$ è dato dal fatto che non possono contenere più nodi di quelli esistenti nel grafo (che sono in numero di $n$)
+	Si può considerare che la loro dimensione cada nell'intervallo $[1, n]$. Il limite inferiore è $1$ perché devono contenere almeno un elemento, mentre il limite superiore è $n$ perché non possono contenere più nodi di quelli esistenti nel grafo, che sono in numero di $n$
 	\item È possibile che un nodo non appartenga a nessuna comunità
-	\item Un nodo del grafo può appartenere a più di una comunità, potenzialmente anche a tutte quelle presenti, se questo accade significa che c'è una sovrapposizione di comunità
+	\item Un nodo del grafo può appartenere a più di una comunità, potenzialmente anche a tutte quelle presenti. Se questo accade significa che c'è una sovrapposizione di comunità
 \end{itemize}
-La metrica di valutazione di una partizione è la modularità (il cui simbolo è $Q$). Questo nome può essere associato a diverse metriche infatti a seconda di cosa cerchiamo avremo interesse a valorizzare alcuni aspetti e penalizzarne altri. Per tale motivo la modularità è solo il nome usato per indicare il valore dato dalla valutazione di una partizione.\\
-Durante il tirocinio sono stati adottati tre metodi differenti: \mmax, \mover e \mmod. I primi due nomi non sono ufficiali in quanto sono stati scelti al solo scopo di riconoscerle, mentre l'ultimo \mmod è quello utilizzato nell'articolo su \cnrl \cite{CNRL_paper}.\\
+La metrica di valutazione di una partizione è la modularità (il cui simbolo è $Q$). Questo nome può essere associato a diverse metriche. A seconda di cosa si cerca si avrà interesse a valorizzare alcuni aspetti e penalizzarne altri. Per tale motivo la modularità è solo il nome usato per indicare il valore dato dalla valutazione di una partizione.\\
+Durante il tirocinio sono stati adottati tre metodi differenti: \mmax, \mover e \mmod. I primi due nomi non sono ufficiali in quanto sono stati scelti al solo scopo di riconoscerli, mentre l'ultimo, \mmod , è quello utilizzato nell'articolo su \cnrl \cite{CNRL_paper}.\\
 I dettagli sul funzionamento e sulla motivazione del perché sono state scelte sono all'interno dell'apposito capitolo sulle metriche di valutazione.
 %
 \section{I cambiamenti apportati}
-Per calcolare una partizione il codice di \cnrl utilizza un sistema di visite random e grazie a questo ricostruisce le possibili somiglianze fra i nodi. Non volendo toccare questa sezione le modifiche da noi riportate si inseriscono all'interno della creazione, grazie a tali visite, dei cammini.\\
-Una cammino è definito come una sequenza di nodi, e preso un elemento qualsiasi fra questi deve esser possibile arrivare all'elemento successivo attraversando un solo arco, ossia i due elementi devono essere direttamente connessi, almeno nel senso di percorrenza.\\
+Per calcolare una partizione, il codice di \cnrl utilizza un sistema di visite random (casuali) e con questo ricostruisce le possibili somiglianze fra i nodi. Non volendo toccare questa sezione, le modifiche da noi apportate si inseriscono all'interno della creazione dei cammini.\\
+Una cammino è definito come una sequenza di nodi. Preso un elemento qualsiasi fra questi deve esser possibile arrivare all'elemento successivo attraversando un solo arco. I due elementi devono essere direttamente connessi, almeno nel senso di percorrenza.\\
 L'algoritmo genera $x$ cammini, ognuno di lunghezza massima $l$, sul grafo, dove $x=n \cdot w$:
 \begin{itemize}
 	\item $n$: è il numero di nodi del grafo
@@ -57,8 +50,8 @@ L'algoritmo genera $x$ cammini, ognuno di lunghezza massima $l$, sul grafo, dove
 	\item $l$: è la lunghezza massima di ogni cammino
 \end{itemize}
 %
-Con questi dati l'algoritmo di \cnrl calcola la suddivisione in comunità, si può notare come tutti questi dati vengano estratti esclusivamente dalla struttura del grafo, ossia da come nodi ed archi sono interconnessi.\\
-L'intuizione sfruttata per modificare l'algoritmo sta nel fatto che esistono altri dati non utilizzati, ossia gli attributi dei nodi. Tramite la creazione di nuovi particolari cammini è possibile far risultare due nodi in precedenza lontani, in quanto non direttamente connessi, vicini, dal momento che questi due nodi condividono uno o più attributi. L'introduzione di tutti questi nuovi dati porta ad un radicale cambiamento della suddivisione in comunità.\\
+Con questi dati l'algoritmo di \cnrl calcola la suddivisione in comunità. Si può notare come tutti questi dati vengano estratti esclusivamente dalla struttura del grafo, ossia da come nodi ed archi sono interconnessi.\\
+L'intuizione sfruttata per modificare l'algoritmo si basa sull'esistenza di altri dati non utilizzati, ossia gli attributi dei nodi. Tramite la creazione di nuovi particolari cammini è possibile far risultare vicini due nodi in precedenza lontani, in quanto non direttamente connessi. Risultano vicini perché questi nodi condividono uno o più attributi. L'introduzione dei nuovi dati porta ad un radicale cambiamento della suddivisione in comunità.\\
 L'idea di introdurre gli attributi per migliorare l'efficienza dell'algoritmo è sorta grazie agli articoli:
 \begin{itemize}
 	\item "Attributed social network embedding"\cite{SNE_paper}
@@ -66,16 +59,22 @@ L'idea di introdurre gli attributi per migliorare l'efficienza dell'algoritmo è
 \end{itemize}
 %
 \section{Esperimenti}
-Gli esperimenti che sono stati eseguiti nel corso del tirocinio si dividono in tre principali gruppi, in quanto ognuno di questi è dedicato ad un diverso algoritmo.\\
+Gli esperimenti che sono stati eseguiti nel corso del tirocinio si dividono in tre principali gruppi. Ognuno di questi è dedicato ad un diverso algoritmo.\\
 Le tre aree sono:
 \begin{itemize}
-	\item \textbf{\LPred} è un algoritmo che mediante la creazione di archi finti anche se verosimili e potenzialmente reali, che tuttavia non appaiono in una particolare selezione denominata di test. Va a verificare se sono più coerenti gli archi generati casualmente rispetto a quelli reali (di test).\\
+	\item \textbf{\LPred}: Mediante la creazione di archi verosimili e potenzialmente reali, ma che non appaiono in una particolare selezione denominata "test", va a verificare se sono più coerenti gli archi generati casualmente rispetto a quelli reali.\\
 	Per assegnare un valore comparabile ad un arco, si guarda la relazione, che lega i due nodi agli estremi del collegamento, valutata mediante apposite funzioni di similarità.\\
-	Gli archi dei due insiemi sono in seguito accoppiati e, in base a quale dei due ha valore più alto, si assegna un punteggio. Calcolando tale punteggio per ogni elemento questo andrà a rappresentare con quale attendibilità si riuscirà a predire in maniera corretta un nuovo arco.
-	\item \textbf{Classificazione dei nodi} è una tecnica che grazie ad una rappresentazione univoca di ogni nodo come un punto all'interno di uno spazio a $64$ dimensioni e disponendo per ognuno di questi anche della classe a cui appartiene (solo una).\\
-	Permette di predire per un qualsiasi nuovo nodo rappresentato nella stessa forma degli altri, a quale classe andrà ad appartenere. I test svolti analizzano con quale percentuale il classificatore, ossia la funzione che assegna la classe, riesce a predire in maniera esatta la classe di un nodo.
-	\item La \textbf{valutazione dell'individuazione di comunità} si occupa in prima istanza di creare le comunità di nodi simili fra loro secondo determinate caratteristiche, e poi mediante i metodi della modularità di valutare se le partizioni individuate sono ben costruite oppure no
+	Gli archi dei due insiemi sono in seguito accoppiati e, sulla base del valore più alto, si assegna un punteggio. Calcolando il punteggio per ogni coppia si andrà a rappresentare l'attendibilità per predire in maniera corretta un nuovo arco.
+	\item \textbf{Classificazione dei nodi} è una tecnica che necessita di una rappresentazione univoca dei vertici. Ognuno è definito come un punto all'interno di uno spazio a $64$ dimensioni e se ne conosce la classe d'appartenenza. Questo permette di predire per un qualsiasi nuovo nodo rappresentato nella stessa forma degli altri, a quale classe andrà ad appartenere.\\
+	I test svolti analizzano con quale percentuale il classificatore, ossia la funzione che assegna la classe, riesce a predire in maniera esatta la classe di un nodo.
+	\item La \textbf{valutazione dell'individuazione di comunità} si occupa in prima istanza di creare le comunità di nodi simili fra loro, secondo determinate caratteristiche. I metodi della modularità valutano se le partizioni individuate sono ben costruite oppure no
 \end{itemize}
+%
+\section{Com'è strutturata la tesi}
+Il capitolo sull'implementazione spiega le dinamiche base dell'algoritmo principale, da cui è partito tutto il lavoro. Poi viene descritta l'idea per un incremento di prestazioni mediante gli attributi, tramite un esempio di come viene applicata.\\
+Nel capitolo 3 sono esposte le metriche di valutazione fulcro degli esperimenti principali. Per ognuna son spiegate le dinamiche e le motivazioni per cui son state scelte.\\
+Il quarto capitolo è dedicato agli esperimenti. Vengono fornite le conoscenze di base per comprendere i tre algoritmi su cui s'è lavorato. Per ognuno di questi vengono descritte le meccaniche, tramite un esempio e poi sono illustrati i risultati raggiunti.\\
+Si termina con le conclusioni e la bibliografia.
 %
 
 \newpage
