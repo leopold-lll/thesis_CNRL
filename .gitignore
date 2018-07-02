@@ -4,10 +4,13 @@
 *.blg
 *.dvi
 *.gz
+*.lof
 *.log
+*.lot
 *.out
 *.pdf
 *.toc
+
 
 # Except the files
 !tesi_Stefano_Leonardi.pdf
