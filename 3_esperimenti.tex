@@ -1,6 +1,6 @@
 %\input{import}
 %
-\chapter{Esperimenti}
+\chapter{Esperimenti}\label{chap:3}
 In questo capitolo vi è una raccolta rappresentativa degli esperimenti svolti, con le relative analisi e commenti.
 \section{Origini dei grafi}
 In questa sezione vengono spiegati i dataset utilizzati e cosa rappresentano.\\
@@ -46,7 +46,7 @@ Come descritto nel capitolo sull'implementazione è necessario visitare il grafo
 \begin{figure}[htp]
 	\centering
 	\includegraphics{immagini/punti_modello}
-	\caption{Son visualizzati i nodi d'un grafo che vengono rappresentati da un modello che dispone di due dimensioni, mostrato in Tabella~\ref{tab:coordinate_modello}}
+	\caption{Son visualizzati i nodi d'un grafo rappresentati da un modello che dispone di due dimensioni, mostrato in Tabella~\ref{tab:coordinate_modello}}
 	\label{fig:grafico_modello}
 \end{figure}
 \\
@@ -96,7 +96,7 @@ Si è interessati a capire quanto sono buoni gli archi originari del grafo, T, r
 	\frac{\left( n_1 + \frac{n_2}{2} \right)}{n}
 	\label{eq:AUC_formula}
 \end{equation}
-Si usa perciò la metrica detta AUC\cite{AUC_metric}, che si basa sulla Formula~\ref{eq:AUC_formula}, i cui elementi sono:
+Si usa perciò la metrica detta \textbf{AUC}\cite{AUC_metric}, che si basa sulla Formula~\ref{eq:AUC_formula}, i cui elementi sono:
 \begin{itemize}
 	\item $n$ è il numero di archi presenti nell'insieme di test, calcolato mediante la Formula~\ref{eq:n_archi_fake}
 	\item $n1$ sono le volte in cui un arco di test T è migliore di un arco casuale di C
@@ -150,11 +150,11 @@ Si omette questa fase perché uguale a quella appena illustrata.
 \subsection{Applicazioni}
 Le similarità utilizzate in questi esempi sono\cite{all_metric}:
 \begin{itemize}
-	\item DW = DeepWalk
-	\item CN = Common Neighbors\cite{CN_metric}
-	\item Salton = Salton Index\cite{Salton_metric}
-	\item Jaccard = Jaccard Index
-	\item RA = Resource Allocation\cite{RA_metric}
+	\item \textbf{DW} = DeepWalk
+	\item \textbf{CN} = Common Neighbors\cite{CN_metric}
+	\item \textbf{Salton} = Salton Index\cite{Salton_metric}
+	\item \textbf{Jaccard} = Jaccard Index
+	\item \textbf{RA} = Resource Allocation\cite{RA_metric}
 \end{itemize}
 %
 \begin{figure}[htp]
@@ -174,7 +174,7 @@ Le similarità utilizzate in questi esempi sono\cite{all_metric}:
 \begin{figure}[htp]
 	\centering
 	\includegraphics[width=\linewidth]{immagini/LP_Dolphins}
-	\caption{Andamento del grafo dolphins su diverse metriche attraverso differenti percentuali di selezione}
+	\caption{Andamento del grafo dolphins, su diverse metriche, attraverso differenti percentuali di selezione}
 	\label{fig:LP_Dolphins}
 \end{figure}
 %
@@ -200,7 +200,7 @@ In aggiunta si considerano anche le etichette o classi d'appartenenza, quindi pe
 \end{itemize}
 Con questi dati viene addestrata la \textbf{funzione di classificazione}, o \textbf{classificatore}, il cui scopo sarà predire la classe d'appartenenza dato in input il vettore rappresentativo di un nodo.\\
 \\
-In seguito per ogni nodo appartenente all'insieme di test si cerca di predire la sua classe sottoponendo il suo vettore al classificatore. Una volta terminato si confronta se l'esito corrisponde con la reale classe, nota grazie allo stesso file di etichette utilizzato per l'addestramento.\\
+In seguito per ogni nodo appartenente all'insieme di test si cerca di predire la sua classe sottoponendo il suo vettore al classificatore. Una volta terminato, si confronta se l'esito corrisponde con la reale classe, nota grazie allo stesso file di etichette utilizzato per l'addestramento.\\
 È importante far notare che il modello viene spezzato in due perché il classificatore deve essere addestrato su dati diversi da quelli che prenderà in seguito in input. Se così non fosse non ci sarebbe nulla da predire in quanto i dati passati vengono ricordati e ed è impossibile sbagliare una risposta.\\
 \\
 La valutazione delle predizioni effettuate può avvenire mediante un metodo semplice ossia il \textbf{tasso d'errore}, che corrisponde alla Formula~\ref{eq:tasso_errore}. Si contano quanti errori si son fatti rispetto al totale o in alternativo si usa il metodo opposto ossia \textbf{l'accuratezza}, definita nella Formula~\ref{eq:accuratezza}, che conta i risultati con esito positivo rispetto al totale.
@@ -428,7 +428,7 @@ Dalla figura possiamo capire:
 		& Att & $4.14$ \e{-1} & $2.30$ \e{-2} \\
 		\hline
 	\end{tabular}
-	\captionof{table}{Misurazione delle comunità, generate attraverso due differenti metodi d'elaborazione, e analizzate su due tipologie di valutazione}
+	\captionof{table}{Misurazione delle comunità, generate attraverso due differenti metodi d'elaborazione, analizzate su due tipologie di valutazione}
 	\label{tab:4_valutazioni}
 \end{center}
 Nella Tabella~\ref{tab:4_valutazioni} vengono mostrati entrambi i grafi di \cora e \citeseer, su ognuno son state fatte quattro differenti valutazioni.\\
@@ -460,24 +460,22 @@ Nonostante i dati mostrati in Tabella~\ref{tab:4_valutazioni} siano perfettament
 
 
 
-\chapter{Conclusioni}
+\chapter{Conclusioni}\label{chap:4}
 Seguono alcune considerazioni personali sul lavoro affrontato e su come è stato svolto.
 \section*{Conclusioni tecniche}
 Vorrei evidenziare le potenzialità dell'uso degli attributi nella creazione dei modelli.\\
-Durante il tirocinio sono stati indagati solo alcuni dei metodi esistenti per l'introduzione di questi dati aggiuntivi. Ne esistono molti altri, ognuno con i suoi vantaggi e svantaggi. Non so se gli approcci da noi utilizzati sono i migliori o quelli con più potenzialità, certo è che lavorano bene e hanno portato ad un miglioramento.\\
-Uno dei vantaggi principali è che, basandosi su delle meccaniche semplici, è potenzialmente fattibile integrarli con altri metodi, portando ad ulteriori miglioramenti. Uno svantaggio evidente è il tempo d'esecuzione. Il codice iniziale di \cnrl è molto veloce, l'introduzione delle meccaniche proposte in questa tesi ha appesantito molto il costo computazionale. Questo è ancor più evidente quando, come nel nostro caso, si lavora con grafi estremamente sparsi che però dispongono di molti attributi.\\
-\\
-Probabilmente questo approccio dovrà essere sviluppato ancora e ancora, ma non è escluso che potrà mai dare il suo contributo.
+Durante il tirocinio sono stati indagati solo alcuni dei metodi esistenti per l'introduzione di questi dati aggiuntivi. Ne esistono molti altri, ognuno con i suoi vantaggi e svantaggi. Non so se gli approcci da noi utilizzati sono i migliori o quelli con più potenzialità, ma comunque abbiamo riscontrato che lavorano bene e hanno portato ad un miglioramento.\\
+Uno dei vantaggi principali è che, basandosi su delle meccaniche semplici, è potenzialmente fattibile integrarli con altri metodi, portando ad ulteriori miglioramenti. Uno svantaggio evidente è il tempo d'esecuzione. Il codice iniziale di \cnrl è molto veloce, l'introduzione delle meccaniche proposte in questa tesi hanno appesantito molto il costo computazionale. Questo è ancor più evidente quando, come nel nostro caso, si lavora con grafi estremamente sparsi che però dispongono di molti attributi.\\
+Probabilmente questo approccio dovrà essere ancora e ancora sviluppato, ma non è escluso che potrà dare un suo valido contributo.
 %
 \section*{Conclusioni personali}
-Affacciarsi per la prima volta a questo campo risulta essere considerevolmente complesso.\\
-È possibile, anche se estremamente difficoltoso, comprendere tutte le meccaniche degli algoritmi che si vanno a maneggiare. Essendo un progetto molto grande personalmente ho preferito appoggiarmi a svariate parti di codice già ideate, scritte e testate.\\
-È necessario ricordarsi che i dataset su cui si va ad operare sono troppo ampi, perché se ne possa tener traccia manualmente. Gli errori sono complicati da individuare in quanto non è possibile eseguire manualmente le operazioni svolte, nonostante si conoscano nel dettaglio come lavorano gli algoritmi. È fondamentale non sottovalutare la mole del progetto a cui si va incontro e non tralasciare nessun dettaglio finché è ancora possibile individuarlo, testarlo e correggerlo.\\
-\\
+Affacciarsi per la prima volta a questo campo è molto complesso.\\
+È possibile, anche se estremamente difficoltoso, comprendere tutte le meccaniche degli algoritmi che si vanno ad utilizzare. Essendo un progetto molto vasto personalmente ho preferito appoggiarmi a svariate parti di codice già ideate, scritte e testate.\\
+I dataset su cui si va ad operare sono troppo ampi e questo comporta che non se ne possa tener traccia. Gli errori sono complicati da individuare poiché non è possibile eseguire manualmente le operazioni svolte dal codice, nonostante si conoscano nel dettaglio come lavorano gli algoritmi. È fondamentale non sottovalutare la mole del progetto su cui si lavora e non tralasciare nessun dettaglio finché è ancora possibile individuarlo, testarlo e correggerlo.\\
 La complessità maggiore che personalmente ho incontrato sta nel settaggio dei parametri.\\
-Visto la moltitudine di possibilità di cui si dispone, risulta complesso visualizzarle/abbracciarle tutte, per comprendere come impostare i parametri che regolano la gestione dei dati all'interno del codice. Spesso alcuni settaggi sono disponibili solo in alcune situazioni o magari dipendono da altre impostazioni. Un esecuzione avvenuta con parametri errati non rispecchia le aspettative, e quindi porta a dover rivedere tutto.\\
+Visto la moltitudine di possibilità di cui si dispone, risulta complesso abbracciarle tutte, per comprendere come impostare i parametri che regolano la gestione dei dati all'interno del codice. Spesso alcuni settaggi sono disponibili solo in alcune situazioni o dipendono da delle impostazioni. Un esecuzione avvenuta con parametri errati non rispecchia le aspettative, e porta a dover rivedere il tutto.\\
 \\
-Terminando, le tante sfaccettature di questo argomento lo rendono complesso e difficile, è quindi necessario prestare sempre estrema attenzione a come si lavora.
+In conclusione, le tante sfaccettature di questo argomento lo rendono complesso e difficile, è quindi necessario prestare sempre estrema attenzione al metodo di lavoro.
 
 %\end{document}
 
