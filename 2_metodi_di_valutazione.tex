@@ -1,16 +1,16 @@
 %\input{import}
 %
 \chapter{Metodi di valutazione}\label{chap:2}
-Questo capitolo spiega di come si valuta una partizione creata dagli algoritmi d'individuazione delle comunità. Come citato nel sommario, il metodo scelto nel corso del tirocinio è stato la modularità, il cui simbolo è $Q$.\\
-La modularità altro non è che un valore solitamente compreso all'interno dell'intervallo $[-1, 1]$. Tuttavia questo non è sempre vero, poiché dipende strettamente da quale metodo d'implementazione si va ad utilizzare. Le prime persone che hanno lavorato sulla modularità sono state Newman e Girvan , che necessitavano di un metodo formale per decidere fra due partizioni di nodi quale fosse la migliore.\\
+Questo capitolo spiega come si valuta una partizione creata dagli algoritmi d'individuazione delle comunità. Come citato nel sommario, il metodo scelto nel corso del tirocinio è stato la modularità, il cui simbolo è $Q$.\\
+La modularità altro non è che un valore solitamente compreso all'interno dell'intervallo $[-1, 1]$. Tuttavia questo non è sempre vero, poiché dipende strettamente da quale metodo d'implementazione si va ad utilizzare. Le prime persone che hanno lavorato sulla modularità sono state Newman e Girvan, che necessitavano di un metodo formale per decidere quale fosse la migliore fra due partizioni di nodi.\\
 Newman e Girvan  quando hanno scritto le prime applicazioni della modularità sono partiti da una semplice assunzione: un nodo non può appartenere a più di una comunità. Questo elimina tutti i problemi dovuti alla sovrapposizione delle comunità. Per i casi studiati durante il tirocinio quest'assunzione non sempre è valida. Inizialmente è molto comoda poiché permette di ridurre notevolmente la complessità del calcolo della modularità.\\
 \\
 Durante tutto il lavoro svolto si è passati attraverso tre differenti metodi, tutti e tre verranno ora mostrati ed ove possibile spiegati. Si parte dal più semplice fino ad arrivare al più complesso.\\ Durante la spiegazione di ogni metodo viene assunto di lavorare con grafi non orientati, alla fine di ogni sezione sono indicati gli eventuali cambiamenti da applicare in caso si abbia invece a che fare con grafi orientati.
 %
-\section{Modularità con massimi ( \mmax )}
+\section{Modularità con massimi (\mmax)}
 È stato scelto questo nome in quanto questo metodo gestisce al massimo una comunità per ogni nodo, andando a ricalcare l'assunzione base di \textbf{Newman e Girvan}.\\
-L'idea di base è che questo metodo va a calcolare un valore di modularità per ogni comunità. Tutti questi elementi sono poi sommati fra loro per andare a creare il valore di modularità del grafo in se. È necessario far notare che questo metodo non permette la sovrapposizione delle comunità, per l'assunzione fatta, di conseguenza è impossibile che la sommatoria finale vada a considerare più di una volta i valori raccolti, da un qualsiasi elemento del grafo.\\
-Questo metodo si basa sull'osservazione che è possibile identificare una comunità sulla base della frequenza degli archi contenuti al suo interno. Di fatto se un insieme di nodi dispone di una grande quantità di archi che li collegano direttamente, questi nodi dovrebbero essere una comunità a sé stante o almeno far parte della stessa. Se così non fosse, allora la valutazione della partizione sul grafo deve essere penalizzata in quanto non ha considerato questi nodi come parte dello stesso gruppo.\\
+L'idea di base è che questo metodo va a calcolare un valore di modularità per ogni comunità. Tutti questi elementi sono poi sommati fra loro per andare a creare il valore di modularità del grafo in se. È necessario far notare che questo metodo non permette la sovrapposizione delle comunità, per l'assunzione fatta; di conseguenza è impossibile che la sommatoria finale vada a considerare più di una volta i valori raccolti, da un qualsiasi elemento del grafo.\\
+Questo metodo si basa sull'osservazione che è possibile identificare una comunità sulla base della frequenza degli archi contenuti al suo interno. Di fatto, se un insieme di nodi dispone di una grande quantità di archi che li collegano direttamente, questi nodi dovrebbero essere una comunità a sé stante o almeno far parte della stessa. Se così non fosse, allora la valutazione della partizione sul grafo deve essere penalizzata in quanto non ha considerato questi nodi come parte dello stesso gruppo.\\
 Il motivo per cui è stato scelto questo metodo, oltre al fatto che è semplice da calcolare, è proprio perché va a penalizzare le partizioni che non considerano una comunità molto evidente.\\
 Di seguito la formula completa:
 \begin{equation}
@@ -32,7 +32,7 @@ Si può notare che $\frac{l_c}{L}$ è il peso della comunità $c$ rispetto al re
 Quando si parla di grafo orientato l'unica parte da modificare è $\frac{d_c}{2L}$ che diventa $\frac{d_c}{L}$. In un grafo non orientato un arco incrementa di uno il grado di due nodi, quello  di partenza e quello d'arrivo, mentre, se l'arco fosse orientato questo non accadrebbe in quanto aumenterebbe solamente il grado del nodo di partenza, ecco il motivo del fattore moltiplicativo $2$ di differenza.
 %
 %
-\section{Modularità con sovrapposizione ( \mover )}
+\section{Modularità con sovrapposizione (\mover)}
 L'algoritmo qui descritto è preso dall'articolo intitolato "Modularity measure of networks with overlapping communities"\cite{M-over_paper}.\\
 Come si può intuire dal nome, questo metodo permette a due comunità di condividere uno o più nodi e quindi d'aver una sovrapposizione. In linea con diversi altri metodi la modularità generata da questo algoritmo cade nell'intervallo $[-1, 1]$.\\
 Se nel metodo precedente si calcolava un valore di modularità per ogni comunità e poi li si sommava in quanto non era prevista la sovrapposizione, qui la gestione è simile. Si calcola un valore per ogni comunità e poi, invece di sommarli, se ne ricava una media poiché la sovrapposizione è concessa. Uno stesso nodo può portare il suo contributo a diversi elementi della sommatoria.\\
@@ -69,7 +69,6 @@ Dove gli elementi dell'equazione sono:
 	\item $a_{ij}$ vale 1 se l'arco dal nodo $i$ al nodo $j$ esiste, altrimenti assume il valore 0
 \end{itemize}
 %
-Ecco spiegati i dettagli presenti all'interno di quest'Equazione~\ref{eq:m_over}.\\
 Come per il metodo precedente, si calcola la densità della comunità (attraverso la Formula~\ref{eq:edge_density}). Ora si confronta il numero di archi interni presenti, rispetto al potenziale numero massimo, ossia il numero di archi presenti in un grafo completo con lo stesso numero di nodi.
 \begin{equation}
 	\frac{ n^e_{c_r} }{ \binom{n_{c_r}}{2} }
@@ -91,14 +90,14 @@ $d_i$ è importante perché va a premiare gli archi che partono da un nodo con u
 Compresa la formula generatrice, si può notare che un particolare valore di modularità può rivelare  due importanti dettagli del grafo:
 \begin{itemize}
 	\item un valore negativo sta a significare che i gruppi di nodi non sono densamente connessi al loro interno ma piuttosto legati a punti esterni. Pur con un valore negativo è possibile che gli archi interni siano in numero maggiore rispetto agli archi verso l'esterno, ma, se ciò accade, è perché i parametri di $d_i$ e $s_i$ hanno dato maggior rilevanza agli archi uscenti
-	\item se la modularità ha un valore, che in assoluto si avvicina molto allo zero, sta a significare che il grafo valutato è estremamente sparso. Il fattore moltiplicativo mostrato nell'Equazione~\ref{eq:edge_density} va a collassare i vari elementi della formula vicino allo zero, di conseguenza anche la sommatoria non si allontanerà di molto da quel valore
+	\item se la modularità ha un valore che in assoluto si avvicina molto allo zero, questo significa che il grafo valutato è estremamente sparso. Il fattore moltiplicativo mostrato nell'Equazione~\ref{eq:edge_density} va a collassare i vari elementi della formula vicino allo zero, di conseguenza anche la sommatoria non si allontanerà di molto da quel valore
 \end{itemize}
-Quando si parla di grafo orientato l'unica differenza, da considerare, la si applica alla Formula~\ref{eq:edge_density}. Si dà il caso che il numero massimo di archi in un grafo orientato sia il doppio del numero di archi per lo stesso grafo non orientato, questo per il semplice motivo che si possono creare due archi leganti gli stessi due nodi se presentano versi opposti. Pertanto il numero massimo cambia da $\binom{n_{c_r}}{2}$ per diventare $ 2\binom{n_{c_r}}{2}$.
+Quando si parla di grafo orientato, l'unica differenza significativa riguarda la Formula~\ref{eq:edge_density}. Si dà il caso che il numero massimo di archi in un grafo orientato sia il doppio del numero di archi per lo stesso grafo non orientato, questo per il semplice motivo che si possono creare due archi leganti gli stessi due nodi se presentano versi opposti. Pertanto il numero massimo cambia da $\binom{n_{c_r}}{2}$ per diventare $ 2\binom{n_{c_r}}{2}$.
 %
 %
 \section{Modularità modificata}
 Questo algoritmo\cite{M-mod_code} è preso dall'articolo intitolato "Incorporating Implicit Link Preference Into Overlapping Community Detection"\cite{M-mod_paper}.\\
-Questo è l'algoritmo che è stato scelto da chi ha scritto l'articolo di \cnrl e, per questa ragione, è stato adottato anche da noi. È estremamente importante perché permette di replicare i risultati illustrati nel documento cui facciamo riferimento. Si ha quindi un punto fisso da cui partire e con cui all'occorrenza confrontarsi.\\
+Questo è l'algoritmo che è stato scelto da chi ha scritto l'articolo \cnrl\ e, per questa ragione, è stato adottato anche da noi. È estremamente importante perché permette di replicare i risultati illustrati nel documento cui facciamo riferimento. Si ha quindi un punto fisso da cui partire e con cui all'occorrenza confrontarsi.\\
 Sfortunatamente questo è il più lento dei tre metodi che vengono illustrati in questo capitolo, per il semplice motivo che è il più complesso, sia logicamente che computazionalmente.\\
 Di seguito vi sono due versioni della stessa formula (senza sistema~\ref{eq:m_mod} e con sistema~\ref{eq:m_mod_system}):
 \begin{equation}
@@ -134,7 +133,6 @@ Dove gli elementi delle equazioni sono:
 	\item $|C_u \cap C_v|$ è il numero totale di comunità condivise fra i nodi $u$ e $v$
 \end{itemize}
 %
-Come per i metodi precedenti segue una spiegazione delle varie sezioni della Formula~\ref{eq:m_mod}.\\
 Si prende l'elemento $ |C_u \cap C_v|$: questo fattore moltiplicativo ci permette d'ignorare gli archi che legano nodi che non condividono nessuna comunità. Per capire il suo scopo si può pensare ad una partizione che non presenta sovrapposizioni, in questo caso tale componente permetterà di ignorare tutti gli archi che non sono interni ad una singola comunità, ma passano da una all'altra. Ignorando ora l'assunzione base di Newman e Girvan  si può dire che gli unici archi considerati sono quelli che rimangono interni ad almeno una comunità, anche se è permesso loro essere di collegamento fra altre. Il funzionamento di questo componente è illustrato bene nella seconda versione (Formula~\ref{eq:m_mod_system}), grazie al sistema si nota che se la condizione è verificata si può ignorare tutta la prima parte.\\
 Oltre a filtrare gli archi utilizzabili, questo componente assegna un importanza maggiore a quegli archi che connettono nodi che condividono molte comunità.
 \begin{equation}

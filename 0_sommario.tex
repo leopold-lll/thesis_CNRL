@@ -18,7 +18,7 @@ L'algoritmo proposto nell'articolo utilizza diverse tecniche, alcune delle quali
 Segue la spiegazione del perché l'individuazione di comunità è una tecnica così importante.
 %
 \section{Cosa sono i grafi e cosa le comunità}
-La base sono i grafi, una particolare struttura dati composta da \textbf{nodi/vertici} $V$ (dove $n=|V|$) e \textbf{archi/bordi/lati} $E$ (dove $m=|E|$). I primi possono rappresentare un entità eventualmente anche con l'aiuto di attributi. Diversamente gli archi sono dei collegamenti che legano due nodi. Possono essere interamente \textbf{orientati/diretti} o \textbf{non orientati/indiretti}. Questa struttura dati permette di rappresentare molte situazioni e per tale motivo è importante.\\
+La base sono i grafi, una particolare struttura dati composta da \textbf{nodi/vertici} $V$ (dove $n=|V|$) e \textbf{archi/bordi/lati} $E$ (dove $m=|E|$). I primi possono rappresentare un'entità eventualmente anche con l'aiuto di attributi. Diversamente gli archi sono dei collegamenti che legano due nodi. Possono essere interamente \textbf{orientati/diretti} o \textbf{non orientati/indiretti}. Questa struttura dati permette di rappresentare molte situazioni e per tale motivo è importante.\\
 Lo scopo dell'individuazione delle comunità è riconoscere dei gruppi di nodi simili fra loro.\\
 Si fa notare che i nodi risultano essere simili per diverse ragioni. Possono avere le stesse caratteristiche strutturali in quanto sono dei cardini che legano molti altri elementi, oppure punti isolati da tutto il resto, o più semplicemente  valori analoghi sugli attributi.\\
 Gruppi di nodi simili possono essere gestiti in maniera omogenea; questo permette di sfruttarne le peculiarità. La versatilità d'applicazione dei grafi conferisce a questi algoritmi una grande importanza.
@@ -37,12 +37,12 @@ Le \textbf{partizioni} vengono così definite:
 	\item Un nodo del grafo può appartenere a più di una comunità, potenzialmente anche a tutte quelle presenti. Se questo accade significa che c'è una sovrapposizione di comunità
 \end{itemize}
 La metrica di valutazione di una partizione è la modularità (il cui simbolo è $Q$). Questo nome può essere associato a diverse metriche. A seconda di cosa si cerca si avrà interesse a valorizzare alcuni aspetti e penalizzarne altri. Per tale motivo la modularità è solo il nome usato per indicare il valore dato dalla valutazione di una partizione.\\
-Durante il tirocinio sono stati adottati tre metodi differenti: \textbf{\mmax}, \textbf{\mover} e \textbf{\mmod}. I primi due nomi non sono ufficiali in quanto sono stati scelti al solo scopo di riconoscerli, mentre l'ultimo, \mmod , è quello utilizzato nell'articolo su \cnrl \cite{CNRL_paper}.\\
+Durante il tirocinio sono stati adottati tre metodi differenti: \textbf{\mmax}, \textbf{\mover} e \textbf{\mmod}. I primi due nomi non sono ufficiali in quanto sono stati scelti al solo scopo di riconoscerli, mentre l'ultimo, \mmod, è quello utilizzato nell'articolo su \cnrl \cite{CNRL_paper}.\\
 I dettagli sul funzionamento e sulla motivazione del perché sono state scelte sono all'interno dell'apposito capitolo sulle metriche di valutazione (\autoref{chap:2}).
 %
 \section{I cambiamenti apportati}
-Per calcolare una partizione, il codice di \cnrl utilizza un sistema di visite random (casuali) e con questo ricostruisce le possibili somiglianze fra i nodi. Non volendo toccare questa sezione, le modifiche da noi apportate si inseriscono all'interno della creazione dei cammini.\\
-Una cammino è definito come una sequenza di nodi. Preso un elemento qualsiasi fra questi deve esser possibile arrivare all'elemento successivo attraversando un solo arco. I due elementi devono essere direttamente connessi, almeno nel senso di percorrenza.\\
+Per calcolare una partizione, il codice di \cnrl\ utilizza un sistema di visite random (casuali) e con questo ricostruisce le possibili somiglianze fra i nodi. Non volendo toccare questa sezione, le modifiche da noi apportate si inseriscono all'interno della creazione dei cammini.\\
+Un cammino è definito come una sequenza di nodi. Preso un elemento qualsiasi fra questi, deve essere possibile arrivare all'elemento successivo attraversando un solo arco. I due elementi devono essere direttamente connessi, almeno nel senso di percorrenza.\\
 L'algoritmo genera $x$ cammini, ognuno di lunghezza massima $l$, sul grafo, dove $x=n \cdot w$:
 \begin{itemize}
 	\item $n$: è il numero di nodi del grafo
@@ -50,7 +50,7 @@ L'algoritmo genera $x$ cammini, ognuno di lunghezza massima $l$, sul grafo, dove
 	\item $l$: è la lunghezza massima di ogni cammino
 \end{itemize}
 %
-Con questi dati l'algoritmo di \cnrl calcola la suddivisione in comunità. Si può notare come tutti questi dati vengano estratti esclusivamente dalla struttura del grafo, ossia da come nodi ed archi sono interconnessi.\\
+Con questi dati, l'algoritmo di \cnrl\ calcola la suddivisione in comunità. Si può notare come tutti questi dati vengano estratti esclusivamente dalla struttura del grafo, ossia da come nodi ed archi sono interconnessi.\\
 L'intuizione sfruttata per modificare l'algoritmo si basa sull'esistenza di altri dati non utilizzati, ossia gli attributi dei nodi. Tramite la creazione di nuovi particolari cammini è possibile far risultare vicini due nodi in precedenza lontani, in quanto non direttamente connessi. Risultano vicini perché questi nodi condividono uno o più attributi. L'introduzione dei nuovi dati porta ad un radicale cambiamento della suddivisione in comunità.\\
 L'idea di introdurre gli attributi per migliorare l'efficienza dell'algoritmo è sorta grazie agli articoli:
 \begin{itemize}
@@ -73,7 +73,7 @@ Le tre aree sono:
 \section{Com'è strutturata la tesi}
 Il \autoref{chap:1} sull'implementazione spiega le dinamiche base dell'algoritmo principale, da cui è partito tutto il lavoro. Poi viene descritta l'idea per un incremento di prestazioni mediante gli attributi, tramite un esempio di come viene applicata.\\
 Nel \autoref{chap:2} sono esposte le metriche di valutazione fulcro degli esperimenti principali. Per ognuna son spiegate le dinamiche e le motivazioni per cui son state scelte.\\
-Il quarto (\autoref{chap:3}) è dedicato agli esperimenti. Vengono fornite le conoscenze di base per comprendere i tre algoritmi su cui s'è lavorato. Per ognuno di questi vengono descritte le meccaniche, tramite un esempio e poi sono illustrati i risultati raggiunti.\\
+Il \autoref{chap:3} è dedicato agli esperimenti. Vengono fornite le conoscenze di base per comprendere i tre algoritmi su cui s'è lavorato. Per ognuno di questi vengono descritte le meccaniche, tramite un esempio e poi sono illustrati i risultati raggiunti.\\
 Si termina con le conclusioni (\autoref{chap:4}) e la bibliografia.
 %
 

@@ -25,48 +25,63 @@ Nella Tabella~\ref{tab:dati_grafi} sono elencati i dettagli tecnici di ogni data
 		\label{tab:dati_grafi}
 \end{center}
 %
-\subsection*{Esperimento principale: \cora - \citeseer}\cite{Co-Ci_1}\cite{Co-Ci_2}
-Il dataset di \textbf{\cora} è un grafo diretto che rappresenta una rete di articoli scientifici sull'apprendimento automatico. Ogni nodo è un articolo, mentre ogni arco rappresenta il collegamento fra un documento è l'altro, se il documento $A$ cita il documento $B$ si avrà l'arco $(A, B)$. La rete è costruita in modo che ogni nodo abbia almeno un arco entrante o uscente.\\
+\subsection*{Esperimento principale: \cora\ - \citeseer}\cite{Co-Ci_1}\cite{Co-Ci_2}
+Il dataset \textbf{\cora} è un grafo diretto che rappresenta una rete di articoli scientifici sull'apprendimento automatico. Ogni nodo è un articolo, mentre ogni arco rappresenta il collegamento fra un documento e l'altro; se il documento $A$ cita il documento $B$, si avrà l'arco $(A, B)$. La rete è costruita in modo che ogni nodo abbia almeno un arco entrante o uscente.\\
 Ogni articolo appartiene esattamente ad una classe identificata da un etichetta. Ogni attributo rappresenta la presenza o meno di una determinata parola nel testo del documento (deve apparire almeno 10 volte).\\
 \\
-Il dataset di \textbf{\citeseer} è un grafo diretto che rappresenta una rete analoga a quella di \cora, anche qui si hanno articoli scientifici che si citano vicendevolmente. L'etichetta è la classe d'appartenenza di cui l'articolo fa parte, e gli attributi son nuovamente la presenza o meno di certe parole all'interno del testo.\\
+Il dataset di \textbf{\citeseer} è un grafo diretto che rappresenta una rete analoga a quella di \cora; anche in questo caso si hanno articoli scientifici che si citano vicendevolmente. L'etichetta è la classe d'appartenenza di cui l'articolo fa parte, e gli attributi rappresentano nuovamente la presenza o meno di certe parole all'interno del testo.\\
 %
 \subsection*{Grafi per esperimenti minori}
 Questi quattro grafi vengono presentati in ordine decrescente nel numero dei nodi, così come fatto nella seconda parte della Tabella~\ref{tab:dati_grafi}.\\
 \begin{itemize}
 	\item \textbf{BlogCatalog}\cite{BlogCatalog} rappresenta la rete di relazioni, di conoscenza, fra gli utenti di alcune piattaforme per blog
-	\item \textbf{Gnutella}\cite{Gnutella_1}\cite{Gnutella_2} questo grafo si rifà alla rete peer-to-peer per lo scambio di file di Gnutella nell'agosto 2002. Ogni nodo rappresenta un host e ogni arco un collegamento fra due host
+	\item \textbf{Gnutella}\cite{Gnutella_1}\cite{Gnutella_2} descrive la rete peer-to-peer per lo scambio di file di Gnutella nell'agosto 2002. Ogni nodo rappresenta un host e ogni arco un collegamento fra due host
 	\item \textbf{Soc-Dolphins}\cite{Dolphins_1}\cite{Dolphins_2} riporta la rete sociale di un gruppo di delfini al largo della Nuova Zelanda nel 2003
-	\item \textbf{Karate}\cite{Karate} raccoglie lo storico degli incontri in un club di karate universitario nel 1977. Ogni nodo è un membro del club, ogni arco indica uno scontro terminato in pareggio
+	\item \textbf{Karate}\cite{Karate} raccoglie lo storico degli incontri in un club di karate universitario nel 1977. Ogni nodo è un membro del club, ogni arco indica uno scontro terminato in pareggio.
 \end{itemize}
 %
 \section{Modello di un grafo}
 In questa sezione viene spiegato cosa si intende per modello di un grafo, e perché è tanto importante per gli algoritmi che vi sono costruiti sopra.\\
-Come descritto nel capitolo sull'implementazione è necessario visitare il grafo per generare su questo dei cammini. Tali vettori di nodi vengono presi in input dall'algoritmo di \wv che, tramite una rete neurale va a descrivere ogni nodo coinvolto tramite un vettore di valori reali. \cnrl utilizza invece un metodo alternativo chiamato Latent Dirichlet Allocation (LDA)\cite{LDA} o una sua variante detta HalfLDA, entrambe sono comunque basate su \wv.\\
+Come descritto nel capitolo sull'implementazione è necessario visitare il grafo per generare su questo dei cammini. Tali vettori di nodi vengono presi in input dall'algoritmo di \wv\ che, tramite una rete neurale va a descrivere ogni nodo coinvolto tramite un vettore di valori reali. \cnrl\ utilizza invece un metodo alternativo chiamato Latent Dirichlet Allocation (LDA)\cite{LDA} o una sua variante detta HalfLDA, entrambe sono comunque basate su \wv.\\
 \begin{figure}[htp]
 	\centering
 	\includegraphics{immagini/punti_modello}
-	\caption{Son visualizzati i nodi d'un grafo rappresentati da un modello che dispone di due dimensioni, mostrato in Tabella~\ref{tab:coordinate_modello}}
+	\caption{Sono visualizzati i nodi di un grafo rappresentati da un modello che dispone di due dimensioni, mostrato in Tabella~\ref{tab:coordinate_modello}}
 	\label{fig:grafico_modello}
 \end{figure}
 \\
 \begin{center}
 	\begin{tabular}{|l|cc|}
 		\hline
-		ID&X1&X2\\
+		ID&X1&X2 \\
 		\hline
-		1 & 1 & 2\\
-		2 & 2 & 2\\
-		3 & 7 & 5\\
-		4 & 7 & 3\\
-		5 & 5 & 4\\
-		6 & 3 & 8\\
+		1 & 1 & 2 \\
+		2 & 2 & 2 \\
+		3 & 7 & 5 \\
+		4 & 7 & 3 \\
+		5 & 5 & 4 \\
+		6 & 3 & 8 \\
+		%7 & 1 & 5 \\
+		%8 & 1 & 7 \\
+		%9 & 1 & 8 \\
 		\hline
 	\end{tabular}
 	\captionof{table}{Tabella rappresentativa del modello dei nodi in Figura~\ref{fig:grafico_modello}}
 	\label{tab:coordinate_modello}
 \end{center}
-Di norma ogni vettore contiene $64$ numeri reali e ognuno rappresenta una posizione lungo un asse in uno spazio a $64$ dimensioni. È possibile pensare anche ad un caso più semplice. In Figura~\ref{fig:grafico_modello} si possono vedere sei punti che si può immaginare appartenessero ad un grafo e fossero legati fra loro in qualche modo. Una volta generati i cammini su tale grafo, e questi forniti ad uno dei due algoritmi, viene calcolata la Tabella~\ref{tab:coordinate_modello}. Ad ogni ID di un nodo vengono associati due valori (qui interi per semplicità). Se ne usano due in quanto facili da mostrare, con $64$ sarebbe pressoché impossibile. Si possono dunque immaginare come coordinate su un piano cartesiano, e così si arriva alla Figura~\ref{fig:grafico_modello}, visivamente si può dire che esistono 3 gruppi distinti evidenziati dai colori, abbiamo quindi $(1, 2) - (3, 4, 5) - (6)$.\\
+%\begin{center}
+%	\begin{tabular}{|l|ccccccccc|}
+%		\hline
+%		ID & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\
+%		\hline
+%		X1 & 1 & 2 & 7 & 7 & 5 & 3 & 1 & 1 & 1 \\
+%		X2 & 2 & 2 & 5 & 3 & 4 & 8 & 5 & 7 & 8 \\
+%		\hline
+%	\end{tabular}
+%	\captionof{table}{Tabella rappresentativa del modello dei nodi in Figura~%\ref{fig:grafico_modello}}
+%	\label{tab:coordinate_modello}
+%\end{center}
+Di norma ogni vettore contiene $64$ numeri reali, ognuno dei quali rappresenta una posizione lungo un asse in uno spazio a $64$ dimensioni. È possibile pensare anche ad un caso più semplice. In Figura~\ref{fig:grafico_modello} si possono vedere sei punti che si può immaginare appartenessero ad un grafo e fossero legati fra loro in qualche modo. Una volta generati i cammini su tale grafo, e questi forniti ad uno dei due algoritmi, viene calcolata la Tabella~\ref{tab:coordinate_modello}. Ad ogni ID di un nodo vengono associati due valori (qui interi per semplicità). Se ne usano due in quanto facili da mostrare, con $64$ sarebbe pressoché impossibile. Si possono dunque immaginare come coordinate su un piano cartesiano, e così si arriva alla Figura~\ref{fig:grafico_modello}, visivamente si può dire che esistono 3 gruppi distinti evidenziati dai colori, abbiamo quindi $(1, 2) - (3, 4, 5) - (6)$.\\
 Escludendo l'influenza causata dai colori, il nostro occhio ci suggerisce l'esistenza di questi 3 gruppi in quanto i nodi che vi fanno parte sono vicini fra loro. Questo ricalca alla perfezione la definizione di somiglianza: tanto più due nodi sono vicini tanto più questi sono simili. Si ricorda che esistono comunque molte definizioni formali di somiglianza e la distanza euclidea è solo una di queste.\\
 \\
 Se due nodi molto simili, e quindi vicini, vengono collegati da un arco, allora tale arco assume un valore molto elevato, vicino a $1$, diversamente assumerà un valore molto basso, vicino a $0$, se i nodi che lega sono diversi ossia molto lontani.\\
@@ -74,7 +89,7 @@ Questo valore verrà chiamato d'ora in avanti coerenza di un arco\footnote{Non e
 %
 \section{Link Prediction}
 Questo è il primo di tre algoritmi, che verranno illustrati in questo capitolo, tutti e tre basati sul modello del grafo appena spiegato.\\
-L'algoritmo di \LPred ha lo scopo d'assegnare un valore al grafo in input. Questo valore è una percentuale e per tale motivo ricade nell'intervallo $[0, 1]$. Questa percentuale sta a rappresentare la coerenza degli archi del grafo. Nel dettaglio, un arco è molto coerente se lega due nodi simili, un grafo è tanto più coerente quanti più archi coerenti ha.
+L'algoritmo di \LPred\ ha lo scopo d'assegnare un valore al grafo in input. Questo valore è una percentuale e per tale motivo ricade nell'intervallo $[0, 1]$. Questa percentuale sta a rappresentare la coerenza degli archi del grafo. Nel dettaglio, un arco è molto coerente se lega due nodi simili; un grafo è tanto più coerente quanti più archi coerenti ha.
 %
 \subsection{Dinamiche di funzionamento}
 In prima istanza viene caricato il grafo, sempre come lista d'archi, sono questi il fulcro dell'algoritmo. Si va poi a spezzare gli archi in due gruppi, dopo averli mescolati per non creare delle divisioni sempre uguali. Tale separazione viene fatta sulla base del parametro $F$, che indica quale sarà la percentuale degli archi adibiti all'addestramento del modello e quali invece saranno adibiti alla fase di test.\\
@@ -90,8 +105,8 @@ Il numero degli archi usati per il test viene dato dalla Formula~\ref{eq:n_archi
 mentre quelli utilizzati per l'addestramento corrispondono alla Formula~\ref{eq:n_archi_true}, dove $m$ è il numero di archi del grafo.\\
 Il nuovo grafo (\textbf{G1}) creatosi, inseguito alla rimozione degli archi per il test, viene utilizzato per generare il modello.\\
 Per ogni arco appartenente all'insieme di test (\textbf{Test=T}) se ne genera un altro (\textbf{Check=C}) tramite una coppia di nodi casuali, assicurandosi che non corrispondano ad un arco già esistente. Si hanno quindi tre insiemi, il primo adibito all'addestramento, stabilisce il modello necessario a discernere quale delle due restanti selezioni è la migliore.
-Per ogni arco, di T e di C, si va a veder quanto sono simili i nodi che legano e se ne calcola così la coerenza, tramite l'apposita funzione di similarità, ora disponibile. Gli archi possono essere valutati sulla base di questo nuovo parametro.\\
-Si è interessati a capire quanto sono buoni gli archi originari del grafo, T, rispetto a quelli generati casualmente, C. 
+Per ogni arco, di T e di C, si va a vedere quanto sono simili i nodi che legano e se ne calcola così la coerenza, tramite l'apposita funzione di similarità, ora disponibile. Gli archi possono essere valutati sulla base di questo nuovo parametro.\\
+Si è interessati a capire quanto sono buoni gli archi originari del grafo (T), rispetto a quelli generati casualmente (C). 
 \begin{equation}
 	\frac{\left( n_1 + \frac{n_2}{2} \right)}{n}
 	\label{eq:AUC_formula}
@@ -99,8 +114,8 @@ Si è interessati a capire quanto sono buoni gli archi originari del grafo, T, r
 Si usa perciò la metrica detta \textbf{AUC}\cite{AUC_metric}, che si basa sulla Formula~\ref{eq:AUC_formula}, i cui elementi sono:
 \begin{itemize}
 	\item $n$ è il numero di archi presenti nell'insieme di test, calcolato mediante la Formula~\ref{eq:n_archi_fake}
-	\item $n1$ sono le volte in cui un arco di test T è migliore di un arco casuale di C
-	\item $n2$ sono le volte in cui un arco di test T ha valore pari o quasi rispetto ad un arco casuale di C
+	\item $n_1$ sono le volte in cui un arco di test T è migliore di un arco casuale di C
+	\item $n_2$ sono le volte in cui un arco di test T ha valore pari o quasi rispetto ad un arco casuale di C
 \end{itemize}
 Per ogni arco di T se ne associa casualmente un altro di C. Si guarda quanto valgono i due archi coinvolti. Se l'arco di T vale più dell'arco di C si incrementa di $1$ il valore di AUC, se uguali o quasi (differenza inferiore ad una soglia detta $ \epsilon$) si incrementa di $0.5$. Avendo fatto ciò con ogni arco se ne calcola la media.\\
 \\
@@ -160,14 +175,14 @@ Le similarità utilizzate in questi esempi sono\cite{all_metric}:
 \begin{figure}[htp]
 	\centering
 	\includegraphics[width=\linewidth]{immagini/LP_fold3}
-	\caption{\LPred con tre sezioni, $F=3$}
+	\caption{\LPred\ con tre sezioni, $F=3$}
 	\label{fig:LP_fold3}
 \end{figure}
 %
 \begin{figure}[htp]
 	\centering
 	\includegraphics[width=\linewidth]{immagini/LP_CN}
-	\caption{Andamento della metrica di Common Neighbors, su tre grafi distinti attraverso differenti percentuali di selezione}
+	\caption{Andamento della metrica di Common Neighbors, su tre grafi distinti attraverso differenti percentuali di selezione (2-3-5-10-20)}
 	\label{fig:LP_CN}
 \end{figure}
 %
@@ -180,7 +195,7 @@ Le similarità utilizzate in questi esempi sono\cite{all_metric}:
 %
 Questo algoritmo ha tre possibili variabili su cui si può lavorare:
 \begin{itemize}
-	\item \textbf{Il parametro $F$} (dall'inglese fold) viene fissato nella Figura~\ref{fig:LP_fold3}. Si può notare come ogni grafo abbia un livello su cui si attesta, BlogCatalog grazie al fatto che è estremamente denso ha un valore in media molto alto rispetto ai tre grafi restanti
+	\item \textbf{Il parametro $F$} (dall'inglese fold) viene fissato nella Figura~\ref{fig:LP_fold3}. Si può notare come ogni grafo abbia un livello su cui si attesta; grazie al fatto che è estremamente denso, BlogCatalog ha un valore in media molto alto rispetto ai tre grafi restanti
 	\item Nella Figura~\ref{fig:LP_CN} si lavora su un \textbf{unica metrica}. Si utilizza solo la funzione di similarità denominata Common Neighbors, che si basa sui nodi geometricamente vicini agli estremi di un arco all'interno del modello del grafo per valutare la somiglianza.\\
 	Si può notare come all'aumentare del parametro $F$, il valore che si associa ad ogni grafo tende ad aumentare. Questo è dovuto ad un modello meglio addestrato perché dispone di più dati in partenza, e quindi si ha una migliore valutazione
 	\item La Figura~\ref{fig:LP_Dolphins} è forse la più semplice da osservare in quanto è mostrato \textbf{un solo grafo}. Come prima si vede che l'influenza del parametro $F$ sul risultato finale è altissima. Si può notare che le prestazioni di DeepWalk sono leggermente più alte rispetto al resto che invece tende ad avere le stesse performance 
@@ -304,7 +319,7 @@ Mentre nella colonna "Classe" è mostrato il valore autentico del nodo. Infine n
 Per una valutazione mediante accuratezza è sufficiente calcolare la media aritmetica dell'ultima colonna, ossia $ Acc = \frac{1+1+1+1+1}{8} = \frac{5}{8} = 0.625$. Mentre per l'F1-score sarebbe necessario calcolare sensibilità e precisione di ognuna delle 3 classi, riassumerli mediante micro o macro, ed infine arrivare ad un valore con F1-score.
 %
 \subsection{Applicazioni}
-I grafi scelti per questa applicazione sono \cora (Figura~\ref{fig:VC_cora}) e \citeseer (Figura~\ref{fig:VC_citeseer}) perché fra quelli presentati nella Tabella~\ref{tab:dati_grafi} sono gli unici che sono forniti di attributi sui nodi. Questo permette di mostrare come l'utilizzo del grafo bipartito per l'introduzione degli attributi, modifica le prestazioni.
+I grafi scelti per questa applicazione sono \cora\ (Figura~\ref{fig:VC_cora}) e \citeseer\ (Figura~\ref{fig:VC_citeseer}) perché fra quelli presentati nella Tabella~\ref{tab:dati_grafi} sono gli unici che sono forniti di attributi sui nodi. Questo permette di mostrare come l'utilizzo del grafo bipartito per l'introduzione degli attributi, modifica le prestazioni.
 %
 \begin{figure}[htp]
 	\centering
@@ -320,16 +335,16 @@ I grafi scelti per questa applicazione sono \cora (Figura~\ref{fig:VC_cora}) e \
 	\label{fig:VC_citeseer}
 \end{figure}
 %
-Sull'asse delle ordinate vi sono i valori compresi nell'intervallo $[0, 1]$ misurati mediante la tecnica dell'accuratezza. Mentre sull'asse delle ascisse vi sono i tre algoritmi utilizzati per creare il modello del grafo partendo dai cammini. \wv è il metodo di controllo, mentre S-CNRL e E-CNRL che lavorano rispettivamente con LDA e HalfLDA, sono i nuovi algoritmi proposti. Entrambi per alcune parti continuano ad usare \wv.\\
-Sia \cora che \citeseer sono grafi originariamente diretti (\textcolor{red}{misurazioni rosse}), tuttavia si è provato ad interpretarli anche come se fossero indiretti (\textcolor{blue}{campionamento blu}), l'ultimo andamento è dato dall'introduzione degli attributi (\textcolor{green}{dati verdi}).\\
+Sull'asse delle ordinate vi sono i valori compresi nell'intervallo $[0, 1]$ misurati mediante la tecnica dell'accuratezza. Mentre sull'asse delle ascisse vi sono i tre algoritmi utilizzati per creare il modello del grafo partendo dai cammini. \wv\ è il metodo di controllo, mentre S-CNRL e E-CNRL che lavorano rispettivamente con LDA e HalfLDA, sono i nuovi algoritmi proposti. Entrambi per alcune parti continuano ad usare \wv.\\
+Sia \cora\ che \citeseer\ sono grafi originariamente diretti (\textcolor{red}{misurazioni rosse}), tuttavia si è provato ad interpretarli anche come se fossero indiretti (\textcolor{blue}{campionamento blu}), l'ultimo andamento è dato dall'introduzione degli attributi (\textcolor{green}{dati verdi}).\\
 Ecco alcuni dettagli che emergono dai due grafici:
 \begin{itemize}
-	\item \wv mostra prestazioni, anche se di poco, maggiori delle due alternative che invece tendono ad equivalersi
-	\item la media dei valori delle misurazione nel grafico di \cora (Figura~\ref{fig:VC_cora}) è $0.696$ rispetto a quella di \citeseer (Figura~\ref{fig:VC_citeseer}) che è $0.491$, la prima risulta essere maggiore di circa $ \frac{2}{10}$ questo è dovuto anche al fatto che \cora abbia una $ densita' = \frac{archi}{nodi}$ maggiore rispetto a \citeseer
+	\item \wv\ mostra prestazioni, anche se di poco, maggiori delle due alternative che invece tendono ad equivalersi
+	\item la media dei valori delle misurazione nel grafico di \cora\ (Figura~\ref{fig:VC_cora}) è $0.696$ rispetto a quella di \citeseer\ (Figura~\ref{fig:VC_citeseer}) che è $0.491$, la prima risulta essere maggiore di circa $ \frac{2}{10}$ questo è dovuto anche al fatto che \cora\ abbia una $ densita' = \frac{archi}{nodi}$ maggiore rispetto a \citeseer
 	\item un alta densità degli archi permette di creare molte interazioni fra i nodi e quindi il modello meglio rappresenta il grafo. Si noti però che questo non è sempre facile da individuare, qui è presente uno stacco evidente in quanto entrambi i grafi hanno un estremamente bassa densità si dice infatti che sono sparsi
 	\item si è provato ad aumentare la densità, considerando ambo i grafi come indiretti (ogni arco indiretto può essere rappresentato come due archi diretti). Si ha quindi poco meno di un raddoppio della densità, è infatti possibile che un arco avesse già il suo opposto e quindi non risenta del cambiamento.\\
 	L'effetto per entrambi è stato un innalzamento del valore medio lungo i 3 algoritmi usati
-	\item con il grafo indiretto l'incremento di S-CNRL e E-CNRL è maggiore rispetto a quello di \wv . Questo può indicare, che \wv lavora molto bene con i grafi orientati a dispetto degli altri due metodi
+	\item con il grafo indiretto l'incremento di S-CNRL e E-CNRL è maggiore rispetto a quello di \wv . Questo può indicare, che \wv\ lavora molto bene con i grafi orientati a dispetto degli altri due metodi
 	\item l'introduzione degli attributi tramite il grafo bipartito cambia notevolmente la situazione portando ad un incremento di prestazioni. Questi valori vanno confrontati con i dati del grafo orientato in quanto quello è il valore corretto. I punti blu del grafo non-orientato non sono comparabili in quanto servono a mostrare come la densità influisce sul risultato, rappresentano un nuovo grafo diverso dall'originale, e quindi non paragonabile
 \end{itemize}
 %
@@ -341,11 +356,11 @@ Questa sezione ripercorre la parte principale del tirocinio, ossia l'integrazion
 \begin{figure}[htp]
 	\centering
 	\includegraphics[width=\linewidth]{immagini/MOD_1_num_cmty}
-	\caption{Accuratezza rappresentativa al variare del numero delle comunità da generare}
+	\caption{Accuratezza rappresentativa al variare del numero delle comunità da generare (2-3-4-5-8-10-15-20-30-50-100)}
 	\label{fig:MOD_1_num_cmty}
 \end{figure}
 %
-In Figura~\ref{fig:MOD_1_num_cmty} è possibile vedere l'andamento dell'algoritmo d'individuazione delle comunità LDA, applicato al grafo \citeseer di cui si considera solo la struttura, la valutazione vien fatta con la \mmod.\\
+In Figura~\ref{fig:MOD_1_num_cmty} è possibile vedere l'andamento dell'algoritmo d'individuazione delle comunità LDA, applicato al grafo \citeseer\ di cui si considera solo la struttura, la valutazione vien fatta con la \mmod.\\
 L'unico parametro che viene modificato è mostrato sull'asse delle ascisse ed è il numero di comunità che si vanno a ricercare all'interno del grafo. Ecco cosa s'osserva:
 \begin{itemize}
 	\item la progressione del numero di comunità da ricercare è stata scelta per mostrare la rapida crescita della modularità quando piccoli numeri sono coinvolti
@@ -357,12 +372,11 @@ L'unico parametro che viene modificato è mostrato sull'asse delle ascisse ed è
 \end{itemize}
 
 \subsection{Metriche di valutazione}%2
-Nella Tabella~\ref{tab:2_metriche} vengono mostrati i due grafi di \cora e \citeseer, valutati mediante tre differenti metriche di calcolo della modularità.\\
+Nella Tabella~\ref{tab:2_metriche} vengono mostrati i due grafi di \cora\ e \citeseer, valutati mediante tre differenti metriche di calcolo della modularità.\\
 Ambo i grafi sono stati caricati senza considerare gli attributi dei nodi, ma solo la loro struttura. La creazione del modello è avvenuta con S-CNRL e il suo algoritmo LDA, tramite il quale sono state ricavate le $10$ comunità che vengono  valutate in Tabella.\\
-\\
-Non ha senso confrontare i tre differenti metodi di calcolo della modularità, in quanto premiano aspetti differenti. Inoltre ognuno si posiziona su un diverso ordine di grandezza.Spicca sopratutto \mover che presenta tutti i valori molto vicini a 0, questo perché, come riporta la Tabella~\ref{tab:dati_grafi}, ambo i grafi sono estremamente sparsi e, a causa di ciò, \mover ha il valore assoluto della modularità calcolata vicino a $0$.\\
-Tutti i metodi assegnano a \cora il valore più alto, e questo fa capire che, se una partizione è nettamente migliore di un'altra, allora verrà premiata indipendentemente dalla metrica di valutazione usata.\\
-La \mmod è stata scelta come metrica ufficiale degli esperimenti, non solo per il fatto che è quella usata nell'articolo di \cnrl, ma anche perché presenta dei valori facilmente analizzabili e comprensibili. \mover funziona bene ma è sempre difficile comprendere i risultati a cui s'arriva rischiando incomprensioni.
+Non ha senso confrontare i tre differenti metodi di calcolo della modularità, in quanto premiano aspetti differenti. Inoltre ognuno si posiziona su un diverso ordine di grandezza.Spicca sopratutto \mover\ che presenta tutti i valori molto vicini a 0, questo perché, come riporta la Tabella~\ref{tab:dati_grafi}, ambo i grafi sono estremamente sparsi e, a causa di ciò, \mover\ ha il valore assoluto della modularità calcolata vicino a $0$.\\
+Tutti i metodi assegnano a \cora\ il valore più alto, e questo fa capire che, se una partizione è nettamente migliore di un'altra, allora verrà premiata indipendentemente dalla metrica di valutazione usata.\\
+La \mmod\ è stata scelta come metrica ufficiale degli esperimenti, non solo per il fatto che è quella usata nell'articolo di \cnrl, ma anche perché presenta dei valori facilmente analizzabili e comprensibili. \mover\ funziona bene ma è sempre difficile comprendere i risultati a cui s'arriva rischiando incomprensioni.
 %
 \begin{center}
 	% Schema num: 2 -> confronto metriche (cmty=10, no_att, valutazione con grafo norm, metric 8 -> HalfLDA)
@@ -379,18 +393,33 @@ La \mmod è stata scelta come metrica ufficiale degli esperimenti, non solo per 
 	\captionof{table}{Confronto fra i metodi di modularità spiegati, partendo dal grafo normale con $10$ comunità}
 	\label{tab:2_metriche}
 \end{center}
+
+%\begin{center}
+%	\begin{tabular}{|l|c|c|} % \multicolumn{2}{|c|}{testo}  \multirow{2}{*}{testo}   $ \e{-}$
+%		\hline
+%		\ & \cora & \citeseer \\
+%		\hline
+%		\mmax & $2.04$ \e{-1} & $8.42$ \e{-2} \\  
+%		\mover & $1.21$ \e{-5} & $-3.55$ \e{-6} \\  
+%		\mmod & $5.31$ \e{-1} & $3.67$ \e{-1} \\  
+%		\hline
+%	\end{tabular}
+%	\captionof{table}{Confronto fra i metodi di modularità spiegati, partendo dal grafo normale con $10$ comunità}
+%	\label{tab:2_metriche}
+%\end{center}
+
 %
 \subsection{Confronto metodi d'elaborazione}%3
 %
 \begin{figure}[htp]
 	\centering
 	\includegraphics[width=\linewidth]{immagini/MOD_3_elaborazione}
-	\caption{Prestazioni dei diversi procedimenti d'elaborazione del modello al variare del numero di comunità da ricercare (grafo \cora)}
+	\caption{Prestazioni dei diversi procedimenti d'elaborazione del modello sul grafo \cora, al variare del numero di comunità da ricercare (3-5-10-20-50)}
 	\label{fig:MOD_3_elaborazione}
 \end{figure}
 %
 In Figura~\ref{fig:MOD_3_elaborazione} vengono confrontati tre differenti metodi d'elaborazione dei grafi, il cui scopo è trovare le comunità.\\
-Viene presentato il grafo \cora su cui si è applicata una progressione da $3$ a $50$ comunità, valutate tramite la \mmod. \\
+Viene presentato il grafo \cora\ su cui si è applicata una progressione da $3$ a $50$ comunità, valutate tramite la \mmod. \\
 I tre metodi utilizzati sono:
 \begin{itemize}
 	\item \textbf{noAtt}: si considera in partenza unicamente la struttura del grafo, dai cui si ricavano i cammini e vengono elaborati con LDA
@@ -400,8 +429,8 @@ I tre metodi utilizzati sono:
 \end{itemize}
 Dalla figura possiamo capire:
 \begin{itemize}
-	\item come avviene in Figura~\ref{fig:MOD_1_num_cmty}, con l'aumentare del numero di comunità si ha il problema dell'overfitting.\\
-	Per \citeseer il problema si rivela quando si cercano $50$ comunità e così è per \cora, questo sembra non valere per bigClam anche se è inevitabile che accada con numeri molto alti di comunità da individuare
+	\item come per Figura~\ref{fig:MOD_1_num_cmty}, con l'aumentare del numero di comunità si ha il problema dell'overfitting.\\
+	Per \citeseer\ il problema si rivela quando si cercano $50$ comunità e così è per \cora, questo sembra non valere per bigClam anche se è inevitabile che accada con numeri molto alti di comunità da individuare
 	\item durante la crescita le prestazioni di bigClam restano costantemente inferiori
 	\item l'apice è raggiunto mediante gli attributi con $20$ comunità ad un valore di $Q=0.986$. È importante notare che non tutti gli apici dei vari metodi si posizionano a $20$ comunità. Al contrario, BigClam sembra aver questo massimo oltre le $50$ comunità
 	\item valutare il grafo mediante e senza gli attributi sembra non influire troppo, anche se così non dovrebbe essere (caso meglio analizzato in Tabella~\ref{tab:4_valutazioni})
@@ -431,7 +460,7 @@ Dalla figura possiamo capire:
 	\captionof{table}{Misurazione delle comunità, generate attraverso due differenti metodi d'elaborazione, analizzate su due tipologie di valutazione}
 	\label{tab:4_valutazioni}
 \end{center}
-Nella Tabella~\ref{tab:4_valutazioni} vengono mostrati entrambi i grafi di \cora e \citeseer, su ognuno son state fatte quattro differenti valutazioni.\\
+Nella Tabella~\ref{tab:4_valutazioni} vengono mostrati entrambi i grafi di \cora\ e \citeseer, su ognuno son state fatte quattro differenti valutazioni.\\
 Sulle righe vi sono i metodi  d'elaborazione utilizzati per trovare le comunità:
 \begin{itemize}
 	\item \textbf{noAtt} indica che del grafo è stata utilizzata solamente la struttura per la generazione dei cammini
@@ -441,7 +470,7 @@ Sulle righe vi sono i metodi  d'elaborazione utilizzati per trovare le comunità
 Sulle colonne sono invece riportati i due metodi per la valutazione della partizione generata:
 \begin{itemize}
 	\item \textbf{struttura} indica che il grafo utilizzato per la valutazione, tramite \mmod, è quello originale, che contiene solo la struttura
-	\item \textbf{ipergrafo} il grafo per la valutazione con \mmod contiene anche gli archi degli attributi, non è possibile utilizzare un grafo bipartito in quanto contiene nodi (l'insieme N2) non appartenenti al grafo originario, si opta quindi per l'ipergrafo.\\
+	\item \textbf{ipergrafo} il grafo per la valutazione con \mmod\ contiene anche gli archi degli attributi, non è possibile utilizzare un grafo bipartito in quanto contiene nodi (l'insieme N2) non appartenenti al grafo originario, si opta quindi per l'ipergrafo.\\
 	Quello qui utilizzato, rispetto a quello mostrato in Figura~\ref{fig:7transform_hyper}, mantiene anche gli archi originali e per non creare incoerenze considera tutti gli archi come diretti, ciò porta a più d'un raddoppio del numero d'archi, partendo da un numero base già elevatissimo
 \end{itemize}
 %
@@ -449,14 +478,14 @@ Dalla Figura~\ref{fig:MOD_3_elaborazione} si può vedere che con $10$ comunità 
 Ecco cosa si può notare:
 \begin{itemize}
 	\item per la scelta del numero di comunità i dati di \cora, valutati sulla struttura, sono pressoché uguali
-	\item per \citeseer accade lo stesso, qui i due valori sono identici.\\
+	\item per \citeseer\ accade lo stesso, qui i due valori sono identici.\\
 	Il dato di $4.14$ \e{-1} è già apparso in Tabella~\ref{fig:MOD_1_num_cmty}
-	\item se la valutazione avviene sull'ipergrafo sia nel caso di \cora che di \citeseer il valore più alto viene generato con l'elaborazione effettuata sugli attributi.\\
+	\item se la valutazione avviene sull'ipergrafo sia nel caso di \cora\ che di \citeseer\ il valore più alto viene generato con l'elaborazione effettuata sugli attributi.\\
 	È in linea con le aspettative, perché i cammini aggiunti dal grafo bipartito vanno a descrivere una sezione che l'elaborazione, utilizzante solo la struttura, non può conoscere e quindi non vi si può adattare
 	\item tutte le valutazioni sull'ipergrafo sono così vicine allo $0$ perché l'Espressione~\ref{eq:d_in-out}, parte della Formula~\ref{eq:m_mod}, della \mmod, in presenza di un grafo molto denso, ed è questo il caso, abbassa notevolmente il valore della misurazione
 \end{itemize}
 %
-Nonostante i dati mostrati in Tabella~\ref{tab:4_valutazioni} siano perfettamente in linea con le aspettative, non è possibile affermare che quanto mostrato in questa sottosezione sia sempre vero in ogni possibile situazione, in quanto i risultati restituiti dalla \mmod presentano una non trascurabile variabilità.
+Nonostante i dati mostrati in Tabella~\ref{tab:4_valutazioni} siano perfettamente in linea con le aspettative, non è possibile affermare che quanto mostrato in questa sottosezione sia sempre vero in ogni possibile situazione, in quanto i risultati restituiti dalla \mmod\ presentano una non trascurabile variabilità.
 
 
 
@@ -465,7 +494,7 @@ Seguono alcune considerazioni personali sul lavoro affrontato e su come è stato
 \section*{Conclusioni tecniche}
 Vorrei evidenziare le potenzialità dell'uso degli attributi nella creazione dei modelli.\\
 Durante il tirocinio sono stati indagati solo alcuni dei metodi esistenti per l'introduzione di questi dati aggiuntivi. Ne esistono molti altri, ognuno con i suoi vantaggi e svantaggi. Non so se gli approcci da noi utilizzati sono i migliori o quelli con più potenzialità, ma comunque abbiamo riscontrato che lavorano bene e hanno portato ad un miglioramento.\\
-Uno dei vantaggi principali è che, basandosi su delle meccaniche semplici, è potenzialmente fattibile integrarli con altri metodi, portando ad ulteriori miglioramenti. Uno svantaggio evidente è il tempo d'esecuzione. Il codice iniziale di \cnrl è molto veloce, l'introduzione delle meccaniche proposte in questa tesi hanno appesantito molto il costo computazionale. Questo è ancor più evidente quando, come nel nostro caso, si lavora con grafi estremamente sparsi che però dispongono di molti attributi.\\
+Uno dei vantaggi principali è che, basandosi su delle meccaniche semplici, è potenzialmente fattibile integrarli con altri metodi, portando ad ulteriori miglioramenti. Uno svantaggio evidente è il tempo d'esecuzione. Il codice iniziale di \cnrl\ è molto veloce, l'introduzione delle meccaniche proposte in questa tesi hanno appesantito molto il costo computazionale. Questo è ancor più evidente quando, come nel nostro caso, si lavora con grafi estremamente sparsi che però dispongono di molti attributi.\\
 Probabilmente questo approccio dovrà essere ancora e ancora sviluppato, ma non è escluso che potrà dare un suo valido contributo.
 %
 \section*{Conclusioni personali}
@@ -474,7 +503,6 @@ Affacciarsi per la prima volta a questo campo è molto complesso.\\
 I dataset su cui si va ad operare sono troppo ampi e questo comporta che non se ne possa tener traccia. Gli errori sono complicati da individuare poiché non è possibile eseguire manualmente le operazioni svolte dal codice, nonostante si conoscano nel dettaglio come lavorano gli algoritmi. È fondamentale non sottovalutare la mole del progetto su cui si lavora e non tralasciare nessun dettaglio finché è ancora possibile individuarlo, testarlo e correggerlo.\\
 La complessità maggiore che personalmente ho incontrato sta nel settaggio dei parametri.\\
 Visto la moltitudine di possibilità di cui si dispone, risulta complesso abbracciarle tutte, per comprendere come impostare i parametri che regolano la gestione dei dati all'interno del codice. Spesso alcuni settaggi sono disponibili solo in alcune situazioni o dipendono da delle impostazioni. Un esecuzione avvenuta con parametri errati non rispecchia le aspettative, e porta a dover rivedere il tutto.\\
-\\
 In conclusione, le tante sfaccettature di questo argomento lo rendono complesso e difficile, è quindi necessario prestare sempre estrema attenzione al metodo di lavoro.
 
 %\end{document}
